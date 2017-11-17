@@ -11,7 +11,6 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ControlzEx;
 using MahApps.Metro.IconPacks;
 using MaterialDesignThemes.Wpf;
 
@@ -31,9 +30,24 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		#endregion
 
 		StackPanel panel = new StackPanel();
-		PackIconMaterial iconCtl = new PackIconMaterial();
+		Viewbox viewbox = new Viewbox();
+		string iconPath;
 		TextBlock textLabelCtl = new TextBlock();
 		TextBox textBoxCtl = new TextBox();
+		
+		public void SetIcon(string iconPath)
+		{
+			if (iconPath == null) {
+				return;
+			}
+			this.iconPath = iconPath;
+		}
+		
+		public string IconPath{
+			get { 
+				return iconPath;
+			}
+		}
 		
 		public static readonly DependencyProperty isInEditModeProperty =
 			DependencyProperty.Register("IsInEditMode", typeof(bool), typeof(TreeNode),
@@ -66,9 +80,88 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		public TreeNode()
 		{
 			panel.Orientation = Orientation.Horizontal;
-			panel.Children.Add(iconCtl);
+			panel.Children.Add(viewbox);			
 			panel.Children.Add(textLabelCtl);
 			panel.Children.Add(textBoxCtl);
+			
+			if (this.IconPath != null) {
+				if (this.IconPath.Contains(";")) {
+					string[] packIconValues = IconPath.Split(';');
+					string packIconType = packIconValues[0];
+					string packIconKind = packIconValues[1];
+							
+					switch (packIconType) {
+						case "PackIconMaterial":
+							PackIconMaterial iconMat = new PackIconMaterial();
+							((PackIconMaterial)iconMat).Kind = (PackIconMaterialKind)Enum
+													.Parse(typeof(PackIconMaterialKind),
+								packIconKind);
+						
+							viewbox.Child = iconMat;
+							break;
+						case "PackIconMaterialLight":
+							PackIconMaterialLight iconMatLight = new PackIconMaterialLight();
+							((PackIconMaterialLight)iconMatLight).Kind = (PackIconMaterialLightKind)Enum
+													.Parse(typeof(PackIconMaterialLightKind),
+								packIconKind);
+						
+							viewbox.Child = iconMatLight;
+							break;
+						case "PackIconModern":
+							PackIconModern iconModern = new PackIconModern();
+							((PackIconModern)iconModern).Kind = (PackIconModernKind)Enum
+													.Parse(typeof(PackIconModernKind),
+								packIconKind);
+						
+							viewbox.Child = iconModern;
+							break;
+						case "PackIconOcticons":
+							PackIconOcticons iconOcti = new PackIconOcticons();
+							((PackIconOcticons)iconOcti).Kind = (PackIconOcticonsKind)Enum
+													.Parse(typeof(PackIconOcticonsKind),
+								packIconKind);
+						
+							viewbox.Child = iconOcti;
+							break;
+						case "PackIconSimpleIcons":
+							PackIconSimpleIcons iconSimple = new PackIconSimpleIcons();
+							((PackIconSimpleIcons)iconSimple).Kind = (PackIconSimpleIconsKind)Enum
+													.Parse(typeof(PackIconSimpleIconsKind),
+								packIconKind);
+						
+							viewbox.Child = iconSimple;
+							break;
+						case "PackIconEntypo":
+							PackIconEntypo iconEnt = new PackIconEntypo();
+							((PackIconEntypo)iconEnt).Kind = (PackIconEntypoKind)Enum
+													.Parse(typeof(PackIconEntypoKind),
+								packIconKind);
+						
+							viewbox.Child = iconEnt;
+							break;
+						case "PackIconFontAwesome":
+							PackIconFontAwesome icon = new PackIconFontAwesome();
+							((PackIconFontAwesome)icon).Kind = (PackIconFontAwesomeKind)Enum
+													.Parse(typeof(PackIconFontAwesomeKind),
+								packIconKind);
+						
+							viewbox.Child = icon;
+							break;
+					}
+			
+					viewbox.Margin = new Thickness(0, 0, 8, 0);
+				}
+			}
+			
+			Style materialDesignTreeViewItem = Application.Current.TryFindResource("MaterialDesignTreeViewItem") as Style;
+			if (materialDesignTreeViewItem != null)
+				this.Style = materialDesignTreeViewItem;
+			
+			Style materialDesignTextbox = Application.Current.TryFindResource("MaterialDesignFloatingHintTextBox") as Style;
+			if (materialDesignTextbox != null) {
+				textBoxCtl.Style = materialDesignTextbox;
+				HintAssist.SetHint(this, "(editable)");
+			}			
 			
 			this.Header = panel;
 			

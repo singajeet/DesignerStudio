@@ -20,8 +20,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 	public class ExtTreeNode : TreeNode, IDisposable, IClipboardHandler, IComparable
 	{
 		string contextmenuAddinTreePath = null;
-		protected bool isInitialized    = false;
-		string  image                    = null;
+		protected bool isInitialized    = false;		
 		
 		public static readonly RoutedEvent CollapsingEvent =
         EventManager.RegisterRoutedEvent("Collapsing",
@@ -76,14 +75,6 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 			set {
 				contextmenuAddinTreePath = value;
 			}
-		}
-		
-		public void SetIcon(string iconName)
-		{
-			if (iconName == null) {
-				return;
-			}
-			this.image = iconName;
 		}
 		
 		TreeNode internalParent;
@@ -150,12 +141,12 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		
 		public virtual void Refresh()
 		{
-			SetIcon(image);
-			foreach (TreeNode node in Items) {
-				if (node is ExtTreeNode) {
-					((ExtTreeNode)node).Refresh();
-				}
-			}
+			//SetIcon(image);
+//			foreach (TreeNode node in Items) {
+//				if (node is ExtTreeNode) {
+//					((ExtTreeNode)node).Refresh();
+//				}
+//			}
 		}
 		
 		#region Label edit

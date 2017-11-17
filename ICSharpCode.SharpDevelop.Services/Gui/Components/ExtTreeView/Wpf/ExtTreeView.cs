@@ -64,7 +64,9 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		
 		public ExtTreeView()
 		{
-			
+			Style materialDesign = Application.Current.TryFindResource("MaterialDesignTreeView") as Style;
+			if (materialDesign != null)
+				this.Style = materialDesign;
 		}
 		
 		protected override void OnItemsChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -81,7 +83,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 				if(node != null)
 					node.ActivateItem();				
 			}
-			e.Handled = true;
+			//e.Handled = true;
 		}
 		
 		protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
