@@ -1,0 +1,95 @@
+<wb:FullScreenEnabledWindow
+	x:Class = "ICSharpCode.SharpDevelop.Workbench.WpfWorkbench"
+	x:ClassModifier = "public"
+	xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:core = "clr-namespace:ICSharpCode.Core.Presentation;assembly=ICSharpCode.Core.Presentation"
+	xmlns:wb = "clr-namespace:ICSharpCode.SharpDevelop.Workbench"
+	xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+	xmlns:palette="clr-namespace:ICSharpCode.SharpDevelop.Services.Palette"
+	xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+	xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    Title = "{core:Localize MainWindow.DialogName}"
+	x:Name="wpfWorkbenchMainWindow"
+	WindowStartupLocation = "Manual"
+	TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+	Background = "{DynamicResource MaterialDesignPaper}"
+	AllowDrop = "True"
+	EnableDWMDropShadow="True" ShowIconOnTitleBar="True"
+	TextElement.FontSize="{DynamicResource ContentFontSize}"
+    FontSize="{DynamicResource WindowTitleFontSize}"
+    FontFamily="{DynamicResource HeaderFontFamily}">
+	<wb:FullScreenEnabledWindow.Resources>		
+	</wb:FullScreenEnabledWindow.Resources>
+	
+	<Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands ShowLastSeparator="False">
+            <Button x:Name="SettingsButton" ToolTip="Open settings panel" VerticalAlignment="Center">
+            	<Grid VerticalAlignment="Center">
+            		<Grid.ColumnDefinitions>
+            			<ColumnDefinition Width="Auto" />
+            			<ColumnDefinition Width="*" />
+            		</Grid.ColumnDefinitions>
+            		<iconPacks:PackIconModern Grid.Column="0" Width="14" Height="14" Kind="Settings" VerticalAlignment="Center" />        		
+	            	<TextBox Text="Settings" Grid.Column="1" FontFamily="{DynamicResource NormalFontFamily}" 
+								FontSize="{DynamicResource ContentFontSize}" VerticalAlignment="Center" />	                
+				</Grid>
+            </Button>
+			<Button x:Name="ThemesButton" ToolTip="Change Theme" VerticalAlignment="Center"
+			        CommandParameter="{Binding ElementName=wpfWorkbenchMainWindow}"
+        			Command="{Binding ElementName=wpfWorkbenchMainWindow, Path=OpenThemesFlyoutCommand}">
+				<Grid VerticalAlignment="Center">
+					<Grid.ColumnDefinitions>
+            			<ColumnDefinition Width="Auto" />
+            			<ColumnDefinition Width="*" />
+            		</Grid.ColumnDefinitions>
+					<iconPacks:PackIconModern Grid.Column="0" Width="14" Height="14" Kind="DrawButton" VerticalAlignment="Center" />
+					<TextBox Text="Themes" Grid.Column="1" FontFamily="{DynamicResource NormalFontFamily}" 
+								FontSize="{DynamicResource ContentFontSize}" VerticalAlignment="Center" />	        		
+				</Grid>
+        	</Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+	<Controls:MetroWindow.WindowButtonCommands>
+        <Controls:WindowButtonCommands Template="{DynamicResource MahApps.Metro.Templates.WindowButtonCommands.Win10}" />
+    </Controls:MetroWindow.WindowButtonCommands>
+	<Window.TaskbarItemInfo>
+		<TaskbarItemInfo />
+	</Window.TaskbarItemInfo>
+	
+	<Controls:MetroWindow.IconTemplate>
+        <DataTemplate>
+            <iconPacks:PackIconModern Width="{TemplateBinding Width}"
+                                      Height="{TemplateBinding Height}"
+                                      Margin="4"
+                                      Foreground="{DynamicResource IdealForegroundColorBrush}"
+                                      Kind="Box" />
+        </DataTemplate>
+    </Controls:MetroWindow.IconTemplate>
+	
+	<Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl x:Name="flyoutsControl">
+            <Controls:Flyout x:Name="settingsFlyout"
+                             Margin="200 30 0 0"
+                             Controls:ControlsHelper.ContentCharacterCasing="Upper"
+                             AreAnimationsEnabled="True"
+                             FocusedElement="{Binding ElementName=firstTB}"
+                             Header="Themes"
+                             IsModal="True"
+                             IsAutoCloseEnabled="False"
+                             Position="Top">
+        		<palette:PaletteSelector>
+            		<palette:PaletteSelector.DataContext>
+        				<palette:PaletteSelectorViewModel />
+        			</palette:PaletteSelector.DataContext>
+            	</palette:PaletteSelector>
+            </Controls:Flyout>
+		</Controls:FlyoutsControl>	
+	</Controls:MetroWindow.Flyouts>
+	<DockPanel Name="dockPanel">
+		<Menu Name="mainMenu" DockPanel.Dock="Top" IsMainMenu="True"/>
+		<!-- Toolbars will be inserted here (index: 1) -->
+		<!-- Statusbar will be inserted here (index: Count-2) -->
+		<ContentPresenter Name="mainContent" />
+	</DockPanel>
+</wb:FullScreenEnabledWindow>
