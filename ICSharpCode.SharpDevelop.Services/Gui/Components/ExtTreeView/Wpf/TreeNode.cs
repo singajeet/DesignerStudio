@@ -173,24 +173,26 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 			textLabelCtl.MouseLeftButtonDown += text_MouseLeftButtonDown;
 			textLabelCtl.KeyDown += text_KeyDown;
 		}
+		
+		public void SetEditMode()
+		{
+			IsInEditMode = true;
+			textLabelCtl.Visibility = Visibility.Collapsed;
+			textBoxCtl.Visibility = Visibility.Visible;	
+		}
 
 		void text_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.Key == Key.F2) {
 				if (this.IsSelected) {
-					IsInEditMode = true;
-					textLabelCtl.Visibility = Visibility.Collapsed;
-					textBoxCtl.Visibility = Visibility.Visible;	
+					SetEditMode();
 				}				
 			}
 		}
 		void text_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			if (this.IsSelected) {
-				IsInEditMode = true;
-				textLabelCtl.Visibility = Visibility.Collapsed;
-				textBoxCtl.Visibility = Visibility.Visible;
-				
+				SetEditMode();
 				e.Handled = true;
 			}
 		}

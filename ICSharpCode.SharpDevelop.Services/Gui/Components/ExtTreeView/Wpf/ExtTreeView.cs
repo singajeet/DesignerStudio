@@ -83,6 +83,12 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 				if(node != null)
 					node.ActivateItem();				
 			}
+			
+			if (e.Key == Key.F2) {
+				ExtTreeNode node = SelectedItem as ExtTreeNode;
+				if(node != null)
+					node.SetEditMode();				
+			}
 			//e.Handled = true;
 		}
 		
