@@ -170,13 +170,18 @@ namespace ICSharpCode.SharpDevelop.Workbench
 			}
 			
 			mainMenu.ItemsSource = MenuService.CreateMenuItems(this, this, mainMenuPath, activationMethod: "MainMenu", immediatelyExpandMenuBuildersForShortcuts: true);
-			mainMenu.Style = Application.Current.FindResource("MaterialDesignMenu") as Style;
+			Style menuStyle = Application.Current.TryFindResource("MaterialDesignMenu") as Style;
+			if (menuStyle != null)
+				mainMenu.Style = menuStyle;
 			
 			toolBars = ToolBarService.CreateToolBars(this, this, "/SharpDevelop/Workbench/ToolBar");
 			foreach (ToolBar tb in toolBars) {
 				if (((ToolBarService.CoreToolBar)tb).ShowInTray) {
 					ToolBarTray tray = new ToolBarTray();
-					tb.Style = Application.Current.FindResource("MaterialDesignToolBar") as Style;
+					Style tbStyle = Application.Current.TryFindResource("MaterialDesignToolBar") as Style;
+					
+					if (tbStyle != null)
+						tb.Style = tbStyle;
 				
 					tray.ToolBars.Add(tb);
 					DockPanel.SetDock(tray, Dock.Top);
@@ -184,7 +189,10 @@ namespace ICSharpCode.SharpDevelop.Workbench
 				} else {
 					DockPanel.SetDock(tb, Dock.Top);
 					dockPanel.Children.Insert(1, tb);
-					tb.Style = Application.Current.FindResource("MaterialDesignToolBar") as Style;
+					Style tbStyle = Application.Current.TryFindResource("MaterialDesignToolBar") as Style;
+					
+					if (tbStyle != null)
+						tb.Style = tbStyle;
 				}
 			}
 			DockPanel.SetDock(statusBar, Dock.Bottom);
@@ -693,7 +701,7 @@ namespace ICSharpCode.SharpDevelop.Workbench
 				base.OnDragEnter(e);
 				if (!e.Handled) {
 					e.Effects = GetEffect(e.Data);
-					e.Handled = true;
+					//e.Handled = true;
 				}
 			} catch (Exception ex) {
 				MessageService.ShowException(ex);
@@ -706,7 +714,7 @@ namespace ICSharpCode.SharpDevelop.Workbench
 				base.OnDragOver(e);
 				if (!e.Handled) {
 					e.Effects = GetEffect(e.Data);
-					e.Handled = true;
+					//e.Handled = true;
 				}
 			} catch (Exception ex) {
 				MessageService.ShowException(ex);
@@ -737,7 +745,7 @@ namespace ICSharpCode.SharpDevelop.Workbench
 			try {
 				base.OnDrop(e);
 				if (!e.Handled && e.Data != null && e.Data.GetDataPresent(DataFormats.FileDrop)) {
-					e.Handled = true;
+					//e.Handled = true;
 					string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 					if (files == null)
 						return;

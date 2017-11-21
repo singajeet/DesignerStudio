@@ -17,7 +17,8 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Windows.Forms;
+//using System.Windows.Forms;
+using ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf;
 
 namespace ICSharpCode.SharpDevelop.Project
 {

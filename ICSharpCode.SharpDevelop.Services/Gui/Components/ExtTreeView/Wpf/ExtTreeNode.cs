@@ -20,7 +20,8 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 	public class ExtTreeNode : TreeNode, IDisposable, IClipboardHandler, IComparable
 	{
 		string contextmenuAddinTreePath = null;
-		protected bool isInitialized    = false;		
+		//protected bool isInitialized    = false;
+		System.Windows.Controls.TreeView treeView;
 		
 		public static readonly RoutedEvent CollapsingEvent =
         EventManager.RegisterRoutedEvent("Collapsing",
@@ -45,28 +46,43 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		protected virtual void OnExpanding(RoutedEventArgs routedEventArgs)
 		{
 			RaiseEvent(routedEventArgs);
+			if (this.TreeView != null) {
+				(this.TreeView as ExtTreeView).OnExpanding();
+			}
 		}
 	    protected override void OnExpanded(RoutedEventArgs e)
 		{
 	    	OnExpanding(new RoutedEventArgs(ExpandingEvent, this));
 			base.OnExpanded(e);
+			
+			if (this.TreeView != null) {
+				(this.TreeView as ExtTreeView).OnExpanded();
+			}
 		}
 
 		protected virtual void OnCollapsing(RoutedEventArgs routedEventArgs)
 		{
 			RaiseEvent(routedEventArgs);
+			if (this.TreeView != null) {
+				(this.TreeView as ExtTreeView).OnCollapsing();
+			}
 		}
+		
 	    protected override void OnCollapsed(RoutedEventArgs e)
 		{
 	    	OnCollapsing(new RoutedEventArgs(CollapsingEvent, this));
 			base.OnCollapsed(e);
-		}
-			    
-		public bool IsInitialized {
-			get {
-				return isInitialized;
+			
+			if (this.TreeView != null) {
+				(this.TreeView as ExtTreeView).OnCollapsed();
 			}
 		}
+			    
+//		public bool IsInitialized {
+//			get {
+//				return isInitialized;
+//			}
+//		}
 		
 		public virtual string ContextmenuAddinTreePath {
 			get {
@@ -79,9 +95,15 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		
 		TreeNode internalParent;
 		
-		public new TreeNode ParentItem {
+		public TreeNode ParentItem {
 			get {
 				return internalParent;
+			}
+		}
+		
+		public System.Windows.Controls.TreeView TreeView{
+			get { 
+				return treeView;
 			}
 		}
 		
@@ -93,6 +115,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		public void AddTo(System.Windows.Controls.TreeView view)
 		{
 			internalParent = null;
+			treeView = view;
 			AddTo(view.Items);
 		}
 		
@@ -106,6 +129,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		public void Insert(int index, System.Windows.Controls.TreeView view)
 		{
 			internalParent = null;
+			treeView = view;
 			view.Items.Insert(index, this);
 			Refresh();
 		}
@@ -122,9 +146,9 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		
 		public void PerformInitialization()
 		{
-			if (!isInitialized) {
+			if (!IsInitialized) {
 				Initialize();
-				isInitialized = true;
+				//isInitialized = true;
 			}
 		}
 		
@@ -141,12 +165,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		
 		public virtual void Refresh()
 		{
-			//SetIcon(image);
-//			foreach (TreeNode node in Items) {
-//				if (node is ExtTreeNode) {
-//					((ExtTreeNode)node).Refresh();
-//				}
-//			}
+			
 		}
 		
 		#region Label edit
@@ -171,25 +190,13 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		/// </summary>
 		public virtual void AfterLabelEdit(string newName)
 		{
-			throw new NotImplementedException();
+			
 		}
 		
 		#endregion
 		public virtual bool Visible {
 			get {
 				return this.Visible;
-			}
-		}
-		
-		protected override void OnDragEnter(DragEventArgs e)
-		{
-			base.OnDragOver(e);
-			ExtTreeNode node = e.Source as ExtTreeNode;
-			if (node != null) {
-				IDataObject data = e.Data;
-				if (data != null) {
-					DragDrop.DoDragDrop(this, data, DragDropEffects.All);
-				}
 			}
 		}
 		
@@ -287,9 +294,9 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		}
 		
 		#endregion		
-		int GetInsertionIndex(ItemCollection nodes, System.Windows.Controls.TreeView treeView)
+		int GetInsertionIndex(ItemCollection nodes, System.Windows.Controls.TreeView treeview)
 		{
-			if (treeView == null) {
+			if (treeview == null) {
 				return nodes.Count;
 			}
 			
@@ -322,7 +329,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 			set {
 				this.doPerformCut = value;
 				if (this.doPerformCut) {
-					//((ExtTreeView)System.Windows.Controls.TreeView).CutNodes.Add(this);					
+					((ExtTreeView)System.Windows.Controls.TreeView).CutNodes.Add(this);					
 				}
 				Refresh();
 			}

@@ -56,7 +56,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		protected void UpdateIcon()
 		{
-			if (Nodes.Count == 0) {
+			if (Items.Count == 0) {
 				SetIcon(ClosedImage);
 			} else if (IsExpanded) {
 				SetIcon(openedImage);

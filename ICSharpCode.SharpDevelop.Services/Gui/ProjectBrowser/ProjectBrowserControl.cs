@@ -22,6 +22,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Forms;
 
 using ICSharpCode.Core;
@@ -30,10 +31,15 @@ using ICSharpCode.SharpDevelop.Workbench;
 
 namespace ICSharpCode.SharpDevelop.Project
 {
+	using TreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.TreeNode;
+	using ExtTreeView = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeView;
+	
 	/// <summary>
 	/// Description of ProjectBrowserControl.
 	/// </summary>
-	public class ProjectBrowserControl : System.Windows.Forms.UserControl, IHasPropertyContainer
+	public class ProjectBrowserControl : //System.Windows.Forms.UserControl, 
+										System.Windows.Controls.UserControl,
+													IHasPropertyContainer
 	{
 		ExtTreeView treeView;
 		
@@ -43,13 +49,13 @@ namespace ICSharpCode.SharpDevelop.Project
 			}
 			set {
 				if (AbstractProjectBrowserTreeNode.ShowAll != value) {
-					treeView.BeginUpdate();
+					//treeView.BeginUpdate();
 					AbstractProjectBrowserTreeNode.ShowAll = value;
-					foreach (AbstractProjectBrowserTreeNode node in treeView.Nodes) {
+					foreach (AbstractProjectBrowserTreeNode node in treeView.Items){ //Nodes) {
 						node.UpdateVisibility();
 					}
 					treeView.Sort();
-					treeView.EndUpdate();
+					//treeView.EndUpdate();
 				}
 			}
 		}
@@ -61,11 +67,11 @@ namespace ICSharpCode.SharpDevelop.Project
 		public DirectoryNode SelectedDirectoryNode {
 			get {
 				TreeNode selectedNode =
-					treeView.SelectedNode as AbstractProjectBrowserTreeNode;
+					treeView.SelectedItem as AbstractProjectBrowserTreeNode;
 				DirectoryNode node = null;
 				while (selectedNode != null && node == null) {
 					node = selectedNode as DirectoryNode;
-					selectedNode = selectedNode.Parent;
+					selectedNode = (TreeNode)selectedNode.Parent;
 				}
 				// If no solution is load theres a valid reason for this to return null.
 				return node;
@@ -74,14 +80,14 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public AbstractProjectBrowserTreeNode SelectedNode {
 			get {
-				return treeView.SelectedNode as AbstractProjectBrowserTreeNode;
+				return treeView.SelectedItem as AbstractProjectBrowserTreeNode;
 			}
 		}
 		
 		public AbstractProjectBrowserTreeNode RootNode {
 			get {
-				if (treeView.Nodes.Count > 0)
-					return treeView.Nodes[0] as AbstractProjectBrowserTreeNode;
+				if (treeView.Items.Count > 0)
+					return treeView.Items[0] as AbstractProjectBrowserTreeNode;
 				else
 					return null;
 			}
@@ -97,54 +103,60 @@ namespace ICSharpCode.SharpDevelop.Project
 		{
 			InitializeComponent();
 			treeView.CanClearSelection = false;
-			treeView.BeforeSelect   += TreeViewBeforeSelect;
-			treeView.AfterExpand    += TreeViewAfterExpand;
+			
+			treeView.SelectedItemChanging+= TreeViewBeforeSelect;
+			//treeView.BeforeSelect   += TreeViewBeforeSelect;
+			//treeView.AfterExpand    += TreeViewAfterExpand;
+			treeView.Expanded += TreeViewAfterExpand;
 			FileService.FileRenamed += FileServiceFileRenamed;
 			FileService.FileRemoved += FileServiceFileRemoved;
 			
 			SD.ProjectService.ProjectItemAdded += ProjectServiceProjectItemAdded;
-			treeView.DrawNode += TreeViewDrawNode;
-			treeView.DragDrop += TreeViewDragDrop;
+//			treeView.DrawNode += TreeViewDrawNode;
+//			treeView.DragDrop += TreeViewDragDrop;
 		}
+
 		
-		void TreeViewDragDrop(object sender, DragEventArgs e)
-		{
-			Point       clientcoordinate = PointToClient(new Point(e.X, e.Y));
-			ExtTreeNode node             = treeView.GetNodeAt(clientcoordinate) as ExtTreeNode;
-			if (node == null) {
-				// did not drag onto any node
-				if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
-					string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-					foreach (string file in files) {
-						try {
-							var fileName = FileName.Create(file);
-							if (SD.ProjectService.IsSolutionOrProjectFile(fileName))
-								SD.ProjectService.OpenSolutionOrProject(fileName);
-							else
-								FileService.OpenFile(fileName);
-						} catch (Exception ex) {
-							MessageService.ShowException(ex, "unable to open file " + file);
-						}
-					}
-				}
-			}
-		}
+		//		**************** This functionality has been moved to AbstractProjectBrowserTreeNode *************************
 		
-		void TreeViewDrawNode(object sender, DrawTreeNodeEventArgs e)
-		{
-			AbstractProjectBrowserTreeNode node = e.Node as AbstractProjectBrowserTreeNode;
-			if (node != null) {
-				Image img = node.Overlay;
-				if (img != null) {
-					Graphics g = e.Graphics;
-					g.DrawImageUnscaled(img, e.Bounds.X - img.Width, e.Bounds.Bottom - img.Height);
-				}
-			}
-		}
+//		void TreeViewDragDrop(object sender, DragEventArgs e)
+//		{
+//			Point       clientcoordinate = PointToClient(new Point(e.X, e.Y));
+//			ExtTreeNode node             = treeView.GetNodeAt(clientcoordinate) as ExtTreeNode;
+//			if (node == null) {
+//				// did not drag onto any node
+//				if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+//					string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+//					foreach (string file in files) {
+//						try {
+//							var fileName = FileName.Create(file);
+//							if (SD.ProjectService.IsSolutionOrProjectFile(fileName))
+//								SD.ProjectService.OpenSolutionOrProject(fileName);
+//							else
+//								FileService.OpenFile(fileName);
+//						} catch (Exception ex) {
+//							MessageService.ShowException(ex, "unable to open file " + file);
+//						}
+//					}
+//				}
+//			}
+//		}
+		
+//		void TreeViewDrawNode(object sender, DrawTreeNodeEventArgs e)
+//		{
+//			AbstractProjectBrowserTreeNode node = e.Node as AbstractProjectBrowserTreeNode;
+//			if (node != null) {
+//				Image img = node.Overlay;
+//				if (img != null) {
+//					Graphics g = e.Graphics;
+//					g.DrawImageUnscaled(img, e.Bounds.X - img.Width, e.Bounds.Bottom - img.Height);
+//				}
+//			}
+//		}
 		
 		void CallVisitor(ProjectBrowserTreeNodeVisitor visitor)
 		{
-			foreach (AbstractProjectBrowserTreeNode treeNode in treeView.Nodes) {
+			foreach (AbstractProjectBrowserTreeNode treeNode in treeView.Items) {
 				treeNode.AcceptVisitor(visitor, null);
 			}
 		}
@@ -174,15 +186,15 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public void RefreshView()
 		{
-			if (treeView.Nodes.Count > 0) {
+			if (treeView.Items.Count > 0) {
 				Properties memento = new Properties();
 				StoreViewState(memento);
-				ViewSolution(((AbstractProjectBrowserTreeNode)treeView.Nodes[0]).Solution);
+				ViewSolution(((AbstractProjectBrowserTreeNode)treeView.Items[0]).Solution);
 				ReadViewState(memento);
 			}
 		}
 		
-		FileNode FindFileNode(TreeNodeCollection nodes, string fileName)
+		FileNode FindFileNode(ItemCollection nodes, string fileName)
 		{
 			FileNode fn;
 			foreach (TreeNode node in nodes) {
@@ -192,7 +204,7 @@ namespace ICSharpCode.SharpDevelop.Project
 						return fn;
 				}
 				if (node != null) {
-					fn = FindFileNode(node.Nodes, fileName);
+					fn = FindFileNode(node.Items, fileName);
 					if (fn != null)
 						return fn;
 				}
@@ -208,7 +220,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		public FileNode FindFileNode(string fileName)
 		{
 			SD.MainThread.VerifyAccess();
-			return FindFileNode(treeView.Nodes, fileName);
+			return FindFileNode(treeView.Items, fileName);
 		}
 		
 		// stores the fileName of the last selected target so
@@ -230,14 +242,14 @@ namespace ICSharpCode.SharpDevelop.Project
 				if (node != null) {
 					// select first parent that is not collapsed
 					TreeNode nodeToSelect = node;
-					TreeNode p = node.Parent;
+					TreeNode p = (TreeNode)node.Parent;
 					while (p != null) {
 						if (!p.IsExpanded)
 							nodeToSelect = p;
-						p = p.Parent;
+						p = (TreeNode)p.Parent;
 					}
 					if (nodeToSelect != null) {
-						treeView.SelectedNode = nodeToSelect;
+						//treeView.SelectedItem = nodeToSelect;
 					}
 				} else {
 					SelectDeepestOpenNodeForPath(fileName);
@@ -277,13 +289,13 @@ namespace ICSharpCode.SharpDevelop.Project
 				item = item.ParentFolder;
 			}
 			AbstractProjectBrowserTreeNode current = null;
-			var currentChildren = treeView.Nodes;
+			var currentChildren = treeView.Items;
 			while (itemsToExpand.Any()) {
 				var currentItem = itemsToExpand.Pop();
 				current = currentChildren.OfType<AbstractProjectBrowserTreeNode>().FirstOrDefault(n => n.Tag == currentItem);
 				if (current == null) break;
-				current.Expand();
-				currentChildren = current.Nodes;
+				current.ExpandSubtree();
+				currentChildren = current.Items;
 			}
 			if (project != null) {
 				var fileItem = project.FindFile(fileName);
@@ -297,18 +309,18 @@ namespace ICSharpCode.SharpDevelop.Project
 					current = currentChildren.OfType<AbstractProjectBrowserTreeNode>()
 						.FirstOrDefault(n => n.Text.Equals(relativePath[i], StringComparison.OrdinalIgnoreCase));
 					if (current == null) break;
-					if (i + 1 < relativePath.Length) current.Expand();
-					currentChildren = current.Nodes;
+					if (i + 1 < relativePath.Length) current.ExpandSubtree();
+					currentChildren = current.Items;
 				}
 			}
-			treeView.SelectedNode = current;
+			current.IsSelected = true;
 		}
 
 		void SelectDeepestOpenNodeForPath(string fileName)
 		{
 			TreeNode node = FindDeepestOpenNodeForPath(fileName);
 			if (node != null) {
-				treeView.SelectedNode = node;
+				node.IsSelected = true;				
 			}
 		}
 		
@@ -334,13 +346,13 @@ namespace ICSharpCode.SharpDevelop.Project
 				// our project node is not yet created,
 				// so start at the root and work down.
 				
-				if (treeView.Nodes == null || treeView.Nodes.Count<1) {
+				if (treeView.Items == null || treeView.Items.Count<1) {
 					// the treeView is not yet prepared to assist in this request.
 					return null;
 					
 				} else {
-					targetNode = treeView.Nodes[0] as AbstractProjectBrowserTreeNode;
-					if (fileName.StartsWith(solution.Directory)) {
+					targetNode = treeView.Items[0] as AbstractProjectBrowserTreeNode;
+					if (fileName.StartsWith(solution.Directory, StringComparison.CurrentCulture)) {
 						relativePath = fileName.Replace(solution.Directory, "");
 					}
 				}
@@ -349,12 +361,12 @@ namespace ICSharpCode.SharpDevelop.Project
 				// start from the project node and work upwards
 				// to the first visible node
 				TreeNode t = targetNode;
-				TreeNode p = targetNode.Parent;
+				TreeNode p = (TreeNode)targetNode.Parent;
 				while (p != null) {
 					if (!p.IsExpanded) {
 						t = p;
 					}
-					p = p.Parent;
+					p = (TreeNode)p.Parent;
 				}
 				
 				if (t != targetNode) {
@@ -365,7 +377,7 @@ namespace ICSharpCode.SharpDevelop.Project
 				} else {
 					// project node is instantiated and visible
 					// so we start here and work down
-					if (fileName.StartsWith((targetNode as ProjectNode).Directory)) {
+					if (fileName.StartsWith((targetNode as ProjectNode).Directory, StringComparison.CurrentCulture)) {
 						relativePath = fileName.Replace((targetNode as ProjectNode).Directory, "");
 					}
 				}
@@ -380,11 +392,11 @@ namespace ICSharpCode.SharpDevelop.Project
 			if (project == null) {
 				return null;
 			}
-			return FindProjectNodeByName(treeView.Nodes, project.Name);
+			return FindProjectNodeByName(treeView.Items, project.Name);
 		}
 		
 		// derived from FindFileNode
-		ProjectNode FindProjectNodeByName(TreeNodeCollection nodes, string projectName)
+		ProjectNode FindProjectNodeByName(ItemCollection nodes, string projectName)
 		{
 			if (nodes == null) {
 				return null;
@@ -401,7 +413,7 @@ namespace ICSharpCode.SharpDevelop.Project
 						return pn;
 					}
 				}
-				pn = FindProjectNodeByName(node.Nodes, projectName);
+				pn = FindProjectNodeByName(node.Items, projectName);
 				if (pn != null)
 					return pn;
 			}
@@ -424,7 +436,7 @@ namespace ICSharpCode.SharpDevelop.Project
 				}
 			}
 			
-			solutionNode.Expand();
+			solutionNode.ExpandSubtree();
 		}
 		
 		public void Clear()
@@ -435,7 +447,8 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public void PadActivated()
 		{
-			TreeViewBeforeSelect(null, new TreeViewCancelEventArgs(treeView.SelectedNode, false, TreeViewAction.Unknown));
+			//TreeViewBeforeSelect(null, new TreeViewCancelEventArgs(treeView.SelectedItem, false, TreeViewAction.Unknown));
+			TreeViewBeforeSelect(null, new System.Windows.RoutedEventArgs());
 		}
 		
 		void TreeViewAfterExpand(object sender, TreeViewEventArgs e)
@@ -445,19 +458,20 @@ namespace ICSharpCode.SharpDevelop.Project
 				TreeNode node = FindDeepestOpenNodeForPath(lastSelectionTarget);
 				while (node != null) {
 					if (node.Parent == e.Node) {
-						treeView.SelectedNode = node;
+						//treeView.SelectedNode = node;
+						node.IsSelected = true;
 						break;
 					} else {
-						node = node.Parent;
+						node = (TreeNode)node.Parent;
 					}
 				}
 			}
 		}
 		
-		void TreeViewBeforeSelect(object sender, TreeViewCancelEventArgs e)
+		void TreeViewBeforeSelect(object sender, System.Windows.RoutedEventArgs e)// TreeViewCancelEventArgs e)
 		{
 			// set current project & current combine
-			AbstractProjectBrowserTreeNode node = e.Node as AbstractProjectBrowserTreeNode;
+			AbstractProjectBrowserTreeNode node = (AbstractProjectBrowserTreeNode)treeView.SelectedItem; // e.Source as AbstractProjectBrowserTreeNode;
 			if (node == null) {
 				return;
 			}
@@ -480,7 +494,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		/// </summary>
 		public void StoreViewState(Properties memento)
 		{
-			memento.Set("ProjectBrowserState", TreeViewHelper.GetViewStateString(treeView));
+			//memento.Set("ProjectBrowserState", TreeViewHelper.GetViewStateString(treeView));
 		}
 		
 		/// <summary>
@@ -488,7 +502,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		/// </summary>
 		public void ReadViewState(Properties memento)
 		{
-			TreeViewHelper.ApplyViewStateString(memento.Get("ProjectBrowserState", ""), treeView);
+			//TreeViewHelper.ApplyViewStateString(memento.Get("ProjectBrowserState", ""), treeView);
 		}
 		
 		#region Windows Forms Designer generated code
@@ -500,41 +514,46 @@ namespace ICSharpCode.SharpDevelop.Project
 		private void InitializeComponent()
 		{
 			this.treeView = new ExtTreeView();
-			this.SuspendLayout();
+			//this.SuspendLayout();
 			// 
 			// treeView
 			// 
-			this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.treeView.ImageIndex = -1;
-			this.treeView.Location = new System.Drawing.Point(0, 0);
+//			this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
+//			this.treeView.ImageIndex = -1;
+//			this.treeView.Location = new System.Drawing.Point(0, 0);
 			this.treeView.Name = "treeView";
-			this.treeView.SelectedImageIndex = -1;
-			this.treeView.Size = new System.Drawing.Size(292, 266);
+//			this.treeView.SelectedImageIndex = -1;
+//			this.treeView.Size = new System.Drawing.Size(292, 266);
+			Width = 292;
+			Height = 266;
 			this.treeView.TabIndex = 0;
 			
 			// 
 			// ProjectBrowserControl
 			// 
-			this.Controls.Add(this.treeView);
+			//this.Controls.Add(this.treeView);
+			this.Content = this.treeView;
 			this.Name = "ProjectBrowserControl";
-			this.Size = new System.Drawing.Size(292, 266);
-			this.ResumeLayout(false);
+			//this.Size = new System.Drawing.Size(292, 266);
+			Width = 292;
+			Height = 266;
+			//this.ResumeLayout(false);
 		}
 		#endregion
 		
 		public void ExpandOrCollapseAll(bool expand)
 		{
 			if (this.treeView == null) return;
-			if (this.treeView.Nodes == null || this.treeView.Nodes.Count == 0) return;
+			if (this.treeView.Items == null || this.treeView.Items.Count == 0) return;
 			
 			if (expand) {
-				this.treeView.ExpandAll();
+				(this.treeView.Items[0] as TreeNode).ExpandSubtree();
 			}
 			else {
-				this.treeView.CollapseAll();
+				//(this.treeView.Items[0] as TreeNode).Collapse ??
 			}
 			
-			this.treeView.Nodes[0].Expand();
+			(this.treeView.Items[0] as TreeNode).ExpandSubtree();
 		}
 	}
 }

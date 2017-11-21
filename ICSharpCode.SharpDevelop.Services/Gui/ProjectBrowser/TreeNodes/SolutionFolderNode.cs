@@ -21,10 +21,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using ICSharpCode.Core;
-using ICSharpCode.SharpDevelop.Gui;
 
 namespace ICSharpCode.SharpDevelop.Project
 {
+	using ExtTreeNode = ICSharpCode.SharpDevelop.Services.Gui.
+						Components.ExtTreeView.Wpf.ExtTreeNode;
+	using ExtTreeView = ICSharpCode.SharpDevelop.Services.Gui.
+						Components.ExtTreeView.Wpf.ExtTreeView;
+	using TreeNode = ICSharpCode.SharpDevelop.Services.Gui.
+						Components.ExtTreeView.Wpf.TreeNode;
+	
 	public interface ISolutionFolderNode
 	{
 		ISolution Solution {
@@ -90,7 +96,8 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		protected override void Initialize()
 		{
-			Nodes.Clear();
+			//Nodes.Clear();
+			Items.Clear();
 			
 			foreach (var treeObject in folder.Items) {
 				if (treeObject is IProject) {
@@ -198,7 +205,8 @@ namespace ICSharpCode.SharpDevelop.Project
 					ProjectService.SaveSolution();
 				}
 			}
-			folderTreeNode.Expand();
+			//folderTreeNode.Expand();
+			folderTreeNode.ExpandSubtree();
 		}
 
 		internal static void MoveItem(ISolutionItem solutionItem, ISolutionFolder folder)
@@ -263,9 +271,9 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public override void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
 		{
-			if (!isInitialized) {
+			if (!IsInitialized) {
 				Initialize();
-				isInitialized = true;
+				//isInitialized = true;
 			}
 			
 			if (dataObject.GetDataPresent(typeof(SolutionFolderNode))) {
@@ -311,7 +319,8 @@ namespace ICSharpCode.SharpDevelop.Project
 			solution.Save();
 			
 			
-		}
+		}		
+		
 		#endregion
 		public override object AcceptVisitor(ProjectBrowserTreeNodeVisitor visitor, object data)
 		{

@@ -436,6 +436,7 @@
     <Compile Include="Gui\Dialogs\ToolNotFoundDialog.Designer.cs" />
     <Compile Include="Gui\Dialogs\TreeViewOptionsDialog.xaml.cs" />
     <Compile Include="Gui\Dialogs\WordCountDialog.cs" />
+    <Compile Include="Gui\DragDropDataObjects\TreeNodeDragDropDataObject.cs" />
     <Compile Include="Gui\ErrorList\ErrorListPad.cs" />
     <Compile Include="Gui\ErrorList\ErrorListToolbarCommands.cs" />
     <Compile Include="Gui\FormLocationHelper.cs" />
@@ -781,11 +782,13 @@
     <Compile Include="Workbench\Commands\AnotherCommandImplementation.cs" />
     <Compile Include="Workbench\DisplayBinding\AutoDetectDisplayBinding.cs" />
     <Compile Include="Workbench\DisplayBinding\DisplayBindingDescriptor.cs" />
+    <Compile Include="Workbench\DisplayBinding\DisplayBindingDoozer.cs" />
     <Compile Include="Workbench\DisplayBinding\DisplayBindingService.cs" />
     <Compile Include="Workbench\DisplayBinding\ExternalProcessDisplayBinding.cs" />
     <Compile Include="Workbench\DisplayBinding\IDisplayBinding.cs" />
     <Compile Include="Workbench\DisplayBinding\IDisplayBindingService.cs" />
     <Compile Include="Workbench\DisplayBinding\ISecondaryDisplayBinding.cs" />
+    <Compile Include="Workbench\DisplayBinding\ShellExecuteDisplayBinding.cs" />
     <Compile Include="Workbench\FileChangeWatcher.cs" />
     <Compile Include="Workbench\FileServiceOpenedFile.cs" />
     <Compile Include="Workbench\File\FileEventArgs.cs" />
@@ -893,6 +896,7 @@
     <Folder Include="Gui\Dialogs\ReferenceDialog" />
     <Folder Include="Gui\Dialogs\ReferenceDialog\ServiceReference" />
     <Folder Include="Gui\ErrorList" />
+    <Folder Include="Gui\DragDropDataObjects" />
     <Folder Include="Gui\Wpf" />
     <Folder Include="Gui\Pads" />
     <Folder Include="Gui\Tools" />

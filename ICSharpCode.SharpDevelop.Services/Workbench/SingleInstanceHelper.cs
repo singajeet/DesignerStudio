@@ -79,20 +79,20 @@ namespace ICSharpCode.SharpDevelop.Workbench
 			long fileNumber = wParam.ToInt64();
 			long openEvenIfProjectIsOpened = lParam.ToInt64();
 			LoggingService.Info("Receiving custom message...");
-			if (openEvenIfProjectIsOpened == 0 ){//&& ProjectService.OpenSolution != null) {
+			if (openEvenIfProjectIsOpened == 0 && ProjectService.OpenSolution != null) {
 				return new IntPtr(RESULT_PROJECT_IS_OPEN);
 			} else {
 				try {
 					SD.MainThread.InvokeAsyncAndForget(delegate {
-//						var win32Window = PresentationSource.FromVisual(SD.Workbench.MainWindow) as System.Windows.Interop.IWin32Window;
-//						if (win32Window != null) {
-//							NativeMethods.SetForegroundWindow(win32Window.Handle);
-//						}
+						var win32Window = PresentationSource.FromVisual(SD.Workbench.MainWindow) as System.Windows.Interop.IWin32Window;
+						if (win32Window != null) {
+							NativeMethods.SetForegroundWindow(win32Window.Handle);
+						}
 					});
 					string tempFileName = Path.Combine(Path.GetTempPath(), "sd" + fileNumber + ".tmp");
 					foreach (string file in File.ReadAllLines(tempFileName)) {
 						SD.MainThread.InvokeAsyncAndForget(delegate {
-							//SharpDevelop.FileService.OpenFile(file);
+							SharpDevelop.FileService.OpenFile(file);
 						});
 					}
 				} catch (Exception ex) {

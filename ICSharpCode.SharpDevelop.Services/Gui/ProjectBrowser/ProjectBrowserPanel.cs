@@ -17,20 +17,25 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Windows.Forms;
+using System.Windows.Controls;
+//using System.Windows.Forms;
 using ICSharpCode.Core;
 using ICSharpCode.SharpDevelop.Gui;
+using ICSharpCode.Core.Presentation;
 
 namespace ICSharpCode.SharpDevelop.Project
 {
 	/// <summary>
 	/// Description of ProjectBrowserPanel.
 	/// </summary>
-	public class ProjectBrowserPanel : System.Windows.Forms.UserControl
+	public class ProjectBrowserPanel : System.Windows.Controls.UserControl //System.Windows.Forms.UserControl
 	{
-		ToolStrip             toolStrip;
+		//ToolStrip             toolStrip;
+		ToolBar toolStrip;
 		ProjectBrowserControl projectBrowserControl;
-		ToolStripItem[]       standardItems;
+		object[]       standardItems;
+		//ItemCollection standardItems;		
+		StackPanel stackPanel;
 		
 		public AbstractProjectBrowserTreeNode SelectedNode {
 			get {
@@ -53,42 +58,48 @@ namespace ICSharpCode.SharpDevelop.Project
 		public ProjectBrowserPanel()
 		{
 			projectBrowserControl      = new ProjectBrowserControl();
-			projectBrowserControl.Dock = DockStyle.Fill;
-			Controls.Add(projectBrowserControl);
+			//projectBrowserControl.Dock = DockStyle.Fill;
+			//Controls.Add(projectBrowserControl);
+			stackPanel = new StackPanel();
+			stackPanel.Orientation = Orientation.Vertical;
+			stackPanel.Children.Add(projectBrowserControl);
+			this.Content = stackPanel;
 			
 			if (SD.AddInTree.GetTreeNode("/SharpDevelop/Pads/ProjectBrowser/ToolBar/Standard", false) != null) {
-				toolStrip = SD.WinForms.ToolbarService.CreateToolStrip(this, "/SharpDevelop/Pads/ProjectBrowser/ToolBar/Standard");
-				toolStrip.ShowItemToolTips  = true;
-				toolStrip.Dock = DockStyle.Top;
-				toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-				toolStrip.Stretch   = true;
-				standardItems = new ToolStripItem[toolStrip.Items.Count];
+				//toolStrip = SD.WinForms.ToolbarService.CreateToolStrip(this, "/SharpDevelop/Pads/ProjectBrowser/ToolBar/Standard");
+				toolStrip = ToolBarService.CreateToolBar(this, this, "/SharpDevelop/Pads/ProjectBrowser/ToolBar/Standard");
+				//toolStrip.ShowItemToolTips  = true;				
+				//toolStrip.Dock = DockStyle.Top;
+				//toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+				//toolStrip.Stretch   = true;
+				standardItems = new object[toolStrip.Items.Count];
 				toolStrip.Items.CopyTo(standardItems, 0);
-				Controls.Add(toolStrip);
+				//Controls.Add(toolStrip);
+				stackPanel.Children.Add(toolStrip);
 			}
-			projectBrowserControl.TreeView.BeforeSelect += TreeViewBeforeSelect;
+			//projectBrowserControl.TreeView.BeforeSelect += TreeViewBeforeSelect;
 		}
 		
-		void TreeViewBeforeSelect(object sender, TreeViewCancelEventArgs e)
-		{
-			UpdateToolStrip(e.Node as AbstractProjectBrowserTreeNode);
-		}
+//		void TreeViewBeforeSelect(object sender, TreeViewCancelEventArgs e)
+//		{
+//			UpdateToolStrip(e.Node as AbstractProjectBrowserTreeNode);
+//		}
 		
-		void UpdateToolStrip(AbstractProjectBrowserTreeNode node)
-		{
-			if (toolStrip == null) return;
-			toolStrip.Items.Clear();
-			toolStrip.Items.AddRange(standardItems);
-			SD.WinForms.ToolbarService.UpdateToolbar(toolStrip);
-			if (node != null && node.ToolbarAddinTreePath != null) {
-				toolStrip.Items.Add(new ToolStripSeparator());
-				toolStrip.Items.AddRange(SD.WinForms.ToolbarService.CreateToolStripItems(node.ToolbarAddinTreePath, node, false));
-			}
-		}
+//		void UpdateToolStrip(AbstractProjectBrowserTreeNode node)
+//		{
+//			if (toolStrip == null) return;
+//			toolStrip.Items.Clear();
+//			toolStrip.Items.AddRange(standardItems);
+//			SD.WinForms.ToolbarService.UpdateToolbar(toolStrip);
+//			if (node != null && node.ToolbarAddinTreePath != null) {
+//				toolStrip.Items.Add(new ToolStripSeparator());
+//				toolStrip.Items.AddRange(SD.WinForms.ToolbarService.CreateToolStripItems(node.ToolbarAddinTreePath, node, false));
+//			}
+//		}
 		
 		public void ViewSolution(ISolution solution)
 		{
-			UpdateToolStrip(null);
+			//UpdateToolStrip(null);
 			projectBrowserControl.ViewSolution(solution);
 		}
 		
@@ -111,7 +122,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		public void Clear()
 		{
 			projectBrowserControl.Clear();
-			UpdateToolStrip(null);
+			//UpdateToolStrip(null);
 		}
 		
 		public void SelectFile(string fileName)

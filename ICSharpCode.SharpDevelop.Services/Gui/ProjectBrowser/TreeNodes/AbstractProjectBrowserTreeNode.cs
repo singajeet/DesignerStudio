@@ -35,7 +35,9 @@ namespace ICSharpCode.SharpDevelop.Project
 		Link = 16,
 	}
 	
-	public abstract class AbstractProjectBrowserTreeNode : ExtTreeNode, IDisposable
+	public class AbstractProjectBrowserTreeNode : ICSharpCode.SharpDevelop.Services.Gui.
+																Components.ExtTreeView.Wpf.ExtTreeNode, 
+																IDisposable
 	{
 		string                  toolbarAddinTreePath     = null;
 		
@@ -50,6 +52,30 @@ namespace ICSharpCode.SharpDevelop.Project
 			}
 		}
 		
+		public AbstractProjectBrowserTreeNode()
+		{
+			this.TreeNodeDropCompleted += AbstractProjectBrowserTreeNode_TreeNodeDropCompleted;
+		}
+
+		void AbstractProjectBrowserTreeNode_TreeNodeDropCompleted(object sender, ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.TreeNodeDragDropEventArgs e)
+		{
+		
+				if (e.DragData.Data.GetDataPresent(DataFormats.FileDrop)) {
+					string[] files = (string[])e.DragData.Data.GetData(DataFormats.FileDrop);
+					foreach (string file in files) {
+						try {
+							var fileName = FileName.Create(file);
+							if (SD.ProjectService.IsSolutionOrProjectFile(fileName))
+								SD.ProjectService.OpenSolutionOrProject(fileName);
+							else
+								FileService.OpenFile(fileName);
+						} catch (Exception ex) {
+							MessageService.ShowException(ex, "unable to open file " + file);
+						}
+					}
+				}
+			
+		}
 		/// <summary>
 		/// Returns the solution in which this node belongs to. This assumes that
 		/// any node is child of a solution.
@@ -90,16 +116,17 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public override void Expanding()
 		{
-			if (isInitialized) {
+			if (IsInitialized) {
 				return;
 			}
-			isInitialized = true;
+			//isInitialized = true;
 			if (autoClearNodes) {
-				Nodes.Clear();
+				Items.Clear();	//Nodes.Clear();
 			}
 			Initialize();
 			base.UpdateVisibility();
 		}
+				
 		
 		public virtual void ShowProperties()
 		{
@@ -108,7 +135,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public static bool IsSomewhereBelow(string path, ProjectItem item)
 		{
-			return item.Include.StartsWith(path);
+			return item.Include.StartsWith(path, StringComparison.CurrentCulture);
 		}
 		
 		public static LinkedListNode<T> Remove<T>(LinkedList<T> list, LinkedListNode<T> item)
@@ -151,10 +178,10 @@ namespace ICSharpCode.SharpDevelop.Project
 				if (overlay == value) return;
 				overlay = value;
 				if (TreeView != null && IsVisible) {
-					Rectangle r = this.Bounds;
-					r.Width += r.X;
-					r.X = 0;
-					TreeView.Invalidate(r);
+//					Rectangle r = this.Bounds;
+//					r.Width += r.X;
+//					r.X = 0;
+//					TreeView.Invalidate(r);
 				}
 			}
 		}
@@ -163,7 +190,8 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public virtual object AcceptChildren(ProjectBrowserTreeNodeVisitor visitor, object data)
 		{
-			foreach (TreeNode node in Nodes) {
+			foreach (ICSharpCode.SharpDevelop.Services.Gui.
+					Components.ExtTreeView.Wpf.TreeNode node in Items){//Nodes) {
 				if (node is AbstractProjectBrowserTreeNode) {
 					((AbstractProjectBrowserTreeNode)node).AcceptVisitor(visitor, data);
 				}
@@ -199,7 +227,7 @@ namespace ICSharpCode.SharpDevelop.Project
 			//LoggingService.DebugFormatted(@"\- starting at '{0}'", targetNode != null ? targetNode.Text : "null");
 
 			//LoggingService.Debug("-- looking for: "+target);
-			foreach (AbstractProjectBrowserTreeNode node in this.Nodes)
+			foreach (AbstractProjectBrowserTreeNode node in this.Items)//this.Nodes)
 			{
 				if (node == null)
 				{

@@ -68,7 +68,8 @@ namespace ICSharpCode.SharpDevelop.Workbench
 			}
 			
 			if (bestMatch == null)
-				throw new InvalidOperationException();
+				return null;
+				//throw new InvalidOperationException();
 			
 			return bestMatch.Binding.CreateContentForFile(file);
 		}

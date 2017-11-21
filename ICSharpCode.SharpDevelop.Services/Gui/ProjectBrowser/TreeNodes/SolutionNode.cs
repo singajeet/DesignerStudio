@@ -24,6 +24,8 @@ using ICSharpCode.Core;
 
 namespace ICSharpCode.SharpDevelop.Project
 {
+	using TreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.TreeNode;
+	
 	public class SolutionNode : AbstractProjectBrowserTreeNode, ISolutionFolderNode
 	{
 		ISolution solution;
@@ -84,7 +86,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		{
 			string folderName = ResourceService.GetString("ICSharpCode.SharpDevelop.Commands.ProjectBrowser.SolutionItemsNodeText");
 			SolutionFolderNode node = null;
-			foreach (TreeNode n in Nodes) {
+			foreach (TreeNode n in Items){ //Nodes) {
 				node = n as SolutionFolderNode;
 				if (node != null && node.Folder.Name == folderName) {
 					break;

@@ -17,31 +17,46 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-//using System.Windows.Forms;
-using ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf;
+using System.Diagnostics;
+using System.IO;
+
 using ICSharpCode.Core;
 
-namespace ICSharpCode.SharpDevelop.Project
+namespace ICSharpCode.SharpDevelop.Workbench
 {
-	public static class NodeBuilders
+	/// <summary>
+	/// Opens files with the default Windows application for them.
+	/// </summary>
+	sealed class ShellExecuteDisplayBinding : IDisplayBinding
 	{
-		/// <summary>
-		/// This method builds a ProjectBrowserNode Tree out of a given combine.
-		/// </summary>
-		public static TreeNode AddProjectNode(TreeNode motherNode, IProject project)
+		public bool CanCreateContentForFile(FileName fileName)
 		{
-			IProjectNodeBuilder   projectNodeBuilder = null;
-			foreach (IProjectNodeBuilder nodeBuilder in AddInTree.BuildItems<IProjectNodeBuilder>("/SharpDevelop/Views/ProjectBrowser/NodeBuilders", null, true)) {
-				if (nodeBuilder.CanBuildProjectTree(project)) {
-					projectNodeBuilder = nodeBuilder;
-					break;
-				}
+			return true;
+		}
+		
+		public IViewContent CreateContentForFile(OpenedFile file)
+		{
+			if (file.IsDirty) {
+				// TODO: warn user that the file must be saved
 			}
-			if (projectNodeBuilder != null) {
-				return projectNodeBuilder.AddProjectNode(motherNode, project);
+			try {
+				Process.Start(new ProcessStartInfo(file.FileName) {
+				              	WorkingDirectory = Path.GetDirectoryName(file.FileName)
+				              });
+			} catch (Exception ex) {
+				MessageService.ShowError(ex.Message);
 			}
-
-			throw new NotImplementedException("can't create node builder for project type " + project.Language);
+			return null;
+		}
+		
+		public bool IsPreferredBindingForFile(FileName fileName)
+		{
+			return false;
+		}
+		
+		public double AutoDetectFileContent(FileName fileName, Stream fileContent, string detectedMimeType)
+		{
+			return double.NegativeInfinity;
 		}
 	}
 }

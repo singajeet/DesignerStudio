@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using ICSharpCode.Core.Presentation;
 using ICSharpCode.SharpDevelop.Services.Utils;
 
@@ -25,6 +26,47 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		bool isSorted = false;
 		bool allowSort = true;
 		
+		
+		public static readonly RoutedEvent CollapsingEvent =
+        EventManager.RegisterRoutedEvent("Collapsing",
+        RoutingStrategy.Bubble, typeof(RoutedEventHandler),
+        typeof(ExtTreeView));
+
+	    public static readonly RoutedEvent ExpandingEvent =
+	        EventManager.RegisterRoutedEvent("Expanding",
+	        RoutingStrategy.Bubble, typeof(RoutedEventHandler),
+	        typeof(ExtTreeView));
+    
+	    public event RoutedEventHandler Collapsing{
+	    	add { AddHandler(CollapsingEvent, value); }
+	    	remove { RemoveHandler(CollapsingEvent, value); }
+	    }
+		
+	    public event RoutedEventHandler Expanding{
+	    	add { AddHandler(ExpandingEvent, value); }
+	    	remove { RemoveHandler(ExpandingEvent, value); }
+	    }
+	    
+	    public static readonly RoutedEvent CollapsedEvent =
+        EventManager.RegisterRoutedEvent("Collapsed",
+        RoutingStrategy.Bubble, typeof(RoutedEventHandler),
+        typeof(ExtTreeView));
+
+	    public static readonly RoutedEvent ExpandedEvent =
+	        EventManager.RegisterRoutedEvent("Expanded",
+	        RoutingStrategy.Bubble, typeof(RoutedEventHandler),
+	        typeof(ExtTreeView));
+    
+	    public event RoutedEventHandler Collapsed{
+	    	add { AddHandler(CollapsedEvent, value); }
+	    	remove { RemoveHandler(CollapsedEvent, value); }
+	    }
+		
+	    public event RoutedEventHandler Expanded{
+	    	add { AddHandler(ExpandedEvent, value); }
+	    	remove { RemoveHandler(ExpandedEvent, value); }
+	    }
+		
 		 public static readonly RoutedEvent SelectedItemChangingEvent =
 	        EventManager.RegisterRoutedEvent("SelectedItemChanging",
 	        RoutingStrategy.Bubble, typeof(RoutedEventHandler),
@@ -34,6 +76,26 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		 	add { AddHandler(SelectedItemChangingEvent, value); }
 			remove { RemoveHandler(SelectedItemChangingEvent, value); }
 		 }
+		 
+		public virtual void OnExpanding()
+		{
+			RaiseEvent(new RoutedEventArgs(ExpandingEvent, this));
+		}
+		
+		public virtual void OnCollapsing()
+		{
+			RaiseEvent(new RoutedEventArgs(CollapsingEvent, this));
+		}
+		
+		public virtual void OnExpanded()
+		{
+			RaiseEvent(new RoutedEventArgs(ExpandedEvent, this));
+		}
+		
+		public virtual void OnCollapsed()
+		{
+			RaiseEvent(new RoutedEventArgs(CollapsedEvent, this));
+		}
 		 
 		public List<ExtTreeNode> CutNodes {
 			get {
@@ -67,6 +129,9 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 			Style materialDesign = Application.Current.TryFindResource("MaterialDesignTreeView") as Style;
 			if (materialDesign != null)
 				this.Style = materialDesign;
+			
+			this.AllowDrop = true;
+			
 		}
 		
 		protected override void OnItemsChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -88,16 +153,17 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 				ExtTreeNode node = SelectedItem as ExtTreeNode;
 				if(node != null)
 					node.SetEditMode();				
-			}
-			//e.Handled = true;
+			}			
 		}
 		
 		protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
 		{
 			base.OnMouseDoubleClick(e);
 			ExtTreeNode node = e.Source as ExtTreeNode;
-			if (node != null)
+			if (node != null) {
 				node.ActivateItem();
+				node.SetEditMode();
+			}
 		}
 		
 		bool canClearSelection = true;
@@ -121,16 +187,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 			base.OnMouseDown(e);
 			mouseClickNum = e.ClickCount;
 			TreeNode item = e.Source as TreeNode;
-			if (item != null) {
-				if (SelectedItem != item) {
-					//SelectedItem = item;
-					
-				}
-			} else {
-				if (CanClearSelection) {
-				}
-					//SelectedItem = null;
-			}
+			
 		}
 		
 		protected override void OnMouseUp(MouseButtonEventArgs e)
@@ -153,52 +210,6 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 			}
 		}
 		
-		protected override void OnDragEnter(DragEventArgs e)
-		{
-			base.OnDragEnter(e);
-			e.Effects = DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.None;
-		}
-		
-		protected override void OnDragOver(DragEventArgs e)
-		{
-			base.OnDragOver(e);
-			ExtTreeNode node = e.Source as ExtTreeNode;
-			
-			if (node != null) {
-				HandleDragOver(e, node);
-				
-				if (e.Effects != DragDropEffects.None) {
-					//SelectedItem = node;
-				}
-			}
-		}
-
-		void HandleDragOver(DragEventArgs e, ExtTreeNode node)
-		{
-			DragDropEffects effect = DragDropEffects.None;
-			
-			if (e.KeyStates == DragDropKeyStates.ControlKey) {
-				effect = DragDropEffects.Copy;
-			} else {
-				effect = DragDropEffects.Move;
-			}
-		}
-		
-		protected override void OnDrop(DragEventArgs e)
-		{
-			base.OnDrop(e);
-			ExtTreeNode node = e.Source as ExtTreeNode;
-			
-			if (node != null) {
-				HandleDragOver(e, node);
-				
-				if (e.Effects != DragDropEffects.None) {
-					DragDrop.DoDragDrop(node, e.Data, e.Effects);
-					SortParentNodes(node);
-				}
-			}
-		}
-		
 		void DeleteNode(ExtTreeNode node)
 		{
 			if (node == null) {
@@ -208,7 +219,6 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 			if (node.EnableDelete) {
 				node.Visibility = Visibility.Visible;
 				node.IsSelected = true;
-				//SelectedItem = node;
 				node.Delete();
 			}
 		}
@@ -251,6 +261,50 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		{
 			TreeNode parent = ((ExtTreeNode)treeNode).ParentItem;
 			SortNodes((parent == null) ? Items : parent.Items, false);
+		}
+		
+		protected override void OnDragEnter(DragEventArgs e)
+		{
+			base.OnDragEnter(e);
+			if (e.AllowedEffects.HasFlag(DragDropEffects.Move) || e.AllowedEffects.HasFlag(DragDropEffects.Copy)) {
+				
+				string [] formats = e.Data.GetFormats();
+				if (e.Data.GetDataPresent("ICSharpCode.SharpDevelop.Services.Gui.DragDropDataObjects.TreeNodeDragDropDataObject")
+				   || e.Data.GetDataPresent(DataFormats.FileDrop)) {
+					
+					if (e.KeyStates == DragDropKeyStates.ControlKey)
+						e.Effects = DragDropEffects.Copy;
+					else
+						e.Effects = DragDropEffects.Move;
+				} else
+					e.Effects = DragDropEffects.None;
+			} else
+				e.Effects = DragDropEffects.None;
+		}
+		
+		protected override void OnDragOver(DragEventArgs e)
+		{
+			base.OnDragEnter(e);
+			if (e.AllowedEffects.HasFlag(DragDropEffects.Move) || e.AllowedEffects.HasFlag(DragDropEffects.Copy)) {
+				
+				string [] formats = e.Data.GetFormats();
+				if (e.Data.GetDataPresent("ICSharpCode.SharpDevelop.Services.Gui.DragDropDataObjects.TreeNodeDragDropDataObject")
+				   || e.Data.GetDataPresent(DataFormats.FileDrop)) {
+					
+					if (e.KeyStates == DragDropKeyStates.ControlKey)
+						e.Effects = DragDropEffects.Copy;
+					else
+						e.Effects = DragDropEffects.Move;
+				} else
+					e.Effects = DragDropEffects.None;
+			} else
+				e.Effects = DragDropEffects.None;
+		}
+		
+		protected override void OnDrop(DragEventArgs e)
+		{
+			base.OnDrop(e);
+			
 		}
 	}
 	

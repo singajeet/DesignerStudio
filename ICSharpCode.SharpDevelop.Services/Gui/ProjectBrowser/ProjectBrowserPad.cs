@@ -17,7 +17,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 using ICSharpCode.Core;
 using ICSharpCode.SharpDevelop.Gui;
 using ICSharpCode.SharpDevelop.WinForms;
@@ -103,7 +103,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public void StartLabelEdit(ExtTreeNode node)
 		{
-			ProjectBrowserControl.TreeView.StartLabelEdit(node);
+			//ProjectBrowserControl.TreeView.StartLabelEdit(node);
 		}
 		
 		void SolutionPreferencesSaving(object sender, EventArgs e)
@@ -118,21 +118,21 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		void LoadSolution(ISolution solution)
 		{
-			if (!ProjectBrowserControl.TreeView.IsHandleCreated) {
-				LoggingService.Debug("ProjectBrowser: Attempt to load solution " + solution.ToString() + " before handle of ProjectBrowserControl.TreeView created");
-				this.solutionToLoadWhenHandleIsCreated = solution;
-				if (!this.treeViewHandleCreatedAttached) {
-					LoggingService.Debug("-> Attaching event handler to ProjectBrowserControl.TreeView.HandleCreated");
-					this.treeViewHandleCreatedAttached = true;
-					ProjectBrowserControl.TreeView.HandleCreated += this.ProjectBrowserTreeViewHandleCreated;
-				}
-			} else {
+//			if (!ProjectBrowserControl.TreeView.IsHandleCreated) {
+//				LoggingService.Debug("ProjectBrowser: Attempt to load solution " + solution.ToString() + " before handle of ProjectBrowserControl.TreeView created");
+//				this.solutionToLoadWhenHandleIsCreated = solution;
+//				if (!this.treeViewHandleCreatedAttached) {
+//					LoggingService.Debug("-> Attaching event handler to ProjectBrowserControl.TreeView.HandleCreated");
+//					this.treeViewHandleCreatedAttached = true;
+//					ProjectBrowserControl.TreeView.HandleCreated += this.ProjectBrowserTreeViewHandleCreated;
+//				}
+//			} else {
 				LoggingService.Debug("ProjectBrowser: Loading solution " + solution.ToString() + " into project tree view");
 				this.solutionToLoadWhenHandleIsCreated = null;
 				projectBrowserPanel.ViewSolution(solution);
 				projectBrowserPanel.ReadViewState(solution.Preferences);
 				solution.PreferencesSaving += SolutionPreferencesSaving;
-			}
+//			}
 		}
 		
 		bool treeViewHandleCreatedAttached;
@@ -195,35 +195,35 @@ namespace ICSharpCode.SharpDevelop.Project
 		#region ICSharpCode.SharpDevelop.Gui.IClipboardHandler interface implementation
 		public bool EnableCut {
 			get {
-				ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedNode as ExtTreeNode;
+				ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedItem as ExtTreeNode;
 				return node != null ? node.EnableCut : false;
 			}
 		}
 		
 		public bool EnableCopy {
 			get {
-				ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedNode as ExtTreeNode;
+				ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedItem as ExtTreeNode;
 				return node != null ? node.EnableCopy : false;
 			}
 		}
 		
 		public bool EnablePaste {
 			get {
-				ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedNode as ExtTreeNode;
+				ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedItem as ExtTreeNode;
 				return node != null ? node.EnablePaste : false;
 			}
 		}
 		
 		public bool EnableDelete {
 			get {
-				ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedNode as ExtTreeNode;
+				ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedItem as ExtTreeNode;
 				return node != null ? node.EnableDelete : false;
 			}
 		}
 		
 		public bool EnableSelectAll {
 			get {
-				ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedNode as ExtTreeNode;
+				ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedItem as ExtTreeNode;
 				return node != null ? node.EnableSelectAll : false;
 			}
 		}
@@ -231,7 +231,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		public void Cut()
 		{
 			ProjectBrowserControl.TreeView.ClearCutNodes();
-			ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedNode as ExtTreeNode;
+			ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedItem as ExtTreeNode;
 			if (node != null) {
 				node.Cut();
 			}
@@ -240,7 +240,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		public void Copy()
 		{
 			ProjectBrowserControl.TreeView.ClearCutNodes();
-			ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedNode as ExtTreeNode;
+			ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedItem as ExtTreeNode;
 			if (node != null) {
 				node.Copy();
 			}
@@ -248,7 +248,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public void Paste()
 		{
-			ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedNode as ExtTreeNode;
+			ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedItem as ExtTreeNode;
 			if (node != null) {
 				node.Paste();
 			}
@@ -257,7 +257,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public void Delete()
 		{
-			ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedNode as ExtTreeNode;
+			ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedItem as ExtTreeNode;
 			if (node != null) {
 				node.Delete();
 			}
@@ -266,7 +266,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public void SelectAll()
 		{
-			ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedNode as ExtTreeNode;
+			ExtTreeNode node = ProjectBrowserControl.TreeView.SelectedItem as ExtTreeNode;
 			if (node != null) {
 				node.SelectAll();
 			}
