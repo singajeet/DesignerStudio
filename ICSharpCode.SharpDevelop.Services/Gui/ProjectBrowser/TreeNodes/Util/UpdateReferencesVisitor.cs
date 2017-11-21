@@ -34,7 +34,7 @@ namespace ICSharpCode.SharpDevelop.Project
 			if (referenceFolder.Project == e.Project) {
 				referenceFolder.ShowReferences();
 				referenceFolder.EnsureVisible();
-				referenceFolder.Expand();
+				referenceFolder.ExpandSubtree();
 			}
 			return data;
 		}

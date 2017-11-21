@@ -18,12 +18,14 @@
 
 using System;
 using System.IO;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 
 using ICSharpCode.Core;
 
 namespace ICSharpCode.SharpDevelop.Project
 {
+	using TreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.TreeNode;
+	
 	public class DefaultDotNetNodeBuilder : IProjectNodeBuilder
 	{
 		public bool CanBuildProjectTree(IProject project)

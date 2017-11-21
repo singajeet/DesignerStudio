@@ -46,7 +46,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public void ShowReferences()
 		{
-			Nodes.Clear();
+			Items.Clear();
 			
 			foreach (ProjectItem item in project.Items) {
 				if (item is ReferenceProjectItem) {

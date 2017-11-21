@@ -20,13 +20,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows;
+//using System.Windows.Forms;
 
 using ICSharpCode.Core;
 using ICSharpCode.SharpDevelop.Gui;
 
 namespace ICSharpCode.SharpDevelop.Project
 {
+	using ExtTreeView = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeView;
+	using ExtTreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeNode;
+	using TreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.TreeNode;
+	
 	public class FileNode : AbstractProjectBrowserTreeNode, IOwnerState
 	{
 		string         fileName       = String.Empty;
@@ -165,7 +170,7 @@ namespace ICSharpCode.SharpDevelop.Project
 					
 					string oldPrefix = Path.GetFileNameWithoutExtension(oldFileName) + ".";
 					string newPrefix = Path.GetFileNameWithoutExtension(newFileName) + ".";
-					foreach (TreeNode node in Nodes) {
+					foreach (TreeNode node in Items) {
 						FileNode fileNode = node as FileNode;
 						if (fileNode != null) {
 							FileProjectItem fileItem = fileNode.ProjectItem as FileProjectItem;
@@ -191,13 +196,15 @@ namespace ICSharpCode.SharpDevelop.Project
 		}
 		
 		#region Drag & Drop
-		public override DataObject DragDropDataObject {
+		//public override DataObject DragDropDataObject {
+		public virtual DataObject DragDropDataObject {
 			get {
 				return new DataObject(this);
 			}
 		}
 		
-		public override DragDropEffects GetDragDropEffect(IDataObject dataObject, DragDropEffects proposedEffect)
+		//public override DragDropEffects GetDragDropEffect(IDataObject dataObject, DragDropEffects proposedEffect)
+		public virtual DragDropEffects GetDragDropEffect(IDataObject dataObject, DragDropEffects proposedEffect)
 		{
 			if (dataObject.GetDataPresent(typeof(FileNode))) {
 				// Dragging a file onto another creates a dependency.
@@ -213,10 +220,11 @@ namespace ICSharpCode.SharpDevelop.Project
 					return proposedEffect;
 				}
 			}
-			return ((ExtTreeNode)Parent).GetDragDropEffect(dataObject, proposedEffect);
+			return DragDropEffects.All; //((ExtTreeNode)Parent).GetDragDropEffect(dataObject, proposedEffect);
 		}
 		
-		public override void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
+		//public override void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
+		public virtual void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
 		{
 			if (dataObject.GetDataPresent(typeof(FileNode))) {
 				
@@ -260,7 +268,8 @@ namespace ICSharpCode.SharpDevelop.Project
 				
 			}
 			
-			((ExtTreeNode)Parent).DoDragDrop(dataObject, effect);
+			//((ExtTreeNode)Parent).DoDragDrop(dataObject, effect);
+			DragDrop.DoDragDrop(this, dataObject, effect);
 		}
 		#endregion
 		
@@ -273,7 +282,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public override void Delete()
 		{
-			if (Nodes.Count > 0) {
+			if (Items.Count > 0) {
 				if (MessageService.AskQuestion(GetQuestionText("${res:ProjectComponent.ContextMenu.DeleteWithDependentFiles.Question}"))) {
 					DeleteChildNodes();
 					FileService.RemoveFile(FileName, false);
@@ -296,9 +305,9 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public override bool EnableCopy {
 			get {
-				if (base.IsEditing) {
-					return false;
-				}
+//				if (base.IsEditing) {
+//					return false;
+//				}
 				return true;
 			}
 		}
@@ -310,9 +319,9 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public override bool EnableCut {
 			get {
-				if (IsEditing) {
-					return false;
-				}
+//				if (IsEditing) {
+//					return false;
+//				}
 				return true;
 			}
 		}
@@ -326,9 +335,9 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public override bool EnablePaste {
 			get {
-				if (IsEditing) {
-					return false;
-				}
+//				if (IsEditing) {
+//					return false;
+//				}
 				return ((ExtTreeNode)Parent).EnablePaste;
 			}
 		}
@@ -343,7 +352,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		/// </summary>
 		void DeleteChildNodes()
 		{
-			foreach (FileNode fileNode in Nodes.OfType<FileNode>().ToList()) {
+			foreach (FileNode fileNode in Items.OfType<FileNode>().ToList()) {
 				fileNode.DeleteChildNodes(); // delete recursively
 				FileService.RemoveFile(fileNode.FileName, false);
 			}
@@ -354,7 +363,7 @@ namespace ICSharpCode.SharpDevelop.Project
 			if (relativePath == Text)
 				return this;
 
-			foreach (AbstractProjectBrowserTreeNode node in Nodes)
+			foreach (AbstractProjectBrowserTreeNode node in Items)
 			{
 				AbstractProjectBrowserTreeNode returnedNode = node.GetNodeByRelativePath(relativePath);
 				if (returnedNode != null)

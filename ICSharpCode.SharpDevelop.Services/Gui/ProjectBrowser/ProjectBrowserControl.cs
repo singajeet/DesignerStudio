@@ -451,20 +451,26 @@ namespace ICSharpCode.SharpDevelop.Project
 			TreeViewBeforeSelect(null, new System.Windows.RoutedEventArgs());
 		}
 		
-		void TreeViewAfterExpand(object sender, TreeViewEventArgs e)
+		void TreeViewAfterExpand(object sender, System.Windows.RoutedEventArgs e)
+		{
+			//TreeViewEventArgs treeArg = new TreeViewEventArgs(e.Source as TreeNode);
+			TreeViewAfterExpand_old(sender, null);
+		}
+		
+		void TreeViewAfterExpand_old(object sender, TreeViewEventArgs e)
 		{
 			// attempt to restore the last selection if its path has been reexpanded
 			if (lastSelectionTarget != null) {
 				TreeNode node = FindDeepestOpenNodeForPath(lastSelectionTarget);
-				while (node != null) {
-					if (node.Parent == e.Node) {
-						//treeView.SelectedNode = node;
-						node.IsSelected = true;
-						break;
-					} else {
-						node = (TreeNode)node.Parent;
-					}
-				}
+//				while (node != null) {
+//					if (node.Parent == e.Node) {
+//						//treeView.SelectedNode = node;
+//						node.IsSelected = true;
+//						break;
+//					} else {
+//						node = (TreeNode)node.Parent;
+//					}
+//				}
 			}
 		}
 		
@@ -524,19 +530,27 @@ namespace ICSharpCode.SharpDevelop.Project
 			this.treeView.Name = "treeView";
 //			this.treeView.SelectedImageIndex = -1;
 //			this.treeView.Size = new System.Drawing.Size(292, 266);
-			Width = 292;
-			Height = 266;
+//			this.treeView.Width = 292;
+//			this.treeView.Height = 266;
 			this.treeView.TabIndex = 0;
 			
 			// 
 			// ProjectBrowserControl
 			// 
 			//this.Controls.Add(this.treeView);
-			this.Content = this.treeView;
+			StackPanel stackPanel = new StackPanel();
+			Border border = new Border();
+			border.BorderThickness = new System.Windows.Thickness(1);
+			border.BorderBrush = System.Windows.Media.Brushes.DarkGray;
+			border.Background = System.Windows.Media.Brushes.Transparent;
+			border.CornerRadius = new System.Windows.CornerRadius(2);
+			border.Child = stackPanel;
+			stackPanel.Children.Add(treeView);
+			this.Content = border;
 			this.Name = "ProjectBrowserControl";
 			//this.Size = new System.Drawing.Size(292, 266);
-			Width = 292;
-			Height = 266;
+//			Width = 292;
+//			Height = 266;
 			//this.ResumeLayout(false);
 		}
 		#endregion

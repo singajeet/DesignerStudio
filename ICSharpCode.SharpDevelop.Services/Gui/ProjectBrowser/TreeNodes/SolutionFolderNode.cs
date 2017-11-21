@@ -234,13 +234,15 @@ namespace ICSharpCode.SharpDevelop.Project
 		#endregion
 		
 		#region Drag & Drop
-		public override DataObject DragDropDataObject {
+		//public override DataObject DragDropDataObject {
+		public virtual DataObject DragDropDataObject {
 			get {
 				return new DataObject(this);
 			}
 		}
 		
-		public override DragDropEffects GetDragDropEffect(IDataObject dataObject, DragDropEffects proposedEffect)
+		//public override DragDropEffects GetDragDropEffect(IDataObject dataObject, DragDropEffects proposedEffect)
+		public virtual DragDropEffects GetDragDropEffect(IDataObject dataObject, DragDropEffects proposedEffect)
 		{
 			if (dataObject.GetDataPresent(typeof(SolutionFolderNode))) {
 				SolutionFolderNode folderNode = (SolutionFolderNode)dataObject.GetData(typeof(SolutionFolderNode));
@@ -269,7 +271,8 @@ namespace ICSharpCode.SharpDevelop.Project
 			return DragDropEffects.None;
 		}
 		
-		public override void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
+		//public override void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
+		public virtual void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
 		{
 			if (!IsInitialized) {
 				Initialize();

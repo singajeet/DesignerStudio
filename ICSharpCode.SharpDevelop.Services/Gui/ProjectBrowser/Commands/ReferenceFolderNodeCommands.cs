@@ -33,6 +33,10 @@ using ICSharpCode.SharpDevelop.Parser;
 
 namespace ICSharpCode.SharpDevelop.Project.Commands
 {
+	using TreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.TreeNode;
+	using ExtTreeView = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeView;
+	using ExtTreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeNode;
+	
 	public class AddReferenceToProject : AbstractMenuCommand
 	{
 		public override void Run()
@@ -190,14 +194,14 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 			
 			if (webReferencesNode != null) {
 				ProjectBrowserPad.Instance.ProjectBrowserControl.TreeView.Sort();
-				webReferencesNode.Expand();
+				webReferencesNode.ExpandSubtree();
 				webReferencesNode.EnsureVisible();
 			}
 		}
 		
 		TreeNode GetWebReferencesFolderNode(ProjectNode projectNode)
 		{
-			foreach (TreeNode node in projectNode.Nodes) {
+			foreach (TreeNode node in projectNode.Items) {
 				WebReferencesFolderNode webReferencesNode = node as WebReferencesFolderNode;
 				if (webReferencesNode != null) {
 					return webReferencesNode;

@@ -104,27 +104,30 @@ namespace ICSharpCode.SharpDevelop.Project
 			bool newIsStartupProject = (this.project == project.ParentSolution.StartupProject);
 			if (newIsStartupProject != isStartupProject) {
 				isStartupProject = newIsStartupProject;
-				drawDefault = !isStartupProject;
+				//drawDefault = !isStartupProject;
 				if (this.TreeView != null) {
-					this.TreeView.Invalidate(this.Bounds);
+					//this.TreeView.Invalidate(this.Bounds);
 				}
 			}
 		}
 		
-		protected override int MeasureItemWidth(DrawTreeNodeEventArgs e)
+		//protected override int MeasureItemWidth(DrawTreeNodeEventArgs e)
+		protected virtual int MeasureItemWidth(DrawTreeNodeEventArgs e)
 		{
-			if (isStartupProject) {
-				return MeasureTextWidth(e.Graphics, this.Text, BoldDefaultFont);
-			} else {
-				return base.MeasureItemWidth(e);
-			}
+//			if (isStartupProject) {
+//				return MeasureTextWidth(e.Graphics, this.Text, BoldDefaultFont);
+//			} else {
+//				return base.MeasureItemWidth(e);
+//			}
+			return 0;
 		}
 		
-		protected override void DrawForeground(DrawTreeNodeEventArgs e)
+		//protected override void DrawForeground(DrawTreeNodeEventArgs e)
+		protected virtual void DrawForeground(DrawTreeNodeEventArgs e)
 		{
-			if (isStartupProject) {
-				DrawText(e, this.Text, SystemBrushes.WindowText, BoldDefaultFont);
-			}
+//			if (isStartupProject) {
+//				DrawText(e, this.Text, SystemBrushes.WindowText, BoldDefaultFont);
+//			}
 		}
 		
 		public override void ActivateItem()
@@ -176,9 +179,9 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public override bool EnableCut {
 			get {
-				if (IsEditing) {
-					return false;
-				}
+//				if (IsEditing) {
+//					return false;
+//				}
 				return true;
 			}
 		}
@@ -258,7 +261,7 @@ namespace ICSharpCode.SharpDevelop.Project
 
 		public override AbstractProjectBrowserTreeNode GetNodeByRelativePath(string relativePath)
 		{
-			foreach (AbstractProjectBrowserTreeNode node in Nodes)
+			foreach (AbstractProjectBrowserTreeNode node in Items)
 			{
 				if (node != null) {
 					AbstractProjectBrowserTreeNode returnedNode = node.GetNodeByRelativePath(relativePath);

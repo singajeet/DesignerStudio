@@ -26,6 +26,10 @@ using ICSharpCode.SharpDevelop.Project.Commands;
 
 namespace ICSharpCode.SharpDevelop.Project
 {
+	using TreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.TreeNode;
+	using ExtTreeView = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeView;
+	using ExtTreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeNode;
+	
 	/// <summary>
 	/// Static factory methods for creating Directory nodes.
 	/// </summary>

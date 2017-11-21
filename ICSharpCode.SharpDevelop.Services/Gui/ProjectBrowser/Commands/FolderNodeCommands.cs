@@ -20,13 +20,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 using ICSharpCode.Core;
 using ICSharpCode.SharpDevelop.Gui;
 using ICSharpCode.SharpDevelop.Templates;
 
 namespace ICSharpCode.SharpDevelop.Project.Commands
 {
+	using TreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.TreeNode;
+	using ExtTreeView = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeView;
+	using ExtTreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeNode;
+	
 	public class AddExistingItemsToProject : AbstractMenuCommand
 	{
 		public enum ReplaceExistingFile {
@@ -117,9 +121,9 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 				if (includeInProject) {
 					IncludeFileInProject.IncludeDirectoryNode(newNode, false);
 				}
-				newNode.Expanding();
+				newNode.ExpandSubtree();
 			} else if (includeInProject) {
-				foreach (TreeNode childNode in node.Nodes) {
+				foreach (TreeNode childNode in node.Items) {
 					if (childNode is DirectoryNode) {
 						DirectoryNode directoryNode = (DirectoryNode)childNode;
 						if (FileUtility.IsEqualFileName(directoryNode.Directory, copiedFileName)) {
@@ -183,29 +187,39 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 			if (node == null) {
 				return null;
 			}
-			node.Expanding();
-			node.Expand();
+			//node.Expanding();
+			node.ExpandSubtree();
 			
 			List<FileProjectItem> addedItems = new List<FileProjectItem>();
 			
-			using (OpenFileDialog fdiag  = new OpenFileDialog()) {
-				fdiag.AddExtension = true;
-				var fileFilters    = ProjectService.GetFileFilters();
+			//using (OpenFileDialog fdiag  = new OpenFileDialog()) {
+				string[] files = null;
+				Caliburn.Micro.Execute.OnUIThread(delegate {
+					
+					Microsoft.Win32.OpenFileDialog fileDialog = new Microsoft.Win32.OpenFileDialog{ 
+						Title = StringParser.Parse("${res:ProjectComponent.ContextMenu.AddExistingFiles}"),
+						CheckFileExists = true,
+						RestoreDirectory = true,
+						InitialDirectory = node.Directory,
+						AddExtension = true,
+						FilterIndex = GetFileFilterIndex(node.Project, ProjectService.GetFileFilters()),
+						Filter = String.Join("|", ProjectService.GetFileFilters()),
+						Multiselect = true
+					};
+					
+				if (fileDialog.ShowDialog() == true) {
+					files = fileDialog.FileNames;
+					}
+				});
 				
-				fdiag.InitialDirectory = node.Directory;
-				fdiag.FilterIndex     = GetFileFilterIndex(node.Project, fileFilters);
-				fdiag.Filter          = String.Join("|", fileFilters);
-				fdiag.Multiselect     = true;
-				fdiag.CheckFileExists = true;
-				fdiag.Title = StringParser.Parse("${res:ProjectComponent.ContextMenu.AddExistingFiles}");
-				
-				if (fdiag.ShowDialog(SD.WinForms.MainWin32Window) == DialogResult.OK) {
-					List<KeyValuePair<string, string>> fileNames = new List<KeyValuePair<string, string>>(fdiag.FileNames.Length);
-					foreach (string fileName in fdiag.FileNames) {
+				//if (fdiag.ShowDialog(SD.WinForms.MainWin32Window) == DialogResult.OK)
+				{
+					List<KeyValuePair<string, string>> fileNames = new List<KeyValuePair<string, string>>(files.Length);
+					foreach (string fileName in files) {
 						fileNames.Add(new KeyValuePair<string, string>(fileName, ""));
 					}
 					bool addedDependentFiles = false;
-					foreach (string fileName in fdiag.FileNames) {
+					foreach (string fileName in files) {
 						foreach (string additionalFile in FindAdditionalFiles(fileName)) {
 							if (!fileNames.Exists(delegate(KeyValuePair<string, string> pair) {
 							                      	return FileUtility.IsEqualFileName(pair.Key, additionalFile);
@@ -222,7 +236,8 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 					string copiedFileName = Path.Combine(node.Directory, Path.GetFileName(fileNames[0].Key));
 					if (!FileUtility.IsEqualFileName(fileNames[0].Key, copiedFileName)) {
 						int res = MessageService.ShowCustomDialog(
-							fdiag.Title, "${res:ProjectComponent.ContextMenu.AddExistingFiles.Question}",
+							StringParser.Parse("${res:ProjectComponent.ContextMenu.AddExistingFiles}"), 
+							"${res:ProjectComponent.ContextMenu.AddExistingFiles.Question}",
 							0, 2,
 							"${res:ProjectComponent.ContextMenu.AddExistingFiles.Copy}",
 							"${res:ProjectComponent.ContextMenu.AddExistingFiles.Link}",
@@ -256,7 +271,9 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 					foreach (KeyValuePair<string, string> pair in fileNames) {
 						copiedFileName = Path.Combine(node.Directory, Path.GetFileName(pair.Key));
 						if (!replaceAll && File.Exists(copiedFileName) && !FileUtility.IsEqualFileName(pair.Key, copiedFileName)) {
-							ReplaceExistingFile res = ShowReplaceExistingFileDialog(fdiag.Title, Path.GetFileName(pair.Key), true);
+							ReplaceExistingFile res = ShowReplaceExistingFileDialog(
+														StringParser.Parse("${res:ProjectComponent.ContextMenu.AddExistingFiles}"),
+							                               Path.GetFileName(pair.Key), true);
 							if (res == ReplaceExistingFile.YesToAll) {
 								replaceAll = true;
 							} else if (res == ReplaceExistingFile.No) {
@@ -275,7 +292,7 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 					if (addedDependentFiles)
 						node.RecreateSubNodes();
 				}
-			}
+			//}
 			
 			return addedItems.AsReadOnly();
 		}
@@ -290,14 +307,27 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 			if (node == null) {
 				return;
 			}
-			node.Expanding();
-			node.Expand();
+			//node.Expanding();
+			node.ExpandSubtree();
 			
-			using (FolderBrowserDialog dlg = new FolderBrowserDialog()) {
-				dlg.SelectedPath = node.Directory;
-				dlg.ShowNewFolderButton = false;
-				if (dlg.ShowDialog(SD.WinForms.MainWin32Window) == DialogResult.OK) {
-					string folderName = dlg.SelectedPath;
+			//using (FolderBrowserDialog dlg = new FolderBrowserDialog()) 
+			{
+				//dlg.SelectedPath = node.Directory;
+				//dlg.ShowNewFolderButton = false;
+				//if (dlg.ShowDialog(SD.WinForms.MainWin32Window) == DialogResult.OK)
+				string selectedPath = null;				
+				{
+					Caliburn.Micro.Execute.OnUIThread(delegate {
+						System.Windows.Forms.FolderBrowserDialog fldrDialog = new System.Windows.Forms.FolderBrowserDialog{ 
+					    	SelectedPath = node.Directory,
+							ShowNewFolderButton = false					    	
+					    };
+					                                  	
+						selectedPath = ((fldrDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) ? fldrDialog.SelectedPath : null);
+					});
+					
+					string folderName = selectedPath;
+					 //dlg.SelectedPath;
 					string copiedFolderName = Path.Combine(node.Directory, Path.GetFileName(folderName));
 					if (!FileUtility.IsEqualFileName(folderName, copiedFolderName)) {
 						if (FileUtility.IsBaseDirectory(folderName, node.Directory)) {
@@ -326,7 +356,7 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 						DirectoryNode newNode = node.AllNodes.OfType<DirectoryNode>()
 							.FirstOrDefault(dir=>FileUtility.IsEqualFileName(copiedFolderName, dir.Directory));
 						if (newNode != null) {
-							newNode.Expanding();
+							newNode.ExpandSubtree();
 							IncludeFileInProject.IncludeDirectoryNode(newNode, true);
 						}
 					} finally {
@@ -359,8 +389,8 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 			if (node == null) {
 				return null;
 			}
-			node.Expand();
-			node.Expanding();
+			node.ExpandSubtree();
+			//node.Expanding();
 			
 			FileTemplateResult result = SD.UIService.ShowNewFileDialog(node.Project, node.Directory);
 			if (result != null) {
@@ -391,7 +421,7 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 		
 		DirectoryNode CreateNewDirectory(DirectoryNode upper, string directoryName)
 		{
-			upper.Expanding();
+			upper.ExpandSubtree();
 			Directory.CreateDirectory(directoryName);
 			FileService.FireFileCreated(directoryName, true);
 			
@@ -410,10 +440,10 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 			if (node == null) {
 				return;
 			}
-			node.Expanding();
+			node.ExpandSubtree();
 			string newDirectoryName = GenerateValidDirectoryName(node.Directory);
 			DirectoryNode newDirectoryNode = CreateNewDirectory(node, newDirectoryName);
-			ProjectBrowserPad.Instance.StartLabelEdit(newDirectoryNode);
+			//ProjectBrowserPad.Instance.StartLabelEdit(newDirectoryNode);
 		}
 	}
 	

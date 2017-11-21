@@ -25,13 +25,17 @@ using ICSharpCode.SharpDevelop.Project.Dialogs;
 
 namespace ICSharpCode.SharpDevelop.Project.Commands
 {
+	using TreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.TreeNode;
+	using ExtTreeView = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeView;
+	using ExtTreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeNode;
+	
 	public class AddNewProjectToSolution : AbstractMenuCommand
 	{
 		public override void Run()
 		{
 			TreeNode node = ProjectBrowserPad.Instance.ProjectBrowserControl.SelectedNode;
 			while (node != null && !(node is ISolutionFolderNode))
-				node = node.Parent;
+				node = node.Parent as TreeNode;
 			ISolutionFolderNode solutionFolderNode = node as ISolutionFolderNode;
 			if (solutionFolderNode != null) {
 				SD.UIService.ShowNewProjectDialog(solutionFolderNode.Folder);
@@ -130,7 +134,7 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 				
 				SolutionFolderNode newSolutionFolderNode = new SolutionFolderNode(newSolutionFolder);
 				newSolutionFolderNode.InsertSorted(node);
-				ProjectBrowserPad.Instance.StartLabelEdit(newSolutionFolderNode);
+				//ProjectBrowserPad.Instance.StartLabelEdit(newSolutionFolderNode);
 			}
 		}
 	}
@@ -142,14 +146,14 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 			AbstractProjectBrowserTreeNode node = ProjectBrowserPad.Instance.ProjectBrowserControl.SelectedNode;
 			if (node is SolutionNode) {
 				// Solution node does not collapse fully, but its subitems stay visible
-				foreach (var subNode in node.Nodes) {
+				foreach (var subNode in node.Items) {
 					var subBrowserNode = subNode as AbstractProjectBrowserTreeNode;
 					if (subBrowserNode != null) {
-						subBrowserNode.Collapse();
+						//subBrowserNode.Collapse();
 					}
 				}
 			} else {
-				node.Collapse();
+				//node.Collapse();
 			}
 		}
 	}

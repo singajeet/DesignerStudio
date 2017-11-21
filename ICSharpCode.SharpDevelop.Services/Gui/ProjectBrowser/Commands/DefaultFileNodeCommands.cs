@@ -21,13 +21,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 
 using ICSharpCode.Core;
 using ICSharpCode.SharpDevelop.Gui;
 
 namespace ICSharpCode.SharpDevelop.Project.Commands
 {
+	using TreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.TreeNode;
+	using ExtTreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeNode;
+	using ExtTreeView = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeView;
+	
 	public class RenameEntryEvent : AbstractMenuCommand
 	{
 		public override void Run()
@@ -37,9 +41,9 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 				return;
 			}
 			
-			ProjectBrowserPad.Instance.ProjectBrowserControl.Select();
+			//ProjectBrowserPad.Instance.ProjectBrowserControl.Select();
 			ProjectBrowserPad.Instance.ProjectBrowserControl.Focus();
-			ProjectBrowserPad.Instance.StartLabelEdit(node);
+			//ProjectBrowserPad.Instance.StartLabelEdit(node);
 		}
 	}
 	
@@ -206,7 +210,7 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 		public static void ExcludeFileNode(FileNode fileNode)
 		{
 			List<FileNode> dependentNodes = new List<FileNode>();
-			foreach (TreeNode subNode in fileNode.Nodes) {
+			foreach (TreeNode subNode in fileNode.Items) {
 				// exclude dependent files
 				if (subNode is FileNode)
 					dependentNodes.Add((FileNode)subNode);
@@ -250,7 +254,7 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 			if (node is FileNode) {
 				ExcludeFileNode((FileNode)node);
 			} else if (node is DirectoryNode) {
-				node.Expanding();
+				node.ExpandSubtree();
 				Stack<TreeNode> nodeStack = new Stack<TreeNode>();
 				nodeStack.Push(node);
 				while (nodeStack.Count > 0) {
@@ -262,9 +266,9 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 						ExcludeDirectoryNode((DirectoryNode)cur);
 					}
 					
-					foreach (TreeNode childNode in cur.Nodes) {
+					foreach (TreeNode childNode in cur.Items) {
 						if (childNode is ExtTreeNode) {
-							((ExtTreeNode)childNode).Expanding();
+							((ExtTreeNode)childNode).ExpandSubtree();
 						}
 						nodeStack.Push(childNode);
 					}
@@ -325,9 +329,9 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 			directoryNode.FileNodeStatus = FileNodeStatus.InProject;
 			
 			if (includeSubNodes) {
-				foreach (TreeNode childNode in directoryNode.Nodes) {
+				foreach (TreeNode childNode in directoryNode.Items) {
 					if (childNode is ExtTreeNode) {
-						((ExtTreeNode)childNode).Expanding();
+						((ExtTreeNode)childNode).ExpandSubtree();
 					}
 					if (childNode is FileNode) {
 						IncludeFileNode((FileNode)childNode);
@@ -345,7 +349,7 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 			if (node == null) {
 				return;
 			}
-			node.Expanding();
+			node.ExpandSubtree();
 			
 			if (node is FileNode) {
 				IncludeFileNode((FileNode)node);
@@ -408,7 +412,8 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 			
 			FileNode primaryAddedNode = dict.Keys.First();
 			primaryAddedNode.EnsureVisible();
-			primaryAddedNode.TreeView.SelectedNode = primaryAddedNode;
+			//primaryAddedNode.TreeView.SelectedItem = primaryAddedNode;
+			primaryAddedNode.IsSelected = true;
 		}
 	}
 	

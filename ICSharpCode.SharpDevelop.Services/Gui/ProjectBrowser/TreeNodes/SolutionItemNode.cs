@@ -18,12 +18,16 @@
 
 using System;
 using System.IO;
-using System.Windows.Forms;
+using System.Windows;
+//using System.Windows.Forms;
 using ICSharpCode.Core;
 using ICSharpCode.SharpDevelop.Gui;
 
 namespace ICSharpCode.SharpDevelop.Project
 {
+	using TreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.TreeNode;
+	using ExtTreeView = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeView;
+	using ExtTreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeNode;
 	public class SolutionItemNode : CustomFolderNode
 	{
 		ISolution     solution;
@@ -61,20 +65,24 @@ namespace ICSharpCode.SharpDevelop.Project
 		}
 		
 		#region Drag & Drop
-		public override DataObject DragDropDataObject {
+		//public override DataObject DragDropDataObject {
+		public virtual DataObject DragDropDataObject {
 			get {
 				return new DataObject(this);
 			}
 		}
 		
-		public override DragDropEffects GetDragDropEffect(IDataObject dataObject, DragDropEffects proposedEffect)
+		//public override DragDropEffects GetDragDropEffect(IDataObject dataObject, DragDropEffects proposedEffect)
+		public virtual DragDropEffects GetDragDropEffect(IDataObject dataObject, DragDropEffects proposedEffect)
 		{
-			return ((ExtTreeNode)Parent).GetDragDropEffect(dataObject, proposedEffect);
+			return DragDropEffects.All; //((ExtTreeNode)Parent).GetDragDropEffect(dataObject, proposedEffect);
 		}
 		
-		public override void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
+		//public override void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
+		public virtual void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
 		{
-			((ExtTreeNode)Parent).DoDragDrop(dataObject, effect);
+			//((ExtTreeNode)Parent).DoDragDrop(dataObject, effect);
+			DragDrop.DoDragDrop(this, dataObject, effect);
 		}
 		#endregion
 		

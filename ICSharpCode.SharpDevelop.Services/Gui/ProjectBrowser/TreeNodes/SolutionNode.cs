@@ -104,7 +104,8 @@ namespace ICSharpCode.SharpDevelop.Project
 		}
 		
 		#region Drag & Drop
-		public override DragDropEffects GetDragDropEffect(IDataObject dataObject, DragDropEffects proposedEffect)
+		//public override DragDropEffects GetDragDropEffect(IDataObject dataObject, DragDropEffects proposedEffect)
+		public virtual DragDropEffects GetDragDropEffect(IDataObject dataObject, DragDropEffects proposedEffect)
 		{
 			if (dataObject.GetDataPresent(typeof(SolutionFolderNode))) {
 				SolutionFolderNode folderNode = (SolutionFolderNode)dataObject.GetData(typeof(SolutionFolderNode));
@@ -125,7 +126,8 @@ namespace ICSharpCode.SharpDevelop.Project
 			
 		}
 		
-		public override void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
+		//public override void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
+		public virtual void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
 		{
 			AbstractProjectBrowserTreeNode parentNode = null;
 			

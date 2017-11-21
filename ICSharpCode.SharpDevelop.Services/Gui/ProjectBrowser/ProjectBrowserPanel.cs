@@ -17,7 +17,9 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Windows;
 using System.Windows.Controls;
+using ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf;
 //using System.Windows.Forms;
 using ICSharpCode.Core;
 using ICSharpCode.SharpDevelop.Gui;
@@ -35,7 +37,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		ProjectBrowserControl projectBrowserControl;
 		object[]       standardItems;
 		//ItemCollection standardItems;		
-		StackPanel stackPanel;
+		DockPanel dockPanel;
 		
 		public AbstractProjectBrowserTreeNode SelectedNode {
 			get {
@@ -58,44 +60,59 @@ namespace ICSharpCode.SharpDevelop.Project
 		public ProjectBrowserPanel()
 		{
 			projectBrowserControl      = new ProjectBrowserControl();
-			//projectBrowserControl.Dock = DockStyle.Fill;
+			projectBrowserControl.VerticalAlignment = VerticalAlignment.Stretch;
+			projectBrowserControl.HorizontalAlignment = HorizontalAlignment.Stretch;
+			
+			DockPanel.SetDock(projectBrowserControl, Dock.Bottom);
 			//Controls.Add(projectBrowserControl);
-			stackPanel = new StackPanel();
-			stackPanel.Orientation = Orientation.Vertical;
-			stackPanel.Children.Add(projectBrowserControl);
-			this.Content = stackPanel;
+			dockPanel = new DockPanel();
+			dockPanel.LastChildFill = true;
+			
 			
 			if (SD.AddInTree.GetTreeNode("/SharpDevelop/Pads/ProjectBrowser/ToolBar/Standard", false) != null) {
 				//toolStrip = SD.WinForms.ToolbarService.CreateToolStrip(this, "/SharpDevelop/Pads/ProjectBrowser/ToolBar/Standard");
 				toolStrip = ToolBarService.CreateToolBar(this, this, "/SharpDevelop/Pads/ProjectBrowser/ToolBar/Standard");
-				//toolStrip.ShowItemToolTips  = true;				
+				//toolStrip.Height = 100;
+				//toolStrip.ShowItemToolTips  = true;
 				//toolStrip.Dock = DockStyle.Top;
 				//toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 				//toolStrip.Stretch   = true;
 				standardItems = new object[toolStrip.Items.Count];
 				toolStrip.Items.CopyTo(standardItems, 0);
 				//Controls.Add(toolStrip);
-				stackPanel.Children.Add(toolStrip);
+				DockPanel.SetDock(toolStrip, Dock.Top);
+				dockPanel.Children.Add(toolStrip);
 			}
+			
+			dockPanel.Children.Add(projectBrowserControl);			
+			this.Content = dockPanel;
+			
 			//projectBrowserControl.TreeView.BeforeSelect += TreeViewBeforeSelect;
+			projectBrowserControl.TreeView.SelectedItemChanging += projectBrowserControl_TreeView_SelectedItemChanging;
+		}
+
+		void projectBrowserControl_TreeView_SelectedItemChanging(object sender, RoutedEventArgs e)
+		{
+			//UpdateToolStrip(e.ChangedNode as AbstractProjectBrowserTreeNode);
 		}
 		
-//		void TreeViewBeforeSelect(object sender, TreeViewCancelEventArgs e)
-//		{
-//			UpdateToolStrip(e.Node as AbstractProjectBrowserTreeNode);
-//		}
+		//		void TreeViewBeforeSelect(object sender, TreeViewCancelEventArgs e)
+		//		{
+		//			UpdateToolStrip(e.Node as AbstractProjectBrowserTreeNode);
+		//		}
 		
-//		void UpdateToolStrip(AbstractProjectBrowserTreeNode node)
-//		{
-//			if (toolStrip == null) return;
-//			toolStrip.Items.Clear();
-//			toolStrip.Items.AddRange(standardItems);
-//			SD.WinForms.ToolbarService.UpdateToolbar(toolStrip);
-//			if (node != null && node.ToolbarAddinTreePath != null) {
-//				toolStrip.Items.Add(new ToolStripSeparator());
-//				toolStrip.Items.AddRange(SD.WinForms.ToolbarService.CreateToolStripItems(node.ToolbarAddinTreePath, node, false));
-//			}
-//		}
+		void UpdateToolStrip(AbstractProjectBrowserTreeNode node)
+		{
+			if (toolStrip == null) return;
+			toolStrip.Items.Clear();
+			toolStrip.Items.AddRange(standardItems);
+			//SD.WinForms.ToolbarService.UpdateToolbar(toolStrip);
+			MenuService.UpdateText(toolStrip.Items);
+			if (node != null && node.ToolbarAddinTreePath != null) {
+				toolStrip.Items.Add(new Separator());
+				toolStrip.Items.AddRange(SD.WinForms.ToolbarService.CreateToolStripItems(node.ToolbarAddinTreePath, node, false));
+			}
+		}
 		
 		public void ViewSolution(ISolution solution)
 		{
@@ -128,6 +145,16 @@ namespace ICSharpCode.SharpDevelop.Project
 		public void SelectFile(string fileName)
 		{
 			projectBrowserControl.SelectFile(fileName);
+		}
+	}
+	
+	public static class ItemCollectionExtension
+	{
+		public static void AddRange(this ItemCollection collection, object[] items)
+		{
+			foreach (object item in items) {
+				collection.Add(item);
+			}
 		}
 	}
 }

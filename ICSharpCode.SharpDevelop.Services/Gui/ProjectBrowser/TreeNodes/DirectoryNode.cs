@@ -28,6 +28,10 @@ using ICSharpCode.SharpDevelop.Workbench;
 
 namespace ICSharpCode.SharpDevelop.Project
 {
+	using TreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.TreeNode;
+	using ExtTreeView = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeView;
+	using ExtTreeNode = ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf.ExtTreeNode;
+	
 	[Serializable]
 	public class FileOperationClipboardObject
 	{
@@ -159,7 +163,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		public override void Refresh()
 		{
 			base.Refresh();
-			if (Nodes.Count == 0) {
+			if (Items.Count == 0) {
 				SetIcon(ClosedImage);
 			} else if (IsExpanded) {
 				SetIcon(openedImage);
@@ -263,15 +267,15 @@ namespace ICSharpCode.SharpDevelop.Project
 		{
 			invisibleNodes.Clear();
 			if (autoClearNodes) {
-				Nodes.Clear();
+				Items.Clear();
 			} else {
 				List<TreeNode> removedNodes = new List<TreeNode>();
-				foreach (TreeNode node in Nodes) {
+				foreach (TreeNode node in Items) {
 					if (node is FileNode || node is DirectoryNode)
 						removedNodes.Add(node);
 				}
 				foreach (TreeNode node in removedNodes) {
-					Nodes.Remove(node);
+					Items.Remove(node);
 				}
 			}
 			Initialize();
@@ -281,7 +285,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		protected override void Initialize()
 		{
 			if (removeMe != null) {
-				Nodes.Remove(removeMe);
+				Items.Remove(removeMe);
 				removeMe = null;
 			}
 			
@@ -309,7 +313,7 @@ namespace ICSharpCode.SharpDevelop.Project
 					fileNode.InsertSorted(this);
 				}
 			}
-			if (Nodes.Count == 0) {
+			if (Items.Count == 0) {
 				SetClosedImage();
 			}
 			
@@ -386,7 +390,7 @@ namespace ICSharpCode.SharpDevelop.Project
 					continue;
 				}
 				AbstractProjectBrowserTreeNode parentNode = fileNodeDictionary[fileName];
-				pair.Key.Parent.Nodes.Remove(pair.Key);
+				(pair.Key.Parent as TreeNode).Items.Remove(pair.Key);
 				if (NodeIsParent(parentNode, pair.Key)) {
 					// is pair.Key a parent of parentNode?
 					// if yes, we have a parent cycle - break it by adding one node to the directory
@@ -405,7 +409,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		{
 			do {
 				if (childNode == parentNode) return true;
-				childNode = childNode.Parent;
+				childNode = childNode.Parent as TreeNode;
 			} while (childNode != null);
 			return false;
 		}
@@ -422,7 +426,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		public FileProjectItem AddNewFile(string fileName)
 		{
 			//TODO: this can probably be moved to AbstractProjectBrowserTreeNode or even lower in the chain.
-			this.Expanding();
+			this.ExpandSubtree();
 			
 			FileNode fileNode = new FileNode(fileName, FileNodeStatus.InProject);
 			fileNode.InsertSorted(this);
@@ -467,17 +471,17 @@ namespace ICSharpCode.SharpDevelop.Project
 				SetIcon(closedImage);
 			}
 		}
-		public override void Expanding()
-		{
-			SetOpenedImage();
-			base.Expanding();
-		}
-		
-		public override void Collapsing()
-		{
-			SetClosedImage();
-			base.Collapsing();
-		}
+//		public override void Expanding()
+//		{
+//			SetOpenedImage();
+//			base.Expanding();
+//		}
+//		
+//		public override void Collapsing()
+//		{
+//			SetClosedImage();
+//			base.Collapsing();
+//		}
 		
 		public override void AfterLabelEdit(string newName)
 		{
@@ -518,11 +522,11 @@ namespace ICSharpCode.SharpDevelop.Project
 		}
 		
 		#region Cut & Paste
-		public override bool EnableDelete {
-			get {
-				return true;
-			}
-		}
+//		public override bool EnableDelete {
+//			get {
+//				return true;
+//			}
+//		}
 		
 		public override void Delete()
 		{
@@ -610,7 +614,7 @@ namespace ICSharpCode.SharpDevelop.Project
 			if (performMove) {
 				FileService.RenameFile(directoryName, copiedName, true);
 				RecreateSubNodes();
-				Expand();
+				ExpandSubtree();
 			} else {
 				AddExistingItemsToProject.CopyDirectory(directoryName, this, true);
 			}
@@ -736,9 +740,9 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public override bool EnableCopy {
 			get {
-				if (IsEditing) {
-					return false;
-				}
+//				if (IsEditing) {
+//					return false;
+//				}
 				return true;
 			}
 		}
@@ -749,9 +753,9 @@ namespace ICSharpCode.SharpDevelop.Project
 		
 		public override bool EnableCut {
 			get {
-				if (IsEditing) {
-					return false;
-				}
+//				if (IsEditing) {
+//					return false;
+//				}
 				return true;
 			}
 		}
@@ -764,13 +768,15 @@ namespace ICSharpCode.SharpDevelop.Project
 		#endregion
 		
 		#region Drag & Drop
-		public override DataObject DragDropDataObject {
+		//public override DataObject DragDropDataObject {
+		public virtual DataObject DragDropDataObject {
 			get {
 				return new DataObject(this);
 			}
 		}
 		
-		public override DragDropEffects GetDragDropEffect(IDataObject dataObject, DragDropEffects proposedEffect)
+		//public override DragDropEffects GetDragDropEffect(IDataObject dataObject, DragDropEffects proposedEffect)
+		public virtual DragDropEffects GetDragDropEffect(IDataObject dataObject, DragDropEffects proposedEffect)
 		{
 			if (dataObject.GetDataPresent(typeof(FileNode))) {
 				FileNode fileNode = (FileNode)dataObject.GetData(typeof(FileNode));
@@ -808,10 +814,11 @@ namespace ICSharpCode.SharpDevelop.Project
 			return DragDropEffects.None;
 		}
 		
-		public override void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
+		//public override void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
+		public virtual void DoDragDrop(IDataObject dataObject, DragDropEffects effect)
 		{
 			PerformInitialization();
-			Expand();
+			ExpandSubtree();
 			try {
 				if (dataObject.GetDataPresent(typeof(FileNode))) {
 					FileNode fileNode = (FileNode)dataObject.GetData(typeof(FileNode));

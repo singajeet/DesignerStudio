@@ -34,7 +34,7 @@ namespace ICSharpCode.SharpDevelop
 				return false;
 			}
 			
-			string fileName = Path.GetFileName(node.FullPath);
+			string fileName = Path.GetFileName(node.DisplayMemberPath);
 			
 			string[] extensions = condition["extensions"].Split(',');
 			if (!extensions.Any(e => fileName.EndsWith(e))) {

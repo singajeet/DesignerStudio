@@ -69,24 +69,24 @@ namespace ICSharpCode.SharpDevelop.Project
 			UpdateIcon();
 		}
 		
-		public override void Expanding()
-		{
-			if (openedImage != null) {
-				SetIcon(openedImage);
-			}
-			base.Expanding();
-			if (Nodes.Count == 0) {
-				SetIcon(ClosedImage);
-			}
-		}
+//		public override void Expanding()
+//		{
+//			if (openedImage != null) {
+//				SetIcon(openedImage);
+//			}
+//			base.Expanding();
+//			if (Nodes.Count == 0) {
+//				SetIcon(ClosedImage);
+//			}
+//		}
 		
-		public override void Collapsing()
-		{
-			if (closedImage != null) {
-				SetIcon(closedImage);
-			}
-			base.Collapsing();
-		}
+//		public override void Collapsing()
+//		{
+//			if (closedImage != null) {
+//				SetIcon(closedImage);
+//			}
+//			base.Collapsing();
+//		}
 		
 		public override object AcceptVisitor(ProjectBrowserTreeNodeVisitor visitor, object data)
 		{

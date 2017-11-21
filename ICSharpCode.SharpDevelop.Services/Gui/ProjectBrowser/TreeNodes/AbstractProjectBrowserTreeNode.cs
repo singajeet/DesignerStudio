@@ -114,18 +114,18 @@ namespace ICSharpCode.SharpDevelop.Project
 			}
 		}
 		
-		public override void Expanding()
-		{
-			if (IsInitialized) {
-				return;
-			}
-			//isInitialized = true;
-			if (autoClearNodes) {
-				Items.Clear();	//Nodes.Clear();
-			}
-			Initialize();
-			base.UpdateVisibility();
-		}
+//		public override void Expanding()
+//		{
+//			if (IsInitialized) {
+//				return;
+//			}
+//			//isInitialized = true;
+//			if (autoClearNodes) {
+//				Items.Clear();	//Nodes.Clear();
+//			}
+//			Initialize();
+//			base.UpdateVisibility();
+//		}
 				
 		
 		public virtual void ShowProperties()
@@ -163,8 +163,8 @@ namespace ICSharpCode.SharpDevelop.Project
 			base.Refresh();
 			if (isNewNode) {
 				isNewNode = false;
-				if (OnNewNode != null)
-					OnNewNode(null, new TreeViewEventArgs(this));
+//				if (OnNewNode != null)
+//					OnNewNode(null, new TreeViewEventArgs(this));
 			}
 		}
 		
@@ -186,7 +186,11 @@ namespace ICSharpCode.SharpDevelop.Project
 			}
 		}
 		
-		public abstract object AcceptVisitor(ProjectBrowserTreeNodeVisitor visitor, object data);
+		//public abstract object AcceptVisitor(ProjectBrowserTreeNodeVisitor visitor, object data);
+		public virtual object AcceptVisitor(ProjectBrowserTreeNodeVisitor visitor, object data)
+		{
+			return null;
+		}
 		
 		public virtual object AcceptChildren(ProjectBrowserTreeNodeVisitor visitor, object data)
 		{

@@ -198,13 +198,14 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		
 		protected override void OnSelectedItemChanged(System.Windows.RoutedPropertyChangedEventArgs<object> e)
 		{	
-			OnSelectedItemChanging(new TreeNodeChangingRoutedEventArgs(e.OldValue as TreeNode, SelectedItemChangingEvent, this));
+			OnSelectedItemChanging(new TreeNodeChangingRoutedEventArgs(e.OldValue as TreeNode, e.NewValue as TreeNode, SelectedItemChangingEvent, this));
 			base.OnSelectedItemChanged(e);
 		}
 
 		void OnSelectedItemChanging(TreeNodeChangingRoutedEventArgs routedEventArgs)
 		{
-			ExtTreeNode node = routedEventArgs.ChangingNode as ExtTreeNode;
+			RaiseEvent(routedEventArgs);
+			ExtTreeNode node = routedEventArgs.ChangedNode as ExtTreeNode;
 			if (node != null) {
 				node.ContextMenu = MenuService.CreateContextMenu(node, node.ContextmenuAddinTreePath);
 			}
@@ -311,11 +312,19 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 	public class TreeNodeChangingRoutedEventArgs : RoutedEventArgs
 	{
 		public TreeNode ChangingNode;
+		public TreeNode ChangedNode;
 		
 		public TreeNodeChangingRoutedEventArgs(TreeNode changingNode, RoutedEvent eventObject, object source) :
 			base(eventObject, source)
 		{
 			ChangingNode = changingNode;
+		}
+		
+		public TreeNodeChangingRoutedEventArgs(TreeNode changingNode, TreeNode changedNode, RoutedEvent eventObject, object source) :
+			base(eventObject, source)
+		{
+			ChangingNode = changingNode;
+			ChangedNode = changedNode;
 		}
 	}
 }

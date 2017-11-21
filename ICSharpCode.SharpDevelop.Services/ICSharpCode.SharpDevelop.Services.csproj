@@ -45,6 +45,15 @@
     <Reference Include="AvalonDock">
       <HintPath>..\..\..\..\..\..\Ajeet\Softwares\Visual Studio - Extras\AvalonDock_35\AvalonDock.dll</HintPath>
     </Reference>
+    <Reference Include="Caliburn.Micro">
+      <HintPath>..\packages\Caliburn.Micro.Core.3.2.0\lib\net45\Caliburn.Micro.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform">
+      <HintPath>..\packages\Caliburn.Micro.3.2.0\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform.Core">
+      <HintPath>..\packages\Caliburn.Micro.3.2.0\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.AvalonEdit">
       <HintPath>..\..\..\..\..\..\Program Files\SharpDevelop\5.1\bin\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
@@ -67,7 +76,7 @@
       <HintPath>..\..\..\..\..\..\Program Files\SharpDevelop\5.1\bin\log4net.dll</HintPath>
     </Reference>
     <Reference Include="MahApps.Metro">
-      <HintPath>..\..\..\Visual Studio 2010\Projects\EmbeddedDesignerStudio\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="MahApps.Metro.IconPacks">
       <HintPath>..\..\..\Visual Studio 2010\Projects\EmbeddedDesignerStudio\packages\MahApps.Metro.IconPacks.1.9.1\lib\net45\MahApps.Metro.IconPacks.dll</HintPath>
@@ -102,12 +111,13 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO" />
     <Reference Include="System.Linq" />
+    <Reference Include="System.Runtime" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity">
-      <HintPath>..\..\..\Visual Studio 2010\Projects\EmbeddedDesignerStudio\packages\MahApps.Metro.1.5.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Presentation">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -1032,6 +1042,7 @@
     <None Include="Editor\CodeCompletion\Images\StaticClass.png" />
     <None Include="Editor\CodeCompletion\Images\Struct.png" />
     <None Include="Editor\CodeCompletion\Images\VirtualMethod.png" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

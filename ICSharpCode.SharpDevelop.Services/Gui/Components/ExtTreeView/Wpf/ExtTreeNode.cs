@@ -256,7 +256,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 			}
 		}
 		
-		public void Dispose()
+		public virtual void Dispose()
 		{
 			isDisposed = true;
 			foreach (TreeNode node in Items) {
@@ -329,7 +329,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 			set {
 				this.doPerformCut = value;
 				if (this.doPerformCut) {
-					((ExtTreeView)System.Windows.Controls.TreeView).CutNodes.Add(this);					
+					((ExtTreeView)this.TreeView).CutNodes.Add(this);					
 				}
 				Refresh();
 			}
@@ -352,61 +352,61 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Components.ExtTreeView.Wpf
 		/// assuming that all other immediate child nodes of the <paramref name="parentNode"/>
 		/// are in sorted order.
 		/// </summary>
-		public void InsertSorted(TreeNode parentNode)
+		public virtual void InsertSorted(TreeNode parentNode)
 		{
 			this.Insert(this.GetInsertionIndex(parentNode.Items), parentNode);
 		}
 
-		public void Cut()
+		public virtual void Cut()
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Copy()
+		public virtual void Copy()
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Paste()
+		public virtual void Paste()
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Delete()
+		public virtual void Delete()
 		{
 			throw new NotImplementedException();
 		}
 
-		public void SelectAll()
+		public virtual void SelectAll()
 		{
 			throw new NotImplementedException();
 		}
 
-		public bool EnableCut {
+		public virtual bool EnableCut {
 			get {
 				return false;
 			}
 		}
 
-		public bool EnableCopy {
+		public virtual bool EnableCopy {
 			get {
 				return false;
 			}
 		}
 
-		public bool EnablePaste {
+		public virtual bool EnablePaste {
 			get {
 				return false;
 			}
 		}
 
-		public bool EnableDelete {
+		public virtual bool EnableDelete {
 			get {
 				return false;
 			}
 		}
 
-		public bool EnableSelectAll {
+		public virtual bool EnableSelectAll {
 			get {
 				return false;
 			}
