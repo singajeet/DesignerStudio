@@ -241,7 +241,7 @@ namespace ICSharpCode.Core.Presentation
 			return result;
 		}
 
-		public static void CreateTemplatedToolBarItem(ContentControl control, Codon codon)
+		public static void CreateTemplatedToolBarItem(Control control, Codon codon)
 		{						
 			if (codon.Properties.Contains("template")) {				
 				ControlTemplate customTemplate = (ControlTemplate)Application
@@ -306,7 +306,14 @@ namespace ICSharpCode.Core.Presentation
 							break;
 					}			
 					
-					control.Content = icon;					
+					if (control is MenuItem)
+						(control as MenuItem).Header = icon;
+					else if (control is MahApps.Metro.Controls.DropDownButton)
+						(control as MahApps.Metro.Controls.DropDownButton).Content = icon;
+					else if (control is MahApps.Metro.Controls.SplitButton)
+						(control as MahApps.Metro.Controls.SplitButton).Icon = icon;
+					else
+						(control as ContentControl).Content = icon;
 				}
 				
 				if (codon.Properties.Contains("icon"))
@@ -315,7 +322,15 @@ namespace ICSharpCode.Core.Presentation
 					image.Source = PresentationResourceService.GetBitmapSource(StringParser.Parse(codon.Properties["icon"]));
 					image.Height = 16;
 					image.SetResourceReference(FrameworkElement.StyleProperty, ToolBarService.ImageStyleKey);
-					control.Content = image;
+					
+					if (control is MenuItem)
+						(control as MenuItem).Header = image;
+					else if (control is MahApps.Metro.Controls.DropDownButton)
+						(control as MahApps.Metro.Controls.DropDownButton).Content = image;
+					else if (control is MahApps.Metro.Controls.SplitButton)
+						(control as MahApps.Metro.Controls.SplitButton).Icon = image;
+					else
+						(control as ContentControl).Content = image;
 				}
 				
 				if (codon.Properties.Contains("label"))
@@ -324,7 +339,15 @@ namespace ICSharpCode.Core.Presentation
 					label.Content = StringParser.Parse(codon.Properties["label"]);
 					label.Padding = new Thickness(0);
 					label.VerticalContentAlignment = VerticalAlignment.Center;
-					control.Content = label;
+					
+					if (control is MenuItem)
+						(control as MenuItem).Header = label;
+					else if (control is MahApps.Metro.Controls.DropDownButton)
+						(control as MahApps.Metro.Controls.DropDownButton).Content = label;
+					else if (control is MahApps.Metro.Controls.SplitButton)
+						(control as MahApps.Metro.Controls.SplitButton).Icon = label;
+					else
+						(control as ContentControl).Content = label;
 				}			
 				
 			}
@@ -335,7 +358,31 @@ namespace ICSharpCode.Core.Presentation
 				if(customStyle != null)
 					control.Style = customStyle;
 			} else {
-				TryApplyMaterialStyle(control);
+				if (control is MenuItem) {
+					Style menuStyle = Application.Current.TryFindResource("MaterialDesignMenuItem") as Style;
+					if (menuStyle != null)
+						control.Style = menuStyle;
+				} else if (control is MahApps.Metro.Controls.DropDownButton) {
+					
+//					Style ddBtnStyle = Application.Current.TryFindResource("MaterialDesignToolForegroundButton") as Style;
+//					if (ddBtnStyle != null)
+//						(control as MahApps.Metro.Controls.DropDownButton).ButtonStyle = ddBtnStyle;
+					
+					Style menuStyle = Application.Current.TryFindResource("MaterialDesignContextMenu") as Style;
+					if (menuStyle != null)						
+						(control as MahApps.Metro.Controls.DropDownButton).MenuStyle = menuStyle;
+					
+				} else if (control is MahApps.Metro.Controls.SplitButton) {
+					
+//					Style splitBtnStyle = Application.Current.TryFindResource("MaterialDesignToolForegroundButton") as Style;
+//					if (splitBtnStyle != null)
+//						(control as MahApps.Metro.Controls.DropDownButton).ButtonStyle = splitBtnStyle;
+					
+					Style lbStyle = Application.Current.TryFindResource("MaterialDesignListBox") as Style;
+					if (lbStyle != null)
+						(control as MahApps.Metro.Controls.SplitButton).ListBoxStyle = lbStyle;
+				} else
+				TryApplyMaterialStyle((control as ContentControl));
 			}
 			
 			control.ApplyTemplate();
@@ -357,25 +404,11 @@ namespace ICSharpCode.Core.Presentation
 				if(customStyle != null)
 				control.Style = customStyle;
 				
-			} else if (control is ToolBarDropDownButton) {
-//				customStyle = Application.Current.TryFindResource("MaterialDesignToolForegroundButton") as Style;
-//				
-//				if(customStyle != null)
-//				control.Style = customStyle;
-//				
-//				customStyle = Application.Current.TryFindResource("MaterialDesignContextMenu") as Style;
-//				if (customStyle != null)
-//					((ToolBarDropDownButton)control).DropDownMenu.Style = customStyle;
-						
-			} else if (control is ToolBarSplitButton) {
-//				customStyle = Application.Current.TryFindResource("MaterialDesignToolForegroundButton") as Style;
-//				
-//				if(customStyle != null)
-//				control.Style = customStyle;
-//				
-//				customStyle = Application.Current.TryFindResource("MaterialDesignContextMenu") as Style;
-//				if (customStyle != null)
-//					((ToolBarSplitButton)control).DropDownMenu.Style = customStyle;
+			} else {
+				customStyle = Application.Current.TryFindResource(ToolBar.ButtonStyleKey) as Style;
+				
+				if(customStyle != null)
+				control.Style = customStyle;
 			}
 			
 			

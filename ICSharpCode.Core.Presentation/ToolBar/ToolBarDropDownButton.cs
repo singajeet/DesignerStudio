@@ -21,37 +21,48 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using MahApps.Metro.Controls;
 
 namespace ICSharpCode.Core.Presentation
 {
 	/// <summary>
 	/// A tool bar button that opens a drop down menu.
 	/// </summary>
-	sealed class ToolBarDropDownButton : DropDownButton, IStatusUpdate
+	sealed class ToolBarDropDownButton : MahApps.Metro.Controls.DropDownButton
+		, IStatusUpdate
 	{
 		readonly Codon codon;
 		readonly object caller;
 		readonly IEnumerable<ICondition> conditions;
 		
-		public ToolBarDropDownButton(Codon codon, object caller, IList subMenu, IEnumerable<ICondition> conditions)
+		public ToolBarDropDownButton(Codon codon, object caller, IList subMenu, IEnumerable<ICondition> conditions) :
+			base()
 		{
 			ToolTipService.SetShowOnDisabled(this, true);
 			
 			this.codon = codon;
 			this.caller = caller;
 			this.conditions = conditions;
+			this.Orientation = Orientation.Vertical;
+			//MenuItem rootMenu = new MenuItem();
 
 			if (codon.Properties.Contains("template") || codon.Properties.Contains("style") || codon.Properties.Contains("packIconKey")) {
-				ToolBarService.CreateTemplatedToolBarItem(this, codon);
+				ToolBarService.CreateTemplatedToolBarItem(this, codon);				
 			} else {
 				this.Content = ToolBarService.CreateToolBarItemContent(codon);				
 			}
 			
-			this.DropDownMenu = MenuService.CreateContextMenu(subMenu);
+			this.ItemsSource = MenuService.ExpandMenuBuilders(subMenu, false);
+//			ContextMenu contextMenu = MenuService.CreateContextMenu(subMenu);	
+//			foreach (MenuItem item in contextMenu.Items) {
+//				rootMenu.Items.Add(item);
+//			}			
 			
 			if (codon.Properties.Contains("name")) {
 				this.Name = codon.Properties["name"];
 			}
+			
+			//this.Items.Add(rootMenu);
 			
 			UpdateText();
 		}

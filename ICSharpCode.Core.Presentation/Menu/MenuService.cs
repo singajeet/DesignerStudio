@@ -203,7 +203,7 @@ namespace ICSharpCode.Core.Presentation
 			return ExpandMenuBuilders(items, false);
 		}
 		
-		sealed class MenuItemBuilderPlaceholder
+		public sealed class MenuItemBuilderPlaceholder
 		{
 			readonly IMenuItemBuilder builder;
 			readonly Codon codon;
@@ -233,7 +233,7 @@ namespace ICSharpCode.Core.Presentation
 			return result;
 		}
 		
-		static IList ExpandMenuBuilders(ICollection input, bool addDummyEntryIfMenuEmpty)
+		public static IList ExpandMenuBuilders(ICollection input, bool addDummyEntryIfMenuEmpty)
 		{
 			List<object> result = new List<object>(input.Count);
 			foreach (object o in input) {

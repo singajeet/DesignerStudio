@@ -31,6 +31,9 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MahApps.Metro">
+      <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro.IconPacks">
       <HintPath>..\..\..\Visual Studio 2010\Projects\EmbeddedDesignerStudio\packages\MahApps.Metro.IconPacks.1.9.1\lib\net40\MahApps.Metro.IconPacks.dll</HintPath>
     </Reference>
@@ -50,6 +53,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Threading" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -95,9 +101,9 @@
     <Compile Include="WpfTreeNavigation.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Menu" />    
+    <Folder Include="Menu" />
     <Folder Include="ToolBar" />
-  </ItemGroup>  
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ICSharpCode.Core\ICSharpCode.Core.csproj">
       <Project>{81875f46-0628-4140-be0c-42ab9c3424eb}</Project>

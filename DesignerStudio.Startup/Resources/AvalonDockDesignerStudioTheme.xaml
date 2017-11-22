@@ -303,6 +303,7 @@
 							        TextTrimming="CharacterEllipsis" 
                                     TextWrapping="NoWrap"
 							        Text="{TemplateBinding Title}" 
+                            		Background="{DynamicResource PrimaryHueMidBrush}"
                             		Style="{StaticResource MaterialDesignSubheadingTextBlock}" />
 							        
                             <avalondock:ImageEx x:Name="PART_LockedIcon" Margin="2,0,0,0" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center" Source="/AvalonDock;component/resources/Images/Locked.png" Width="6" />

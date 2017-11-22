@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using ICSharpCode.Core;
 using ICSharpCode.Core.Presentation;
 using ICSharpCode.NRefactory;
@@ -118,27 +119,44 @@ namespace ICSharpCode.SharpDevelop.Dom.ClassBrowser
 		{
 		}
 		
+		
 		public ClassBrowserPad(IProjectService projectService)
 		{
 			this.projectService = projectService;
 			panel = new DockPanel();
+			panel.Background = System.Windows.Media.Brushes.Transparent;
+			panel.LastChildFill = true;
+			
 			treeView = new ClassBrowserTreeView(); // treeView must be created first because it's used by CreateToolBar
-
+			Border border = new Border();
+			border.BorderBrush = System.Windows.Media.Brushes.DarkGray;
+			border.BorderThickness = new Thickness(1);
+			border.CornerRadius = new CornerRadius(2);
+			border.Child = treeView;
+			
 			toolBar = CreateToolBar("/SharpDevelop/Pads/ClassBrowser/Toolbar");
-			toolBar.Style= Application.Current.FindResource("MaterialDesignToolBar") as Style;
-			panel.Children.Add(toolBar);
-			DockPanel.SetDock(toolBar, Dock.Top);
+			toolBar.HorizontalAlignment = HorizontalAlignment.Stretch;
 			
-			panel.Children.Add(treeView);
+			ToolBarTray tray = new ToolBarTray();
+			tray.HorizontalAlignment = HorizontalAlignment.Stretch;
+			Style tbStyle= Application.Current.TryFindResource("MaterialDesignToolBar") as Style;
+			if (tbStyle != null)
+				toolBar.Style = tbStyle;
 			
-			//treeView.ContextMenu = CreateContextMenu("/SharpDevelop/Pads/UnitTestsPad/ContextMenu");
+			DockPanel.SetDock(tray, Dock.Top);
+			tray.ToolBars.Add(toolBar);			
+			panel.Children.Add(tray);
+			panel.Children.Add(border);
+			
+			treeView.ContextMenu = CreateContextMenu("/SharpDevelop/Pads/UnitTestsPad/ContextMenu");
 			projectService.CurrentSolutionChanged += ProjectServiceCurrentSolutionChanged;
 			ProjectServiceCurrentSolutionChanged(null, null);
+			
 			
 			// Load workspaces from configuration
 			treeView.Loaded += (sender, e) => LoadWorkspaces();
 		}
-		
+
 		public override void Dispose()
 		{
 			projectService.CurrentSolutionChanged -= ProjectServiceCurrentSolutionChanged;
@@ -203,8 +221,8 @@ namespace ICSharpCode.SharpDevelop.Dom.ClassBrowser
 		/// </summary>
 		protected virtual ToolBar CreateToolBar(string name)
 		{
-			Debug.Assert(treeView != null);
-			return ToolBarService.CreateToolBar(treeView, treeView, name);
+			Debug.Assert(panel != null);
+			return ToolBarService.CreateToolBar(panel, panel, name);
 		}
 		
 		/// <summary>

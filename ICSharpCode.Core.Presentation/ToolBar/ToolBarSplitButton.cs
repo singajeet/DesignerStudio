@@ -28,7 +28,8 @@ namespace ICSharpCode.Core.Presentation
 	/// <summary>
 	/// A tool bar button based on the AddIn-tree.
 	/// </summary>
-	sealed class ToolBarSplitButton : SplitButton, IStatusUpdate
+	sealed class ToolBarSplitButton : MahApps.Metro.Controls.SplitButton,//SplitButton, 
+	IStatusUpdate
 	{
 		object caller;
 		Codon codon;
@@ -45,7 +46,7 @@ namespace ICSharpCode.Core.Presentation
 			if (codon.Properties.Contains("template") || codon.Properties.Contains("style") || codon.Properties.Contains("packIconKey")) {
 				ToolBarService.CreateTemplatedToolBarItem(this, codon);
 			} else {
-				this.Content = ToolBarService.CreateToolBarItemContent(codon);
+				this.Icon = ToolBarService.CreateToolBarItemContent(codon);
 			}
 			
 			if (codon.Properties.Contains("name")) {
@@ -54,7 +55,7 @@ namespace ICSharpCode.Core.Presentation
 			
 			this.Command = CommandWrapper.CreateLazyCommand(codon, conditions);
 			this.CommandParameter = caller;
-			this.DropDownMenu = MenuService.CreateContextMenu(submenu);
+			this.ItemsSource = MenuService.ExpandMenuBuilders(submenu, false);
 			
 			UpdateText();
 		}

@@ -70,24 +70,21 @@ namespace ICSharpCode.SharpDevelop.Project
 			
 			
 			if (SD.AddInTree.GetTreeNode("/SharpDevelop/Pads/ProjectBrowser/ToolBar/Standard", false) != null) {
-				//toolStrip = SD.WinForms.ToolbarService.CreateToolStrip(this, "/SharpDevelop/Pads/ProjectBrowser/ToolBar/Standard");
 				toolStrip = ToolBarService.CreateToolBar(this, this, "/SharpDevelop/Pads/ProjectBrowser/ToolBar/Standard");
-				//toolStrip.Height = 100;
-				//toolStrip.ShowItemToolTips  = true;
-				//toolStrip.Dock = DockStyle.Top;
-				//toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-				//toolStrip.Stretch   = true;
 				standardItems = new object[toolStrip.Items.Count];
 				toolStrip.Items.CopyTo(standardItems, 0);
-				//Controls.Add(toolStrip);
+				
 				DockPanel.SetDock(toolStrip, Dock.Top);
 				dockPanel.Children.Add(toolStrip);
+				Style tbStyle = Application.Current.TryFindResource("MaterialDesignToolBar") as Style;
+				if (tbStyle != null)
+					toolStrip.Style = tbStyle;
 			}
 			
 			dockPanel.Children.Add(projectBrowserControl);			
 			this.Content = dockPanel;
 			
-			//projectBrowserControl.TreeView.BeforeSelect += TreeViewBeforeSelect;
+			
 			projectBrowserControl.TreeView.SelectedItemChanging += projectBrowserControl_TreeView_SelectedItemChanging;
 		}
 
@@ -95,11 +92,6 @@ namespace ICSharpCode.SharpDevelop.Project
 		{
 			//UpdateToolStrip(e.ChangedNode as AbstractProjectBrowserTreeNode);
 		}
-		
-		//		void TreeViewBeforeSelect(object sender, TreeViewCancelEventArgs e)
-		//		{
-		//			UpdateToolStrip(e.Node as AbstractProjectBrowserTreeNode);
-		//		}
 		
 		void UpdateToolStrip(AbstractProjectBrowserTreeNode node)
 		{

@@ -287,6 +287,28 @@
 		             command = "Redo"/>
 	</Path>
 	
+	<Path name = "/SharpDevelop/Workbench/Pads">
+		<Pad id       = "ProjectBrowser"
+		     category = "Main"
+		     title    = "${res:MainWindow.Windows.ProjectScoutLabel}"		     
+			 packIconKey = "PackIconMaterial;FileTree"		     
+			 class    = "ICSharpCode.SharpDevelop.Project.ProjectBrowserPad"		     
+		     defaultPosition = "Left" />
+	
+		<Pad id="ClassBrowser"
+			category="Main"
+			title="${res:MainWindow.Windows.ClassScoutLabel}"
+		    class="ICSharpCode.SharpDevelop.Dom.ClassBrowser.ClassBrowserPad"		    
+		    packIconKey = "PackIconMaterial;Matrix"
+			defaultPosition="Left"/>
+	
+		<Pad id= "MyCustomPad"
+			category="Main"
+			title="${res:MainWindow.Windows.OutlinePad}"
+			class="CustomPad.MyCustomPad"
+			packIconKey="PackIconMaterial;Apple"
+			defaultPosition="Left"/>
+	</Path>
 
 	<!-- Project browser Paths -->
 	<Path name = "/SharpDevelop/Pads/ProjectBrowser/ToolBar/Standard">
@@ -314,7 +336,7 @@
 	</Path>
 	
 	<!-- ClassBrowser -->
-	<Path name = "/SharpDevelop/Pads/ClassBrowser/Toolbar" showInTray="True" isLocked="False" >
+	<Path name = "/SharpDevelop/Pads/ClassBrowser/Toolbar">
 		<ToolbarItem id      = "OpenAssembly"
 		             type    = "DropDownButton"
 		             packIconKey    = "PackIconMaterial;OpenInApp"
@@ -330,26 +352,5 @@
 		</ToolbarItem>
 	</Path>
 	
-	<Path name = "/SharpDevelop/Workbench/Pads">
-		<Pad id       = "ProjectBrowser"
-		     category = "Main"
-		     title    = "${res:MainWindow.Windows.ProjectScoutLabel}"		     
-			 packIconKey = "PackIconMaterial;FileTree"		     
-			 class    = "ICSharpCode.SharpDevelop.Project.ProjectBrowserPad"		     
-		     defaultPosition = "Left" />
 	
-		<Pad id="ClassBrowser"
-			category="Main"
-			title="${res:MainWindow.Windows.ClassScoutLabel}"
-		    class="ICSharpCode.SharpDevelop.Dom.ClassBrowser.ClassBrowserPad"		    
-		    packIconKey = "PackIconMaterial;Matrix"
-			defaultPosition="Left"/>
-	
-		<Pad id= "MyCustomPad"
-			category="Main"
-			title="${res:MainWindow.Windows.OutlinePad}"
-			class="CustomPad.MyCustomPad"
-			packIconKey="PackIconMaterial;Apple"
-			defaultPosition="Left"/>
-	</Path>
 </AddIn>
