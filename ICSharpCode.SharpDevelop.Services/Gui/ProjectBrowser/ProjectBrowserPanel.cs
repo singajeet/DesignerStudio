@@ -73,6 +73,7 @@ namespace ICSharpCode.SharpDevelop.Project
 				toolStrip = ToolBarService.CreateToolBar(this, this, "/SharpDevelop/Pads/ProjectBrowser/ToolBar/Standard");
 				standardItems = new object[toolStrip.Items.Count];
 				toolStrip.Items.CopyTo(standardItems, 0);
+				toolStrip.Margin= new Thickness(0,5,0,5);
 				
 				DockPanel.SetDock(toolStrip, Dock.Top);
 				dockPanel.Children.Add(toolStrip);

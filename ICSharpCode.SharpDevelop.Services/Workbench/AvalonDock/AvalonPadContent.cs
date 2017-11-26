@@ -25,6 +25,7 @@ using System.Windows.Threading;
 using AvalonDock;
 using ICSharpCode.Core.Presentation;
 using ICSharpCode.SharpDevelop.Gui;
+using ICSharpCode.SharpDevelop.Services.Commands;
 using MahApps.Metro.IconPacks;
 //using ICSharpCode.SharpDevelop.Gui;
 
@@ -35,8 +36,8 @@ namespace ICSharpCode.SharpDevelop.Workbench
 		PadDescriptor descriptor;
 		IPadContent padInstance;
 		AvalonDockLayout layout;
-		TextBlock placeholder;		
-
+		TextBlock placeholder;			
+		
 		public static DependencyProperty HasIconProperty =
 			DependencyProperty.Register("HasIcon", typeof(bool), typeof(AvalonPadContent));
 		
@@ -69,7 +70,7 @@ namespace ICSharpCode.SharpDevelop.Workbench
 		{
 			this.descriptor = descriptor;
 			this.layout = layout; 
-			
+						
 			CustomFocusManager.SetRememberFocusedChild(this, true);
 			this.Name = descriptor.Class.Replace('.', '_');
 			this.SetValueToExtension(TitleProperty, new StringParseExtension(descriptor.Title));

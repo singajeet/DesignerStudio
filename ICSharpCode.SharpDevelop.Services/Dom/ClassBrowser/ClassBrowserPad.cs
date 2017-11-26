@@ -132,12 +132,14 @@ namespace ICSharpCode.SharpDevelop.Dom.ClassBrowser
 			border.BorderBrush = System.Windows.Media.Brushes.DarkGray;
 			border.BorderThickness = new Thickness(1);
 			border.CornerRadius = new CornerRadius(2);
+			border.Margin = new Thickness(5, 0, 5, 0);
 			border.Child = treeView;
 			
 			toolBar = CreateToolBar("/SharpDevelop/Pads/ClassBrowser/Toolbar");
 			toolBar.HorizontalAlignment = HorizontalAlignment.Stretch;
 			
 			ToolBarTray tray = new ToolBarTray();
+			tray.Margin = new Thickness(0, 5, 0, 5);
 			tray.HorizontalAlignment = HorizontalAlignment.Stretch;
 			Style tbStyle= Application.Current.TryFindResource("MaterialDesignToolBar") as Style;
 			if (tbStyle != null)

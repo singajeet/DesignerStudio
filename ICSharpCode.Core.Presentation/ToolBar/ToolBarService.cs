@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using ControlzEx;
 using MahApps.Metro.IconPacks;
 
@@ -363,20 +364,28 @@ namespace ICSharpCode.Core.Presentation
 					if (menuStyle != null)
 						control.Style = menuStyle;
 				} else if (control is MahApps.Metro.Controls.DropDownButton) {
+				
+					Style btnStyle = new Style();
+					Setter fg = new Setter();
+					Setter bg = new Setter();
 					
-//					Style ddBtnStyle = Application.Current.TryFindResource("MaterialDesignToolForegroundButton") as Style;
-//					if (ddBtnStyle != null)
-//						(control as MahApps.Metro.Controls.DropDownButton).ButtonStyle = ddBtnStyle;
+//					Style btnStyle = Application.Current.TryFindResource("MaterialDesignToolForegroundButton") as Style;
+					bg.Property = MahApps.Metro.Controls.DropDownButton.BackgroundProperty;
+					bg.Value = (Brush)Application.Current.TryFindResource("MaterialDesignPaper");
+					fg.Property = MahApps.Metro.Controls.DropDownButton.ForegroundProperty;
+					fg.Value = (Brush)Application.Current.TryFindResource("MaterialDesignBody");
+					
+					btnStyle.Setters.Add(bg);
+					btnStyle.Setters.Add(fg);
+					
+										if (btnStyle != null)						
+						(control as MahApps.Metro.Controls.DropDownButton).ButtonStyle = btnStyle;
 					
 					Style menuStyle = Application.Current.TryFindResource("MaterialDesignContextMenu") as Style;
 					if (menuStyle != null)						
 						(control as MahApps.Metro.Controls.DropDownButton).MenuStyle = menuStyle;
 					
 				} else if (control is MahApps.Metro.Controls.SplitButton) {
-					
-//					Style splitBtnStyle = Application.Current.TryFindResource("MaterialDesignToolForegroundButton") as Style;
-//					if (splitBtnStyle != null)
-//						(control as MahApps.Metro.Controls.DropDownButton).ButtonStyle = splitBtnStyle;
 					
 					Style lbStyle = Application.Current.TryFindResource("MaterialDesignListBox") as Style;
 					if (lbStyle != null)

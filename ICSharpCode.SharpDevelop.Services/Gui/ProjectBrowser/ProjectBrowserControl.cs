@@ -545,6 +545,7 @@ namespace ICSharpCode.SharpDevelop.Project
 			border.Background = System.Windows.Media.Brushes.Transparent;
 			border.CornerRadius = new System.Windows.CornerRadius(2);
 			border.Child = stackPanel;
+			border.Margin = new System.Windows.Thickness(5, 0, 5, 0);
 			stackPanel.Children.Add(treeView);
 			this.Content = border;
 			this.Name = "ProjectBrowserControl";
