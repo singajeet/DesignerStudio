@@ -141,19 +141,18 @@
     <None Include="Addins\DesignerStudio.addin" />
     <None Include="app.config" />
     <None Include="app.manifest" />
-    <EmbeddedResource Include="Resources\SharpDevelop.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\SplashScreen.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <None Include="Images\ic_web_asset_black_36dp.png" />
-    <None Include="Images\motherboard.png" />
-    <EmbeddedResource Include="Images\processor.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SharpDevelop.ico" />
+    <EmbeddedResource Include="Resources\SplashScreen.jpg" />
+    <Resource Include="Resources\Images\grip.png" />
+    <Resource Include="Resources\Images\ic_web_asset_black_36dp.png" />
+    <Resource Include="Resources\Images\motherboard.png" />
+    <Resource Include="Resources\Images\processor.png" />
     <None Include="Resources\Entypo-license.txt" />
     <None Include="Resources\Entypo.ttf" />
+    <Resource Include="Resources\Images\apps.png" />
+    <Resource Include="Resources\Images\drag-horizontal.png" />
+    <Resource Include="Resources\Images\drag-vertical.png" />
+    <Resource Include="Resources\Images\drag.png" />
     <None Include="Resources\WindowsIcons-license.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -181,7 +180,7 @@
   <ItemGroup>
     <Folder Include="Addins" />
     <Folder Include="Logging" />
-    <Folder Include="Images" />
+    <Folder Include="Resources\Images" />
     <Folder Include="WinForms" />
     <Folder Include="Workbench" />
     <Folder Include="Sda" />

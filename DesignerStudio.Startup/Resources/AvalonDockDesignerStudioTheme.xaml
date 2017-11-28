@@ -55,6 +55,7 @@
 	
 	<!-- Converters -->
 	<BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
+	<converters:CardClipConverter x:Key="CardClipConverter" />
 	
 	
 	<!-- Designer Studio Theme (Mix of Material and MahApps Themes) -->
@@ -173,41 +174,55 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type avalondock:DockablePane}">					
 					<GroupBox Header="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedItem.Title}"					          
-							Style="{DynamicResource MaterialDesignCardGroupBox}" Margin="0" Grid.Row="1"
+							Style="{DynamicResource MaterialDesignCardGroupBox}" Margin="0"
 							FocusManager.FocusedElement="{Binding ElementName=PART_SelectedContent}">
 						<GroupBox.HeaderTemplate>							
 							<DataTemplate DataType="{x:Type avalondock:DockablePane}">
-								<Border x:Name="PART_Header" BorderThickness="0">
-									<!-- DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplatedParent.TemplatedParent}" -->
-									<Grid Height="30">
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="*" />
-											<ColumnDefinition Width="30" />
-											<ColumnDefinition Width="35" />
-											<ColumnDefinition Width="30" />
-										</Grid.ColumnDefinitions>
-										<Button x:Name="btnClose" Style="{StaticResource MaterialDesignToolForegroundButton}" Grid.Column="3"
-												Command="avalondock:DockablePaneCommands.Close"	 HorizontalAlignment="Center"     
-												ToolTip="{x:Static adRes:Resources.DockablePaneCommands_Close}">
-											<materialDesign:PackIcon Kind="Close" />
-										</Button>
-										<ToggleButton x:Name="btnPinAutoHide" Grid.Column="2"
-												Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center"
-												Command="avalondock:DockablePaneCommands.ToggleAutoHide" HorizontalAlignment="Center"
-												ToolTip="{x:Static adRes:Resources.DockablePaneCommands_ToggleAutoHide}">
-											<materialDesign:PackIcon Kind="Pin" RenderTransformOrigin=".5,.5">
-								                <materialDesign:PackIcon.RenderTransform>
-								                    <RotateTransform Angle="45" />
-								                </materialDesign:PackIcon.RenderTransform>
-								            </materialDesign:PackIcon>
-								            <materialDesign:ToggleButtonAssist.OnContent>
-								                <materialDesign:PackIcon Kind="Pin"/>
-											</materialDesign:ToggleButtonAssist.OnContent>
-										</ToggleButton>		
-										<TextBlock x:Name="paneTitle" Grid.Column="0" Margin="8,0,0,0" VerticalAlignment="Center" 
-										           Style="{StaticResource MaterialDesignSubheadingTextBlock}" 
-										           Text="{Binding}"/>									
-									</Grid>
+								<Border x:Name="PART_Header" BorderThickness="0" Margin="0,0,0,0">			
+									<StackPanel Orientation="Vertical">
+										<Rectangle Grid.Row="0" Height="24" Width="220" x:Name="DragHandle" Visibility="Collapsed" Margin="0,0,0,0" Panel.ZIndex="10">
+											<Rectangle.Fill>
+												<!-- <ImageBrush TileMode="Tile" Viewport="0,0,12,24" ViewportUnits="Absolute" Stretch="None"
+												            ImageSource="pack://application:,,,/DesignerStudio.Startup;component/Resources/Images/drag.png">														
+												</ImageBrush>-->
+												<VisualBrush TileMode="Tile" Stretch="None" Viewport="0,0,12,24" ViewportUnits="Absolute">
+													<VisualBrush.Visual>
+														<materialDesign:PackIcon Kind="Drag" Height="24" Width="24" />
+													</VisualBrush.Visual>
+												</VisualBrush>
+											</Rectangle.Fill>
+										</Rectangle>  									
+									<!-- DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplatedParent.TemplatedParent}" -->																			
+										<Grid Height="30" Grid.Row="1">
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition Width="*" />
+												<ColumnDefinition Width="30" />
+												<ColumnDefinition Width="35" />
+												<ColumnDefinition Width="30" />
+											</Grid.ColumnDefinitions>
+											<Button x:Name="btnClose" Style="{StaticResource MaterialDesignToolForegroundButton}" Grid.Column="3"
+													Command="avalondock:DockablePaneCommands.Close"	 HorizontalAlignment="Center"     
+													ToolTip="{x:Static adRes:Resources.DockablePaneCommands_Close}" >
+												<materialDesign:PackIcon Kind="Close" />
+											</Button>
+											<ToggleButton x:Name="btnPinAutoHide" Grid.Column="2"
+													Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center"
+													Command="avalondock:DockablePaneCommands.ToggleAutoHide" HorizontalAlignment="Center"
+													ToolTip="{x:Static adRes:Resources.DockablePaneCommands_ToggleAutoHide}">
+												<materialDesign:PackIcon Kind="Pin" RenderTransformOrigin=".5,.5">
+									                <materialDesign:PackIcon.RenderTransform>
+									                    <RotateTransform Angle="45" />
+									                </materialDesign:PackIcon.RenderTransform>
+									            </materialDesign:PackIcon>
+									            <materialDesign:ToggleButtonAssist.OnContent>
+									                <materialDesign:PackIcon Kind="Pin"/>
+												</materialDesign:ToggleButtonAssist.OnContent>
+											</ToggleButton>		
+											<TextBlock x:Name="paneTitle" Grid.Column="0" Margin="8,0,0,0" VerticalAlignment="Center" 
+											           Style="{StaticResource MaterialDesignSubheadingTextBlock}" 
+											           Text="{Binding}"/>							
+										</Grid>
+									</StackPanel>														
 								</Border>
 								<DataTemplate.Triggers>
 									<DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type avalondock:DockablePane}}, Path=SelectedItem.State}" Value="AutoHide">
@@ -215,7 +230,11 @@
 									</DataTrigger>
 									<DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type avalondock:DockablePane}}, Path=SelectedItem.State}" Value="Docked">
 										<Setter Property="IsChecked" Value="True" TargetName="btnPinAutoHide"/>
-									</DataTrigger>
+									</DataTrigger>	
+									<DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type avalondock:DockablePane}}, Path=SelectedItem.State}" Value="DockableWindow">
+										<Setter Property="Visibility" Value="Visible" TargetName="DragHandle"/>
+										<Setter Property="Margin" Value="0,-10,0,0" TargetName="PART_Header"/>
+									</DataTrigger>								
 								</DataTemplate.Triggers>
 							</DataTemplate>									
 						</GroupBox.HeaderTemplate>
@@ -226,8 +245,8 @@
 								<RowDefinition Height="50" />
 							</Grid.RowDefinitions>
 							<Border Grid.Row="0" x:Name="PART_ShowContextMenuButton" HorizontalAlignment="Right"
-							        Margin="0 -66 63 0" Height="30" Width="30">								
-									<materialDesign:PackIcon Kind="Menu" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{DynamicResource IdealForegroundColorBrush}" />								
+							        Margin="0 -66 73 0" Height="16" Width="16" Background="Transparent">								
+									<materialDesign:PackIcon Kind="Menu" Height="16" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{DynamicResource IdealForegroundColorBrush}" />								
 							</Border>
 							<Border Grid.Row="1" x:Name="SelectedContentBorder"
 									BorderBrush="Gray"
@@ -267,11 +286,6 @@
 						</Grid>
 					</GroupBox>						
 					<ControlTemplate.Triggers>
-                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=SelectedItem.IsActiveContent}" Value="True" >
-                            <!-- <Setter Property="Background" Value="{DynamicResource {ComponentResourceKey {x:Type ad:DockingManager}, {x:Static ad:AvalonDockBrushes.DockablePaneTitleBackgroundSelected}}}" TargetName="PART_Header"/> -->
-                            <!-- <Setter Property="Foreground" Value="{DynamicResource {ComponentResourceKey {x:Type ad:DockingManager}, {x:Static ad:AvalonDockBrushes.DockablePaneTitleForegroundSelected}}}" TargetName="paneTitle"/> -->
-                        </DataTrigger>
-                       
                         <Trigger Property ="ShowTabs" Value="False">
                             <Setter Property="Visibility" Value="Collapsed" TargetName="PART_Tabs"/>							
                         </Trigger>
@@ -333,8 +347,7 @@
                         	<Setter Property="materialDesign:ShadowAssist.ShadowDepth" Value="Depth2" TargetName="CardBorder" />
                             <Setter Property="Visibility"
                                     TargetName="PART_CloseButton"
-                                    Value="Visible"/>  
-							              	
+                                    Value="Visible"/>  							              	
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -343,8 +356,7 @@
                             </MultiTrigger.Conditions>
                             <Setter Property="Opacity" 
                                     TargetName="tabItemIntBorder" 
-                                    Value=".92"/>
-                            
+                                    Value=".92"/>                            
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -353,8 +365,7 @@
                             </MultiTrigger.Conditions>
                             <Setter Property="Opacity" 
                                     TargetName="tabItemIntBorder" 
-                                    Value=".82"/>
-                           
+                                    Value=".82"/>                           
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -384,6 +395,7 @@
     <Style x:Key="{x:Type avalondock:DocumentPane}" TargetType="{x:Type avalondock:DocumentPane}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+    	
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type avalondock:DocumentPane}" >
@@ -400,8 +412,8 @@
                             </Grid.RowDefinitions>
                             <Border x:Name="PART_Header" 
 							    Grid.Row="0" 
-							    Focusable="False">
-                                <Grid>
+							    Focusable="False">                            	
+                                <Grid x:Name="DefaultHeader" Visibility="Visible">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>                                           
@@ -411,61 +423,48 @@
                                       Grid.Column="0"
                                       IsItemsHost="True" 
 								      TabItemStyle="{StaticResource DocumentTabItemStyle}"/>
-                                    <Border x:Name="PART_ShowContextMenuButton" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            Grid.Column="1" Margin="0 0 10 0">
-                                    	<Button>                                   
-                                			<materialDesign:PackIcon Kind="DotsVertical"/>
-										</Button> 
-                                    </Border>                                    
+                                    <Button x:Name="PART_ShowContextMenuButton" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Grid.Column="1" Margin="0 0 10 0" >
+                                    	                                  
+                                			<materialDesign:PackIcon x:Name="ShowContextMenuIcon" Kind="DotsVertical"/>
+										 
+                                    </Button>                                    
                                 </Grid>
                             </Border>     
-							<materialDesign:Card UniformCornerRadius="0" VerticalAlignment="Stretch" Grid.Row="1" >                        	
-                            <Border 
-                                x:Name="topBorder"                            	
-                                BorderThickness="0 2 0 0"    
-								Background="Transparent"                            	
-                                BorderBrush="{StaticResource PrimaryHueMidBrush}">                                                               
-                            <ContentPresenter 
-                                    Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedItem.Content}"
-                                    Margin="0,0,0,0" 
-							        KeyboardNavigation.TabNavigation="Local"
-							        KeyboardNavigation.DirectionalNavigation="Contained"
-							        KeyboardNavigation.TabIndex="1"
-                                    />     
-							</Border>    
+							<materialDesign:Card UniformCornerRadius="0" VerticalAlignment="Stretch" Grid.Row="1" >
+								<!-- <StackPanel Orientation="Vertical">
+									<StackPanel x:Name="FloatingHeader" Height="24" Background="{StaticResource PrimaryHueMidBrush}"
+									HorizontalAlignment="Stretch" Visibility="Collapsed">
+                            			<TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedItem.Title}"/>
+                            		</StackPanel>		-->						
+		                            <Border 
+		                                x:Name="topBorder"                            	
+		                                BorderThickness="0 2 0 0"    
+										Background="Transparent"                            	
+		                                BorderBrush="{StaticResource PrimaryHueMidBrush}">                                                               
+		                            <ContentPresenter 
+		                                    Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedItem.Content}"
+		                                    Margin="0,0,0,0" 
+									        KeyboardNavigation.TabNavigation="Local"
+									        KeyboardNavigation.DirectionalNavigation="Contained"
+									        KeyboardNavigation.TabIndex="1"
+		                                    />     
+									</Border>
+								<!-- </StackPanel> -->    
 							</materialDesign:Card>
                         </Grid>                	
-                    </Border>
-                	
+                    </Border>                	
                     <ControlTemplate.Triggers>
                         <Trigger Property="HasItems" Value="False">
                             <Setter Property="Visibility" Value="Hidden"/>
                         </Trigger>
                         <Trigger Property="ShowHeader" Value="False">
-                            <Setter Property="Visibility" Value="Collapsed" TargetName="PART_Header" />
+                            <Setter Property="Visibility" Value="Collapsed" TargetName="PART_Header" />                    		
                         </Trigger>
-                        <!-- <DataTrigger Binding="{Binding Path=IsMainDocumentPane, RelativeSource={RelativeSource Self}}" Value="True">
-                            <Setter Property="Kind" Value="DotsVertical" TargetName="ShowContextMenuIcon"/>
-                        </DataTrigger>-->
-
-                      <!--   <Trigger Property="ContainsActiveDocument" Value="True">
-                            <Setter Property="Background" 
-                                    Value="{DynamicResource {ComponentResourceKey {x:Type avalondock:DockingManager}, {x:Static avalondock:AvalonDockBrushes.DocumentHeaderBorderSelected}}}" 
-                                    TargetName="topBorder"/>
-                            <Setter Property="Background" 
-                                    Value="{DynamicResource {ComponentResourceKey {x:Type avalondock:DockingManager}, {x:Static avalondock:AvalonDockBrushes.DocumentHeaderBorderSelected}}}" 
-                                    TargetName="bottomBorder"/>
-                        </Trigger>
-
-                        <Trigger Property="ContainsActiveContent" Value="True">
-                            <Setter Property="Background" 
-                                    Value="{DynamicResource {ComponentResourceKey {x:Type avalondock:DockingManager}, {x:Static avalondock:AvalonDockBrushes.DocumentHeaderBorderSelectedActivated}}}" 
-                                    TargetName="topBorder"/>
-                            <Setter Property="Background" 
-                                    Value="{DynamicResource {ComponentResourceKey {x:Type avalondock:DockingManager}, {x:Static avalondock:AvalonDockBrushes.DocumentHeaderBorderSelectedActivated}}}" 
-                                    TargetName="bottomBorder"/>
-                        </Trigger>  -->
-
+                    	<!--  <Trigger Property="IsDocked" Value="False">
+                    	<Setter Property="Visibility" Value="Collapsed" TargetName="DefaultHeader"/>
+                    	<Setter Property="Visibility" Value="Visible" TargetName="FloatingHeader"/>
+                    	</Trigger>-->
                         <EventTrigger RoutedEvent="Window.Loaded">
                             <BeginStoryboard>
                                 <Storyboard>
@@ -480,84 +479,58 @@
             </Setter.Value>
         </Setter>
     </Style>
+	
+	
 	<!--DockableFloatingWindow-->
     <Style x:Key="{x:Type avalondock:DockableFloatingWindow}" TargetType="{x:Type avalondock:DockableFloatingWindow}">
-        <Setter Property="ResizeMode" Value="NoResize" />
         <Setter Property="WindowStyle" Value="None" />
-       <!--  <Setter Property="Background" Value="Transparent"/>-->
+    	<Setter Property="WindowChrome.WindowChrome">
+    		<Setter.Value>
+        		<WindowChrome CaptionHeight="20" CornerRadius="2" GlassFrameThickness="5" NonClientFrameEdges="None"
+					ResizeBorderThickness="2" UseAeroCaptionButtons="True"/>
+        	</Setter.Value>
+    	</Setter>    	
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type avalondock:DockableFloatingWindow}">
-                    <Border x:Name="ExtBorder"
-                            Background="{StaticResource MaterialDesignDivider}"
-                            Opacity=".92"
-							materialDesign:ShadowAssist.ShadowDepth="Depth2"
-                            CornerRadius="2">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="1"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1"/>
-                                <RowDefinition Height="20"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="1"/>
-                            </Grid.RowDefinitions>
-
-                            <avalondock:Resizer x:Name="PART_LeftAnchor" Cursor="SizeWE" VerticalAlignment="Stretch" Width="1" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2"/>
-                            <avalondock:Resizer x:Name="PART_RightAnchor" Cursor="SizeWE" VerticalAlignment="Stretch" Width="1" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2"/>
-                            <avalondock:Resizer x:Name="PART_TopAnchor" Cursor="SizeNS" HorizontalAlignment="Stretch" Height="1" Grid.Row="0" Grid.Column="1"/>
-                            <avalondock:Resizer x:Name="PART_BottomAnchor" Cursor="SizeNS" HorizontalAlignment="Stretch" Height="1" Grid.Row="3" Grid.Column="1"/>
-
-                            <avalondock:Resizer x:Name="PART_LeftTopAnchor" Cursor="SizeNWSE" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="1" Height="1" 
-                                        Grid.Row="0" Grid.Column="0"/>
-                            <avalondock:Resizer x:Name="PART_LeftBottomAnchor" Cursor="SizeNESW" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="1" Height="1" 
-                                        Grid.Row="3" Grid.Column="0"/>
-                            <avalondock:Resizer x:Name="PART_RightTopAnchor" Cursor="SizeNESW" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="1" Height="1" 
-                                        Grid.Row="0" Grid.Column="2"/>
-                            <avalondock:Resizer x:Name="PART_RightBottomAnchor" Cursor="SizeNWSE" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="1" Height="1" 
-                                        Grid.Row="3" Grid.Column="3"/>
-
-                            <Border x:Name="PART_MoveAnchor" Grid.Row="1" Grid.Column="1" CornerRadius="2,2,0,0" 
-                                    Background="DarkGray" >
-                                <Grid x:Name="intTitleGrid">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <!-- <TextBlock x:Name="intTitle" VerticalAlignment="Center" HorizontalAlignment="Stretch" Text="{TemplateBinding Title}" IsHitTestVisible="False" Margin="2,0,0,0"
-                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                               /> -->
-                                    <Border x:Name="PART_ShowContextMenuButton" Grid.Column="1" 
-                                                    VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.6">
-                                        <materialDesign:PackIcon Kind="Menu" />
-                                    </Border>
-                                    <Button x:Name="PART_CloseButton" Grid.Column="2" Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                            Command="avalondock:DockablePaneCommands.Close" CommandTarget="{TemplateBinding Content}"       
-                                            VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,10,0" Opacity="0.6">
-                                       <materialDesign:PackIcon Kind="Close" />
-                                    </Button>                                
-                                </Grid>
-                            </Border>
-                            <Border  
-                                Grid.Row="2"
-                                Grid.Column="1"
-                                Background="{TemplateBinding Background}">
-                                <ContentPresenter/>
-                            </Border>
-                        </Grid>                    
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <DataTrigger 
-                            Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=Content.ContainsActiveContent}" 
-                            Value="True">
-                            <!--<Setter Property="Background" Value="{DynamicResource {ComponentResourceKey {x:Type avalondock:DockingManager}, {x:Static avalondock:AvalonDockBrushes.DockablePaneTitleBackgroundSelected}}}" TargetName="PART_MoveAnchor"/>
-                            <Setter Property="Foreground" Value="{DynamicResource {ComponentResourceKey {x:Type avalondock:DockingManager}, {x:Static avalondock:AvalonDockBrushes.DockablePaneTitleForegroundSelected}}}" TargetName="intTitle"/>-->
-                        </DataTrigger>
-                    </ControlTemplate.Triggers>
+                <ControlTemplate TargetType="{x:Type avalondock:DockableFloatingWindow}">   
+                	<AdornerDecorator>
+	            		<ContentPresenter />
+					</AdornerDecorator>			           
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>       
+    </Style>
+	
+	<!--DocumentFloatingWindow-->
+	 <Style x:Key="{x:Type avalondock:DocumentFloatingWindow}" TargetType="{x:Type avalondock:DocumentFloatingWindow}">        
+    	<Setter Property="WindowChrome.WindowChrome">
+    		<Setter.Value>
+        		<WindowChrome CaptionHeight="20" CornerRadius="2" GlassFrameThickness="2" NonClientFrameEdges="None"
+					ResizeBorderThickness="2" UseAeroCaptionButtons="True"/>
+        	</Setter.Value>
+    	</Setter>    	
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type avalondock:DocumentFloatingWindow}">  
+						<GroupBox Style="{DynamicResource MaterialDesignCardGroupBox}"
+									Header="{TemplateBinding Title}">
+							<Grid>
+								<DockPanel VerticalAlignment="Top" Margin="0,-40,0,0" HorizontalAlignment="Right">
+									<Border x:Name="PART_ShowContextMenuButton" DockPanel.Dock="Right" HorizontalAlignment="Right"
+												VerticalAlignment="Center" WindowChrome.IsHitTestVisibleInChrome="True" Height="18" Width="18">
+										<materialDesign:PackIcon Kind="MenuDown" Height="18" Width="18" />
+									</Border>
+									<Button x:Name="PART_CloseButton" DockPanel.Dock="Right" Style="{StaticResource MaterialDesignToolForegroundButton}" HorizontalAlignment="Right"
+												VerticalAlignment="Center" WindowChrome.IsHitTestVisibleInChrome="True"
+												Command="avalondock:DocumentPaneCommands.CloseThis" CommandTarget="{TemplateBinding Content}">
+										<materialDesign:PackIcon Kind="Close" Height="18" Width="18" />
+									</Button>
+								</DockPanel>
+								<AdornerDecorator Margin="0">
+			            			<ContentPresenter Margin="0" />						
+								</AdornerDecorator>	
+							</Grid>		                		
+                		</GroupBox>						
                 </ControlTemplate>
             </Setter.Value>
         </Setter>       
