@@ -3,7 +3,7 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:gui="clr-namespace:ICSharpCode.SharpDevelop.Gui"
                  xmlns:widgets="clr-namespace:ICSharpCode.SharpDevelop.Widgets;assembly=ICSharpCode.SharpDevelop.Widgets"
-                 xmlns:core="clr-namespace:ICSharpCode.Core.Presentation;assembly=ICSharpCode.Core.Presentation">
+                 xmlns:core="clr-namespace:ICSharpCode.Core.Presentation;assembly=ICSharpCode.Core">
 	<StackPanel>
 		
 		<widgets:StackPanelWithSpacing SpaceBetweenItems="5" Margin="50,8,0,0" Orientation="Horizontal">

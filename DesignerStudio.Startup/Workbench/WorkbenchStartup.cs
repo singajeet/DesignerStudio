@@ -44,8 +44,8 @@ namespace ICSharpCode.SharpDevelop.Workbench
 	/// </summary>
 	class WorkbenchStartup
 	{
-		const string workbenchMemento = "WorkbenchMemento";
-		const string activeContentState = "Workbench.ActiveContent";
+		const string workbenchMemento = "DesignerStudio.WorkbenchMemento";
+		const string activeContentState = "DesignerStudio.Workbench.ActiveContent";
 		App app;
 		
 		public void InitializeWorkbench()

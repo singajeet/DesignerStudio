@@ -237,7 +237,8 @@ namespace ICSharpCode.Core.Presentation
 				result = codon.Id;
 			}
 			
-			TryApplyMaterialStyle((ContentControl)result);
+			if(!(result is StackPanel) && !(result is Image))
+				TryApplyMaterialStyle((ContentControl)result);
 
 			return result;
 		}
@@ -260,61 +261,69 @@ namespace ICSharpCode.Core.Presentation
 					string[] packIconValues = codon.Properties["packIconKey"].Split(';');
 					string packIconType = packIconValues[0];
 					string packIconKind = packIconValues[1];
-					PackIconBase icon = null;
+					//PackIconBase icon = null;
+					object Icon = null;
 					
 					switch(packIconType){
 						case "PackIconMaterial":
-							icon = new PackIconMaterial();
+							var icon = new PackIconMaterial();
 							((PackIconMaterial)icon).Kind = (PackIconMaterialKind)Enum
 															.Parse(typeof(PackIconMaterialKind),
 														       packIconKind);
+								Icon = icon;
 							break;
 						case "PackIconMaterialLight":
-							icon = new PackIconMaterialLight();
-							((PackIconMaterialLight)icon).Kind = (PackIconMaterialLightKind)Enum
+						var icon1 = new PackIconMaterialLight();
+							((PackIconMaterialLight)icon1).Kind = (PackIconMaterialLightKind)Enum
 															.Parse(typeof(PackIconMaterialLightKind),
 														       packIconKind);
+							Icon = icon1;
 							break;
 						case "PackIconModern":
-							icon = new PackIconModern();
-							((PackIconModern)icon).Kind = (PackIconModernKind)Enum
+							var icon2 = new PackIconModern();
+							((PackIconModern)icon2).Kind = (PackIconModernKind)Enum
 															.Parse(typeof(PackIconModernKind),
 														       packIconKind);
+							Icon = icon2;
 							break;
 						case "PackIconOcticons":
-							icon = new PackIconOcticons();
-							((PackIconOcticons)icon).Kind = (PackIconOcticonsKind)Enum
+							var icon3 = new PackIconOcticons();
+							((PackIconOcticons)icon3).Kind = (PackIconOcticonsKind)Enum
 															.Parse(typeof(PackIconOcticonsKind),
 														       packIconKind);
+							Icon = icon3;
 							break;
 						case "PackIconSimpleIcons":
-							icon = new PackIconSimpleIcons();
-							((PackIconSimpleIcons)icon).Kind = (PackIconSimpleIconsKind)Enum
+							var icon4 = new PackIconSimpleIcons();
+							((PackIconSimpleIcons)icon4).Kind = (PackIconSimpleIconsKind)Enum
 															.Parse(typeof(PackIconSimpleIconsKind),
 														       packIconKind);
+							Icon = icon4;
 							break;
 						case "PackIconEntypo":
-							icon = new PackIconEntypo();
-							((PackIconEntypo)icon).Kind = (PackIconEntypoKind)Enum
+							var icon5 = new PackIconEntypo();
+							((PackIconEntypo)icon5).Kind = (PackIconEntypoKind)Enum
 															.Parse(typeof(PackIconEntypoKind),
 														       packIconKind);
+							Icon = icon5;
 							break;
 						case "PackIconFontAwesome":
-							icon = new PackIconFontAwesome();
-							((PackIconFontAwesome)icon).Kind = (PackIconFontAwesomeKind)Enum
+							var icon6 = new PackIconFontAwesome();
+							((PackIconFontAwesome)icon6).Kind = (PackIconFontAwesomeKind)Enum
 															.Parse(typeof(PackIconFontAwesomeKind),
 														       packIconKind);
+							Icon = icon6;
 							break;
 					}			
 					
 					if (control is MenuItem)
-						(control as MenuItem).Header = icon;
+						(control as MenuItem).Header = Icon;
 					else if (control is MahApps.Metro.Controls.DropDownButton)
-						(control as MahApps.Metro.Controls.DropDownButton).Content = icon;
+						(control as MahApps.Metro.Controls.DropDownButton).Content = Icon;
 					else if (control is MahApps.Metro.Controls.SplitButton)
-						(control as MahApps.Metro.Controls.SplitButton).Icon = icon;
+						(control as MahApps.Metro.Controls.SplitButton).Icon = Icon;
 					else
-						(control as ContentControl).Content = icon;
+						(control as ContentControl).Content = Icon;
 				}
 				
 				if (codon.Properties.Contains("icon"))

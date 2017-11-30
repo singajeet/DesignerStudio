@@ -41,7 +41,7 @@ namespace ICSharpCode.SharpDevelop.Editor
 		[Obsolete("Use the TextDocument constructor instead")]
 		public static IDocument LoadDocumentFromBuffer(ITextSource buffer)
 		{
-			return new TextDocument(buffer);
+			return new TextDocument(buffer); 
 		}
 		
 		/// <summary>

@@ -160,7 +160,7 @@ namespace ICSharpCode.SharpDevelop.Sda
 			if (settings.RunOnNewThread) {
 				Thread t = new Thread(RunWorkbenchInternal);
 				t.SetApartmentState(ApartmentState.STA);
-				t.Name = "SDmain";
+				t.Name = "DSmain";
 				t.Start(settings);
 			} else {
 				RunWorkbenchInternal(settings);

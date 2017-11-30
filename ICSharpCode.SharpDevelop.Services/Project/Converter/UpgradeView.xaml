@@ -4,7 +4,7 @@
 	x:Class="ICSharpCode.SharpDevelop.Project.Converter.UpgradeView" 
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-	xmlns:core="clr-namespace:ICSharpCode.Core.Presentation;assembly=ICSharpCode.Core.Presentation">
+	xmlns:core="clr-namespace:ICSharpCode.Core.Presentation;assembly=ICSharpCode.Core">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition

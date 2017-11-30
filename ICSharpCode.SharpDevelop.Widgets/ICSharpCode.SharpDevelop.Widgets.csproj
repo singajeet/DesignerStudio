@@ -10,6 +10,12 @@
     <AssemblyName>ICSharpCode.SharpDevelop.Widgets</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
+    <NoWin32Manifest>False</NoWin32Manifest>
+    <SignAssembly>False</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\..\..\..\SharpDevelop\SharpDevelop-master\src\Main\ICSharpCode.SharpDevelop.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>False</DelaySign>
+    <AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
+    <RunCodeAnalysis>False</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>

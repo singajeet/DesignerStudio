@@ -6,7 +6,7 @@
 	xmlns:optionpanels="clr-namespace:ICSharpCode.SharpDevelop.Gui.OptionPanels"
 	xmlns:local="clr-namespace:ICSharpCode.SharpDevelop.Gui.OptionPanels"
 	xmlns:projects="clr-namespace:ICSharpCode.SharpDevelop.Project"
-	xmlns:core="clr-namespace:ICSharpCode.Core.Presentation;assembly=ICSharpCode.Core.Presentation">
+	xmlns:core="clr-namespace:ICSharpCode.Core.Presentation;assembly=ICSharpCode.Core">
 	
 	<optionpanels:ProjectOptionPanel.Resources>
 		<local:StorageLocationConverter x:Key="converter" />

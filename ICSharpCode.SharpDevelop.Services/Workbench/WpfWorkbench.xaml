@@ -3,7 +3,7 @@
 	x:ClassModifier = "public"
 	xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:core = "clr-namespace:ICSharpCode.Core.Presentation;assembly=ICSharpCode.Core.Presentation"
+	xmlns:core = "clr-namespace:ICSharpCode.Core.Presentation;assembly=ICSharpCode.Core"
 	xmlns:wb = "clr-namespace:ICSharpCode.SharpDevelop.Workbench"
 	xmlns:MControls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
 	xmlns:palette="clr-namespace:ICSharpCode.SharpDevelop.Services.Palette"

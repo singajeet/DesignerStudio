@@ -112,7 +112,7 @@ namespace ICSharpCode.SharpDevelop.Gui
 		/// Creates a snapshot of the editor content.
 		/// This method is thread-safe.
 		/// </summary>
-		public ITextSource CreateSnapshot()
+		public ICSharpCode.NRefactory.Editor.ITextSource CreateSnapshot()
 		{
 			return this.TextEditor.Document.CreateSnapshot();
 		}
@@ -123,7 +123,7 @@ namespace ICSharpCode.SharpDevelop.Gui
 			}
 		}
 		
-		public virtual IDocument GetDocumentForFile(OpenedFile file)
+		public virtual ICSharpCode.NRefactory.Editor.IDocument GetDocumentForFile(OpenedFile file)
 		{
 			return null;
 		}

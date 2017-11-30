@@ -8,15 +8,15 @@
     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
     xmlns:converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
-	xmlns:core="clr-namespace:ICSharpCode.Core.Presentation;assembly=ICSharpCode.Core.Presentation"
+	xmlns:core="clr-namespace:ICSharpCode.Core.Presentation;assembly=ICSharpCode.Core"
 	xmlns:sd="clr-namepsace:ICSharpCode.SharpDevelop.Workbench;assembly=ICSharpCode.SharpDevelop.Services"
 	xmlns:matDesignColors="clr-namespace:MaterialDesignColors;assembly=MaterialDesignColors">
 	
 	
 	<ResourceDictionary.MergedDictionaries>		
 	
-		<ResourceDictionary Source="pack://application:,,,/DesignerStudio.Startup;component/themes/Aero.NormalColor.xaml" />
-		<ResourceDictionary Source="pack://application:,,,/DesignerStudio.Startup;component/themes/generic.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/ICSharpCode.Core;component/Presentation/themes/Aero.NormalColor.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/ICSharpCode.Core;component/Presentation/themes/generic.xaml" />
 		
 		<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />

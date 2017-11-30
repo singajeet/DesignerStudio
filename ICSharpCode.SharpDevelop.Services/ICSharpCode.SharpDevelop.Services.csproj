@@ -16,6 +16,10 @@
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <WarningLevel>4</WarningLevel>
+    <SignAssembly>False</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\..\..\..\SharpDevelop\SharpDevelop-master\src\Main\ICSharpCode.SharpDevelop.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>False</DelaySign>
+    <AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -79,13 +83,13 @@
       <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="MahApps.Metro.IconPacks">
-      <HintPath>..\..\..\Visual Studio 2010\Projects\EmbeddedDesignerStudio\packages\MahApps.Metro.IconPacks.1.9.1\lib\net45\MahApps.Metro.IconPacks.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.IconPacks.1.9.1\lib\net45\MahApps.Metro.IconPacks.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignColors">
-      <HintPath>..\..\..\Visual Studio 2010\Projects\EmbeddedDesignerStudio\packages\MaterialDesignColors.1.1.2\lib\net45\MaterialDesignColors.dll</HintPath>
+      <HintPath>..\packages\MaterialDesignColors.1.1.3\lib\net45\MaterialDesignColors.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignThemes.Wpf">
-      <HintPath>..\..\..\Visual Studio 2010\Projects\EmbeddedDesignerStudio\packages\MaterialDesignThemes.2.3.1.953\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+      <HintPath>..\packages\MaterialDesignThemes.2.3.1.953\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.Build.Framework" />
@@ -94,6 +98,15 @@
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\..\..\..\..\..\Program Files\SharpDevelop\5.1\bin\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
@@ -846,10 +859,6 @@
       <Project>{9c2c8253-904f-412c-9f53-1ef4f88c2a90}</Project>
       <Name>ICSharpCode.Build.Tasks</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ICSharpCode.Core.Presentation\ICSharpCode.Core.Presentation.csproj">
-      <Project>{490570ee-b010-49fa-bc28-2e905394eb66}</Project>
-      <Name>ICSharpCode.Core.Presentation</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ICSharpCode.Core\ICSharpCode.Core.csproj">
       <Project>{81875f46-0628-4140-be0c-42ab9c3424eb}</Project>
       <Name>ICSharpCode.Core</Name>
@@ -858,14 +867,14 @@
       <Project>{867b7e3b-bc22-4149-bb93-ce31384a810b}</Project>
       <Name>ICSharpCode.SharpDevelop.BuildWorker</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ICSharpCode.SharpDevelop.Common\ICSharpCode.SharpDevelop.Common.csproj">
+    <!-- <ProjectReference Include="..\ICSharpCode.SharpDevelop.Common\ICSharpCode.SharpDevelop.Common.csproj">
       <Project>{03a0ff69-84c4-4a62-a88b-2876643851c3}</Project>
       <Name>ICSharpCode.SharpDevelop.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\ICSharpCode.SharpDevelop.Project\ICSharpCode.SharpDevelop.Project.csproj">
       <Project>{f920203a-980d-4fbc-acde-d6dc24b4d96f}</Project>
       <Name>ICSharpCode.SharpDevelop.Project</Name>
-    </ProjectReference>
+    </ProjectReference> -->
     <ProjectReference Include="..\ICSharpCode.SharpDevelop.Widgets\ICSharpCode.SharpDevelop.Widgets.csproj">
       <Project>{14252c93-1a7c-472f-a8e8-18768741514c}</Project>
       <Name>ICSharpCode.SharpDevelop.Widgets</Name>

@@ -23,7 +23,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using ControlzEx;
 using MahApps.Metro.IconPacks;
 
 namespace ICSharpCode.Core.Presentation
@@ -57,53 +56,60 @@ namespace ICSharpCode.Core.Presentation
 					string[] packIconValues = codon.Properties["packIconKey"].Split(';');
 					string packIconType = packIconValues[0];
 					string packIconKind = packIconValues[1];
-					PackIconBase icon = null;
+				//object icon = null;
 					
 					switch(packIconType){
 						case "PackIconMaterial":
-							icon = new PackIconMaterial();
+							var icon = new PackIconMaterial();
 							((PackIconMaterial)icon).Kind = (PackIconMaterialKind)Enum
 															.Parse(typeof(PackIconMaterialKind),
 														       packIconKind);
+								this.Icon = icon;
 							break;
 						case "PackIconMaterialLight":
-							icon = new PackIconMaterialLight();
-							((PackIconMaterialLight)icon).Kind = (PackIconMaterialLightKind)Enum
+						var icon1 = new PackIconMaterialLight();
+							((PackIconMaterialLight)icon1).Kind = (PackIconMaterialLightKind)Enum
 															.Parse(typeof(PackIconMaterialLightKind),
 														       packIconKind);
+							this.Icon = icon1;
 							break;
 						case "PackIconModern":
-							icon = new PackIconModern();
-							((PackIconModern)icon).Kind = (PackIconModernKind)Enum
+							var icon2 = new PackIconModern();
+							((PackIconModern)icon2).Kind = (PackIconModernKind)Enum
 															.Parse(typeof(PackIconModernKind),
 														       packIconKind);
+							this.Icon = icon2;
 							break;
 						case "PackIconOcticons":
-							icon = new PackIconOcticons();
-							((PackIconOcticons)icon).Kind = (PackIconOcticonsKind)Enum
+							var icon3 = new PackIconOcticons();
+							((PackIconOcticons)icon3).Kind = (PackIconOcticonsKind)Enum
 															.Parse(typeof(PackIconOcticonsKind),
 														       packIconKind);
+							this.Icon = icon3;
 							break;
 						case "PackIconSimpleIcons":
-							icon = new PackIconSimpleIcons();
-							((PackIconSimpleIcons)icon).Kind = (PackIconSimpleIconsKind)Enum
+							var icon4 = new PackIconSimpleIcons();
+							((PackIconSimpleIcons)icon4).Kind = (PackIconSimpleIconsKind)Enum
 															.Parse(typeof(PackIconSimpleIconsKind),
 														       packIconKind);
+							this.Icon = icon4;
 							break;
 						case "PackIconEntypo":
-							icon = new PackIconEntypo();
-							((PackIconEntypo)icon).Kind = (PackIconEntypoKind)Enum
+							var icon5 = new PackIconEntypo();
+							((PackIconEntypo)icon5).Kind = (PackIconEntypoKind)Enum
 															.Parse(typeof(PackIconEntypoKind),
 														       packIconKind);
+							this.Icon = icon5;
 							break;
 						case "PackIconFontAwesome":
-							icon = new PackIconFontAwesome();
-							((PackIconFontAwesome)icon).Kind = (PackIconFontAwesomeKind)Enum
+							var icon6 = new PackIconFontAwesome();
+							((PackIconFontAwesome)icon6).Kind = (PackIconFontAwesomeKind)Enum
 															.Parse(typeof(PackIconFontAwesomeKind),
 														       packIconKind);
+							this.Icon = icon6;
 							break;
 					}
-					this.Icon = icon;
+					//this.Icon = icon;
 				
 				} else {
 					if (codon.Properties.Contains("icon")) {

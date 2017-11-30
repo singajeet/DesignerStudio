@@ -51,14 +51,14 @@
 			<Doozer name="TemplateFile" class="ICSharpCode.SharpDevelop.Templates.TemplateFileDoozer"/>
 			<Doozer name="TemplateCategory" class="ICSharpCode.SharpDevelop.Templates.TemplateCategoryDoozer"/>				
 		</Import>
-		<Import assembly="ICSharpCode.Build.Tasks.dll" />
+<!--		<Import assembly="ICSharpCode.Build.Tasks.dll" />-->
 		<Import assembly="ICSharpCode.Core.dll">
 			<Doozer name="Parser" class="ICSharpCode.SharpDevelop.Parser.ParserDoozer"/>
 		</Import>
-		<Import assembly="ICSharpCode.Core.Presentation.dll" />
+		<!--<Import assembly="ICSharpCode.Core.Presentation.dll" />
 		<Import assembly="ICSharpCode.SharpDevelop.Widgets.dll" />
 		<Import assembly="ICSharpCode.TreeView.dll" />
-		<Import assembly="DesignerStudio.Test.dll" />
+		<Import assembly="DesignerStudio.Test.dll" />-->
 	</Runtime>
 	<Path name="/SharpDevelop/Services">		
 		<Service id="ICSharpCode.SharpDevelop.Parser.IGlobalAssemblyCacheService"
@@ -105,6 +105,9 @@
 		         class="ICSharpCode.SharpDevelop.WinForms.WinFormsToolbarService"/>
 	</Path>	
 	
+	<Path name = "/SharpDevelop/Workbench/Ambiences">
+	</Path>
+	
 	<Path name = "/SharpDevelop/Workbench/DisplayBindings">
 		<DisplayBinding id    = "Browser"
 		                title = "${res:Gui.ProjectBrowser.OpenWith.Bindings.WebBrowser}"
@@ -131,6 +134,45 @@
 		<FileFilter id         = "AllFiles"
 		            name       = "${res:SharpDevelop.FileFilter.AllFiles}"
 		            extensions = "*.*"/>
+	</Path>
+	
+	<Path name = "/SharpDevelop/Workbench/Pads">
+		<Pad id       = "ProjectBrowser"
+		     category = "Main"
+		     title    = "${res:MainWindow.Windows.ProjectScoutLabel}"		     
+			 packIconKey = "PackIconMaterial;FileTree"		     
+			 class    = "ICSharpCode.SharpDevelop.Project.ProjectBrowserPad"		     
+		     defaultPosition = "Left" />
+	
+		<Pad id="ClassBrowser"
+			category="Main"
+			title="${res:MainWindow.Windows.ClassScoutLabel}"
+		    class="ICSharpCode.SharpDevelop.Dom.ClassBrowser.ClassBrowserPad"		    
+		    packIconKey = "PackIconMaterial;Matrix"
+			defaultPosition="Left"/>
+	
+		<Pad id       = "SideBar"
+		     category = "Main"
+		     title    = "${res:MainWindow.Windows.ToolbarLabel}"
+		     icon     = "PadIcons.Toolbar"
+		     class    = "ICSharpCode.SharpDevelop.Gui.ToolsPad"
+		     defaultPosition = "Left" />
+	
+		<Pad id       = "OutlinePad"
+		     category = "Main"
+		     title    = "${res:MainWindow.Windows.OutlinePad}"
+		     icon     = "PadIcons.Toolbar"
+		     class    = "ICSharpCode.SharpDevelop.Gui.OutlinePad"
+		     defaultPosition = "Left, Hidden" />
+	
+		<Pad id       = "ErrorList"
+		     category = "Main"
+		     title    = "${res:MainWindow.Windows.ErrorList}"
+		     icon     = "PadIcons.ErrorList"
+		     class    = "ICSharpCode.SharpDevelop.Gui.ErrorListPad"
+		     defaultPosition = "Bottom" />
+	
+		
 	</Path>
 	
 	<Path name="/SharpDevelop/Workbench/MainMenu">
@@ -287,28 +329,7 @@
 		             command = "Redo"/>
 	</Path>
 	
-	<Path name = "/SharpDevelop/Workbench/Pads">
-		<Pad id       = "ProjectBrowser"
-		     category = "Main"
-		     title    = "${res:MainWindow.Windows.ProjectScoutLabel}"		     
-			 packIconKey = "PackIconMaterial;FileTree"		     
-			 class    = "ICSharpCode.SharpDevelop.Project.ProjectBrowserPad"		     
-		     defaultPosition = "Left" />
 	
-		<Pad id="ClassBrowser"
-			category="Main"
-			title="${res:MainWindow.Windows.ClassScoutLabel}"
-		    class="ICSharpCode.SharpDevelop.Dom.ClassBrowser.ClassBrowserPad"		    
-		    packIconKey = "PackIconMaterial;Matrix"
-			defaultPosition="Left"/>
-	
-		<Pad id= "MyCustomPad"
-			category="Main"
-			title="${res:MainWindow.Windows.OutlinePad}"
-			class="CustomPad.MyCustomPad"
-			packIconKey="PackIconMaterial;Apple"
-			defaultPosition="Left"/>
-	</Path>
 
 	<!-- Project browser Paths -->
 	<Path name = "/SharpDevelop/Pads/ProjectBrowser/ToolBar/Standard">
@@ -352,5 +373,98 @@
 		</ToolbarItem>
 	</Path>
 	
+	<!--<Path name = "/SharpDevelop/Pads/CompilerMessageView/Toolbar">
+		<ToolbarItem id      = "CategorySelect"
+		             type    = "Custom"
+		             tooltip = "${res:MainWindow.Windows.CompilerMessageView.ShowOutputFromComboBox.ToolTip}"
+		             class   = "ICSharpCode.SharpDevelop.Gui.ShowOutputFromComboBox"/>
+		
+		<ToolbarItem id    = "CategorySelectSeparator" type  = "Separator"/>
+		
+		<ToolbarItem id      = "Clear"
+		             icon    = "OutputPad.Toolbar.ClearOutputWindow"
+		             tooltip = "${res:MainWindow.Windows.CompilerMessageView.ClearAllButton.ToolTip}"
+		             class   = "ICSharpCode.SharpDevelop.Gui.ClearOutputWindow"/>
+		
+		<ToolbarItem id      = "ToggleWordWrap"
+		             type    = "CheckBox"
+		             icon    = "OutputPad.Toolbar.ToggleWordWrap"
+		             tooltip = "${res:MainWindow.Windows.CompilerMessageView.ToggleWordWrapButton.ToolTip}"
+		             class   = "ICSharpCode.SharpDevelop.Gui.ToggleMessageViewWordWrap"/>
+	</Path>-->
 	
+	<!--<Path name = "/SharpDevelop/Pads/CompilerMessageView/ContextMenu">
+		<Include id = "Copy" item = "/SharpDevelop/Workbench/MainMenu/Edit/Copy"/>
+		<Include id = "SelectAll" item = "/SharpDevelop/Workbench/MainMenu/Edit/SelectAll"/>
+		<MenuItem id    = "Clear"
+		          icon  = "OutputPad.Toolbar.ClearOutputWindow"
+		          label = "${res:MainWindow.Windows.CompilerMessageView.ClearAllButton.ToolTip}"
+		          class = "ICSharpCode.SharpDevelop.Gui.ClearOutputWindow"/>
+	</Path>-->
+	
+	<Path name = "/SharpDevelop/Pads/ErrorList/Toolbar">
+		<ToolbarItem id      = "Errors"
+		             type    = "CheckBox"
+		             icon    = "Icons.16x16.Error"
+		             label   = "${res:MainWindow.Windows.ErrorList.ErrorButton.Label}"
+		             tooltip = "${res:MainWindow.Windows.ErrorList.ErrorButton.ToolTip}"
+		             class   = "ICSharpCode.SharpDevelop.Gui.ShowErrorsToggleButton"/>
+		
+		<ToolbarItem id    = "ErrorsSeparator" type  = "Separator"/>
+		
+		<ToolbarItem id    = "Warnings"
+		             type  = "CheckBox"
+		             icon  = "Icons.16x16.Warning"
+		             label = "${res:MainWindow.Windows.ErrorList.WarningButton.Label}"
+		             tooltip = "${res:MainWindow.Windows.ErrorList.WarningButton.ToolTip}"
+		             class = "ICSharpCode.SharpDevelop.Gui.ShowWarningsToggleButton"/>
+		<ToolbarItem id    = "WarningsSeparator" type  = "Separator"/>
+		
+		<ToolbarItem id    = "Messages"
+		             type  = "CheckBox"
+		             icon  = "Icons.16x16.Information"
+		             label = "${res:MainWindow.Windows.ErrorList.MessageButton.Label}"
+		             tooltip = "${res:MainWindow.Windows.ErrorList.MessageButton.ToolTip}"
+		             class = "ICSharpCode.SharpDevelop.Gui.ShowMessagesToggleButton"/>
+	</Path>
+	
+	<Path name="/SharpDevelop/Pads/ErrorList/TaskContextMenu">
+		<MenuItem id = "Copy"
+		          label = "${res:XML.MainMenu.EditMenu.Copy}"
+		          type = "Item"
+		          icon = "Icons.16x16.CopyIcon"
+		          command = "Copy"/>
+	</Path>
+
+	<!--<Path name="/SharpDevelop/Pads/TaskList/Toolbar">
+		<ToolbarItem id = "SelectScope"
+		             class = "ICSharpCode.SharpDevelop.Gui.SelectScopeComboBox"
+		             type = "Custom"/>
+	</Path>
+	
+	<Path name="/SharpDevelop/Pads/TaskList/TaskContextMenu">
+		<MenuItem id = "Copy"
+		          label = "${res:XML.MainMenu.EditMenu.Copy}"
+		          type = "Item"
+		          icon = "Icons.16x16.CopyIcon"
+		          command = "Copy"/>
+	</Path>-->
+
+	<Path name="/SharpDevelop/Pads/CommonConsole/ToolBar">
+		<ToolbarItem id = "ClearConsole"
+		             tooltip = "${res:AddIns.Debugger.Console.ClearConsole}"
+		             class = "ICSharpCode.SharpDevelop.Gui.ClearConsoleCommand"
+		             icon = "OutputPad.Toolbar.ClearOutputWindow" />
+		<ToolbarItem id = "DeleteHistory"
+		             tooltip = "${res:AddIns.Debugger.Console.DeleteHistory}"
+		             class = "ICSharpCode.SharpDevelop.Gui.DeleteHistoryCommand"
+		             icon = "Icons.16x16.DeleteHistory" />
+		<ToolbarItem type="Separator" />
+		<ToolbarItem id      = "ToggleWordWrap"
+		             type    = "CheckBox"
+		             icon    = "OutputPad.Toolbar.ToggleWordWrap"
+		             tooltip = "${res:MainWindow.Windows.CompilerMessageView.ToggleWordWrapButton.ToolTip}"
+		             class   = "ICSharpCode.SharpDevelop.Gui.ToggleConsoleWordWrapCommand"/>
+	</Path>
+
 </AddIn>

@@ -18,6 +18,7 @@
 using System;
 using System.Text;
 using ICSharpCode.AvalonEdit.Document;
+//using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.NRefactory.Editor;
 
 namespace ICSharpCode.SharpDevelop.Editor

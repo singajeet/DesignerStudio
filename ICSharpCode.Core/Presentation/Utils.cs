@@ -8,7 +8,6 @@
  */
 using System;
 using System.Windows.Controls;
-using ControlzEx;
 using MahApps.Metro.IconPacks;
 
 namespace ICSharpCode.Core.Presentation
@@ -22,9 +21,9 @@ namespace ICSharpCode.Core.Presentation
 		{
 			string packIconKind = packIconKey;
 
-			PackIconBase packIconControl = control.Template
+			object packIconControl = control.Template
 													.FindName("PackIcon", control) 
-														as PackIconBase;					
+														as object;					
 			
 			
 			if(packIconControl is PackIconMaterial){
