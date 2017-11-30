@@ -755,8 +755,11 @@
     <Compile Include="Templates\ScriptRunner.cs" />
     <Compile Include="Templates\TemplateBase.cs" />
     <Compile Include="Templates\TemplateCategory.cs" />
+    <Compile Include="Templates\TemplateCategoryDoozer.cs" />
+    <Compile Include="Templates\TemplateFileDoozer.cs" />
     <Compile Include="Templates\TemplateIconLoader.cs" />
     <Compile Include="Templates\TemplateLoadException.cs" />
+    <Compile Include="Templates\TemplateService.cs" />
     <Compile Include="Templates\TextTemplate.cs" />
     <Compile Include="UIService.cs" />
     <Compile Include="Utils\AtomicBoolean.cs" />
@@ -802,6 +805,7 @@
     <Compile Include="Workbench\AvalonDock\AvalonDockLayout.cs" />
     <Compile Include="Workbench\AvalonDock\AvalonPadContent.cs" />
     <Compile Include="Workbench\AvalonDock\AvalonWorkbenchWindow.cs" />
+    <Compile Include="Workbench\ChooseLayoutComboBox.cs" />
     <Compile Include="Workbench\Commands\AnotherCommandImplementation.cs" />
     <Compile Include="Workbench\DisplayBinding\AutoDetectDisplayBinding.cs" />
     <Compile Include="Workbench\DisplayBinding\DisplayBindingDescriptor.cs" />
@@ -1052,6 +1056,7 @@
     <None Include="Editor\CodeCompletion\Images\Struct.png" />
     <None Include="Editor\CodeCompletion\Images\VirtualMethod.png" />
     <None Include="packages.config" />
+    <None Include="Templates\SharpDevelop.Setup.sln" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
