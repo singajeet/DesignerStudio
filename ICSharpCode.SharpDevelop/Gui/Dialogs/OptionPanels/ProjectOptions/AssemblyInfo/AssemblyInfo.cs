@@ -15,8 +15,8 @@
 // FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
-
 using System;
+using System.Reflection;
 
 namespace ICSharpCode.SharpDevelop.Gui.OptionPanels
 {
@@ -25,36 +25,87 @@ namespace ICSharpCode.SharpDevelop.Gui.OptionPanels
 	/// </summary>
 	public class AssemblyInfo
 	{
-		public string Title { get; set; }
+		public string Title {
+			get;
+			set;
+		}
 
-		public string Description { get; set; }
+		public string Description {
+			get;
+			set;
+		}
 
-		public string Company { get; set; }
+		public string Company {
+			get;
+			set;
+		}
 
-		public string Product { get; set; }
+		public string Product {
+			get;
+			set;
+		}
 
-		public string Copyright { get; set; }
+		public string Copyright {
+			get;
+			set;
+		}
 
-		public string Trademark { get; set; }
+		public string Trademark {
+			get;
+			set;
+		}
 
-		public string DefaultAlias { get; set; }
+		public string DefaultAlias {
+			get;
+			set;
+		}
 
-		public string AssemblyVersion { get; set; }
+		public string AssemblyVersion {
+			get;
+			set;
+		}
 
-		public string AssemblyFileVersion { get; set; }
+		public string AssemblyFileVersion {
+			get;
+			set;
+		}
 
-		public string InformationalVersion { get; set; }
+		public string InformationalVersion {
+			get;
+			set;
+		}
 
-		public Guid? Guid { get; set; }
+		public Guid? Guid {
+			get;
+			set;
+		}
 
-		public string NeutralLanguage { get; set; }
+		public string NeutralLanguage {
+			get;
+			set;
+		}
 
-		public bool ComVisible { get; set; }
+		public bool ComVisible {
+			get;
+			set;
+		}
 
-		public bool ClsCompliant { get; set; }
+		public bool ClsCompliant {
+			get;
+			set;
+		}
 
-		public bool JitOptimization { get; set; }
+		public bool JitOptimization {
+			get;
+			set;
+		}
 
-		public bool JitTracking { get; set; }
+		public bool JitTracking {
+			get;
+			set;
+		}
 	}
 }
+[assembly: AssemblyVersion ("5.2.0.0")]
+[assembly: AssemblyFileVersion ("5.2.0.0")]
+[assembly: AssemblyTitle ("ICSharpCode.SharpDevelop")]

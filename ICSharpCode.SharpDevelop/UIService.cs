@@ -81,9 +81,17 @@ namespace ICSharpCode.SharpDevelop
 		
 		public async void ShowNewProjectWpfDialog(ISolutionFolder solutionFolder, IEnumerable<TemplateCategory> templates)
 		{
+			#if DEBUG
+			SD.Templates.UpdateTemplates();
+			#endif
 			ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialog npdlg =
 				new ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialog();
+			ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialogModelView npdlgViewModel =
+				new ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialogModelView(
+					templates ?? SD.Templates.TemplateCategories, createNewSolution: solutionFolder == null);
 			
+			
+			npdlg.DataContext = npdlgViewModel;
 			var result = await (SD.Workbench as Window).ShowDialog(npdlg, ClosingEventHandler);
 		}
 		

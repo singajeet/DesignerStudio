@@ -6,8 +6,8 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Library</OutputType>
-    <RootNamespace>ICSharpCode.SharpDevelop.Services</RootNamespace>
-    <AssemblyName>ICSharpCode.SharpDevelop.Services</AssemblyName>
+    <RootNamespace>ICSharpCode.SharpDevelop</RootNamespace>
+    <AssemblyName>ICSharpCode.SharpDevelop</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <NoWin32Manifest>False</NoWin32Manifest>
@@ -20,6 +20,7 @@
     <AssemblyOriginatorKeyFile>..\..\..\..\..\..\SharpDevelop\SharpDevelop-master\src\Main\ICSharpCode.SharpDevelop.snk</AssemblyOriginatorKeyFile>
     <DelaySign>False</DelaySign>
     <AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,6 +37,7 @@
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <StartAction>Project</StartAction>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -315,6 +317,7 @@
     <Compile Include="Editor\XmlDocFormatter.cs" />
     <Compile Include="FakeMessageLoop.cs" />
     <Compile Include="FileIconService.cs" />
+    <Compile Include="FileSystem.cs" />
     <Compile Include="Gui\BrowserDisplayBinding\BrowserCommands.cs" />
     <Compile Include="Gui\BrowserDisplayBinding\BrowserDisplayBinding.cs" />
     <Compile Include="Gui\BrowserDisplayBinding\BrowserLocationConditionEvaluator.cs" />

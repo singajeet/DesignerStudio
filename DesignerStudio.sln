@@ -12,13 +12,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.SharpDevelop.Wi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.TreeView", "ICSharpCode.TreeView\ICSharpCode.TreeView.csproj", "{7ED6E021-BA77-4DE8-9ADB-069C7E50A1A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.SharpDevelop.Services", "ICSharpCode.SharpDevelop.Services\ICSharpCode.SharpDevelop.Services.csproj", "{8350E685-5488-423C-AEDA-14802FB7CE0D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.SharpDevelop", "ICSharpCode.SharpDevelop\ICSharpCode.SharpDevelop.csproj", "{8350E685-5488-423C-AEDA-14802FB7CE0D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesignerStudio.Startup", "DesignerStudio.Startup\DesignerStudio.Startup.csproj", "{DF1A70B6-30BC-428C-93F6-BC97E62A4215}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.SharpDevelop.BuildWorker", "ICSharpCode.SharpDevelop.BuildWorker\ICSharpCode.SharpDevelop.BuildWorker.csproj", "{867B7E3B-BC22-4149-BB93-CE31384A810B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesignerStudio.Test", "DesignerStudio.Test\DesignerStudio.Test.csproj", "{2F862BC6-B820-4660-8B99-643B2C5FDA68}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Addins", "Addins", "{0926DA82-CA90-4940-9517-DB8B04A62264}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

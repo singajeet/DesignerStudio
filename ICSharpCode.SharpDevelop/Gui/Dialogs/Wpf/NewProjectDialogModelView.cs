@@ -138,7 +138,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 
 		void MyInitializeComponents()
 		{
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
 		}
 
 		void InitializeTemplates(IEnumerable<TemplateCategory> templateCategories)
@@ -188,7 +188,8 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 
 		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+			if(PropertyChanged!= null)
+			PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
 		#endregion
 	}
