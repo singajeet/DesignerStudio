@@ -61,5 +61,6 @@ namespace ICSharpCode.SharpDevelop
 		/// Pass <c>null</c> to use the default list (<see cref="ITemplateService.TemplateCategories"/>)</param>
 		/// <returns>Returns a <see cref="ProjectTemplateResult"/>; or null if no project was created.</returns>
 		ProjectTemplateResult ShowNewProjectDialog(ISolutionFolder solutionFolder, IEnumerable<TemplateCategory> templates = null);
+		void ShowNewProjectWpfDialog(ISolutionFolder solutionFolder, IEnumerable<TemplateCategory> templates = null);
 	}
 }

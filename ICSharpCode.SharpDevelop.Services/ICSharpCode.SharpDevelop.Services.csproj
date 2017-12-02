@@ -459,6 +459,11 @@
     <Compile Include="Gui\Dialogs\ToolNotFoundDialog.Designer.cs" />
     <Compile Include="Gui\Dialogs\TreeViewOptionsDialog.xaml.cs" />
     <Compile Include="Gui\Dialogs\WordCountDialog.cs" />
+    <Compile Include="Gui\Dialogs\Wpf\NewProjectDialog.xaml.cs">
+      <DependentUpon>NewProjectDialog.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Gui\Dialogs\Wpf\NewProjectDialogModelView.cs" />
     <Compile Include="Gui\DragDropDataObjects\TreeNodeDragDropDataObject.cs" />
     <Compile Include="Gui\ErrorList\ErrorListPad.cs" />
     <Compile Include="Gui\ErrorList\ErrorListToolbarCommands.cs" />
@@ -912,6 +917,7 @@
     <Folder Include="Gui\BrowserDisplayBinding" />
     <Folder Include="Gui\Dialogs" />
     <Folder Include="Gui\Components" />
+    <Folder Include="Gui\Dialogs\Wpf" />
     <Folder Include="Gui\Dialogs\OptionPanels" />
     <Folder Include="Gui\Dialogs\OptionPanels\IDEOptions" />
     <Folder Include="Gui\Dialogs\OptionPanels\ProjectOptions" />
@@ -1017,6 +1023,7 @@
     <Page Include="Gui\Dialogs\ReferenceDialog\ServiceReference\ServiceReferenceOptionsPanel.xaml" />
     <Page Include="Gui\Dialogs\TabbedOptionsDialog.xaml" />
     <Page Include="Gui\Dialogs\TreeViewOptionsDialog.xaml" />
+    <Page Include="Gui\Dialogs\Wpf\NewProjectDialog.xaml" />
     <Page Include="Gui\TaskList\TaskViewResources.xaml" />
     <Page Include="Project\Converter\UpgradeView.xaml" />
     <Page Include="Project\PortableLibrary\SelectProfileDialog.xaml" />

@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Forms;
 
 using ICSharpCode.Core;
@@ -27,6 +28,7 @@ using ICSharpCode.SharpDevelop.Project;
 using ICSharpCode.SharpDevelop.Project.Commands;
 using ICSharpCode.SharpDevelop.Project.Dialogs;
 using ICSharpCode.SharpDevelop.Templates;
+using MaterialDesignThemes.Wpf;
 
 namespace ICSharpCode.SharpDevelop
 {
@@ -75,6 +77,19 @@ namespace ICSharpCode.SharpDevelop
 					return null;
 				}
 			}
+		}
+		
+		public async void ShowNewProjectWpfDialog(ISolutionFolder solutionFolder, IEnumerable<TemplateCategory> templates)
+		{
+			ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialog npdlg =
+				new ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialog();
+			
+			var result = await (SD.Workbench as Window).ShowDialog(npdlg, ClosingEventHandler);
+		}
+		
+		private void ClosingEventHandler(object sender, DialogClosingEventArgs eventArgs)
+        {
+            //Console.WriteLine("You can intercept the closing event, and cancel here.");
 		}
 	}
 }

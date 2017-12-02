@@ -28,7 +28,8 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 	{
 		public override void Run()
 		{
-			SD.UIService.ShowNewProjectDialog(null);
+			//SD.UIService.ShowNewProjectDialog(null);
+			SD.UIService.ShowNewProjectWpfDialog(null);
 		}
 	}
 	

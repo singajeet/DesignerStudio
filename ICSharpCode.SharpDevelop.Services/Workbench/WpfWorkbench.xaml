@@ -87,10 +87,13 @@
             </MControls:Flyout>
 		</MControls:FlyoutsControl>	
 	</MControls:MetroWindow.Flyouts>
-	<DockPanel Name="dockPanel">
-		<Menu Name="mainMenu" DockPanel.Dock="Top" IsMainMenu="True"/>
-		<!-- Toolbars will be inserted here (index: 1) -->
-		<!-- Statusbar will be inserted here (index: Count-2) -->
-		<ContentPresenter Name="mainContent" />
-	</DockPanel>
+	<materialDesign:DialogHost Identifier="RootDialog" HorizontalAlignment="Center"
+			VerticalAlignment="Center">
+		<DockPanel Name="dockPanel">
+			<Menu Name="mainMenu" DockPanel.Dock="Top" IsMainMenu="True"/>
+			<!-- Toolbars will be inserted here (index: 1) -->
+			<!-- Statusbar will be inserted here (index: Count-2) -->
+			<ContentPresenter Name="mainContent" />
+		</DockPanel>
+	</materialDesign:DialogHost>
 </wb:FullScreenEnabledWindow>
