@@ -14,9 +14,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
+using System.Windows.Input;
 using ICSharpCode.Core;
 using ICSharpCode.SharpDevelop.Project;
 using ICSharpCode.SharpDevelop.Templates;
+using MaterialDesignThemes.Wpf;
 
 namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 {
@@ -34,8 +36,11 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 		private bool _isCustomSolutionName= false;
 		private string _projectLocationDirectory;		
 		private Category _selectedCategory;
+		private TemplateItem _selectedTemplate;
 		private string _projectName;
 		private string _solutionName;
+		private int _selectedIconSizeIndex;
+		private UserControl _newProjectDialogInstance;
 		private ISolutionFolder _solutionFolder;
 		internal ProjectTemplateResult _result;
 		
@@ -45,8 +50,19 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 				_isCustomSolutionName = value;
 						OnPropertyChanged();
 					}
+		}		
+		
+		public UserControl NewProjectDialogInstance{
+			get { return this._newProjectDialogInstance; }
 		}
 		
+		public int SelectedIconSizeIndex{
+			get { return _selectedIconSizeIndex; }
+			set { _selectedIconSizeIndex = value; 
+				OnPropertyChanged();
+				//CommandManager.InvalidateRequerySuggested();
+			}
+		}
 		
 		public ObservableCollection<TemplateItem> AllTemplates{
 			get { return this._alltemplates; }
@@ -59,6 +75,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 			get { return this._categoryTreeViewItems; }
 			set { this._categoryTreeViewItems = value; 
 				OnPropertyChanged();
+				//CommandManager.InvalidateRequerySuggested();
 			}
 		}
 		
@@ -79,6 +96,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 			}
 			set { this._projectLocationDirectory = value; 
 				OnPropertyChanged();
+				//CommandManager.InvalidateRequerySuggested();
 			}
 		}
 		
@@ -90,6 +108,18 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 				OnPropertyChanged();
 				OnPropertyChanged("TargetFrameworks");
 				OnPropertyChanged("SelectedTargetFramework");
+				//CommandManager.InvalidateRequerySuggested();
+			}
+		}
+		
+		public TemplateItem SelectedTemplate{
+			get {
+				return this._selectedTemplate;
+			}
+			set {
+				this._selectedTemplate = value;
+				OnPropertyChanged();
+				//CommandManager.InvalidateRequerySuggested();
 			}
 		}
 		
@@ -126,7 +156,8 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 				return _targetFrameworks[0];
 			}
 			set { 
-				_selectedTargetFramework = value;				
+				_selectedTargetFramework = value;	
+				//CommandManager.InvalidateRequerySuggested();				
 			}
 		}
 		
@@ -134,6 +165,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 			get { return this._isCreateDirectoryForSolutionChecked; }
 			set { this._isCreateDirectoryForSolutionChecked = value; 
 				OnPropertyChanged();
+				//CommandManager.InvalidateRequerySuggested();
 			}
 		}
 		
@@ -145,6 +177,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 			set { this._projectName = value; 
 				OnPropertyChanged();
 				OnPropertyChanged("SolutionName");
+				//CommandManager.InvalidateRequerySuggested();
 			}
 		}
 		
@@ -159,6 +192,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 				return this._solutionName; }
 			set { this._solutionName = value; 
 				OnPropertyChanged();
+				//CommandManager.InvalidateRequerySuggested();
 			}
 		}
 		
@@ -187,22 +221,53 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 			}
 		}
 		
-		public NewProjectDialogViewModel(IEnumerable<TemplateCategory> templateCategories, bool createNewSolution)
+		public NewProjectDialogViewModel(IEnumerable<TemplateCategory> templateCategories, bool createNewSolution, UserControl dialog)
 		{
-			this.CreateNewSolution = createNewSolution;
-			MyInitializeComponents();
+			this.CreateNewSolution = createNewSolution;					
+			this._newProjectDialogInstance = dialog;
 			
 			InitializeTemplates(templateCategories);
 			InitializeViewModel();
+			RegisterCommandBindings(dialog);
 			
 			ProjectLocationDirectory = ICSharpCode.Core.PropertyService.Get("ICSharpCode.SharpDevelop.Gui.Dialogs.NewProjectDialog.DefaultPath", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "DesignerStudio Projects"));
+			
 		}
 
-		void MyInitializeComponents()
+		void RegisterCommandBindings(UserControl dialog)
 		{
-			//throw new NotImplementedException();
+			dialog.CommandBindings.Add(new CommandBinding(NewProjectDialogCommands.CreateProject, new ExecutedRoutedEventHandler(this.OnExecuteCreateProjectCommand), new CanExecuteRoutedEventHandler(this.OnCanExecuteCreateProjectCommand)));
 		}
 
+		void OnCanExecuteCreateProjectCommand(object sender, CanExecuteRoutedEventArgs e)
+		{
+			try{
+			if (SelectedTargetFramework != null && SelectedCategory != null
+			    && SelectedTemplate != null
+			    && ProjectName != null
+			    && SolutionName != null
+			    && ProjectLocationDirectory != null 
+			    && e.Command == NewProjectDialogCommands.CreateProject)
+				e.CanExecute = true;
+			else
+				e.CanExecute = false;
+			} catch (Exception ex) {
+				e.CanExecute = false;
+			}			
+		}
+		
+		void OnExecuteCreateProjectCommand(object sender, ExecutedRoutedEventArgs e)
+		{
+			if (e.Command == NewProjectDialogCommands.CreateProject) {
+				bool success = TryCreateProject();
+				if (success) {					
+					DialogHost.CloseDialogCommand.Execute(true, NewProjectDialogInstance);
+				}
+				
+				e.Handled = true;
+			}
+		}
+		
 		void InitializeTemplates(IEnumerable<TemplateCategory> templateCategories)
 		{
 			foreach (var templateCategory in Sorted(templateCategories)) {
@@ -264,6 +329,101 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 			PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
 		#endregion
+		
+		bool TryCreateProject()
+		{
+			try {
+				return CreateProject();
+			} catch (ProjectLoadException ex) {
+				LoggingService.Error("Unable to create new project.", ex);
+				if (ex.CanShowDialog) {
+					ex.ShowDialog();
+					return false;
+				} else {
+					MessageService.ShowError(ex.Message);
+					return false;
+				}
+			} catch (IOException ex) {
+				LoggingService.Error("Unable to create new project.", ex);
+				MessageService.ShowError(ex.Message);
+				return false;
+			}			
+		}
+		
+		string CheckProjectName(string solution, string name, string location)
+		{
+			if (name.Length == 0 || !char.IsLetter(name[0]) && name[0] != '_') {
+				return "${res:ICSharpCode.SharpDevelop.Gui.Dialogs.NewProjectDialog.ProjectNameMustStartWithLetter}";
+			}
+			if (name.EndsWith(".", StringComparison.Ordinal)) {
+				return "${res:ICSharpCode.SharpDevelop.Gui.Dialogs.NewProjectDialog.ProjectNameMustNotEndWithDot}";
+			}
+			if (!FileUtility.IsValidDirectoryEntryName(solution)
+			    || !FileUtility.IsValidDirectoryEntryName(name))
+			{
+				return "${res:ICSharpCode.SharpDevelop.Gui.Dialogs.NewProjectDialog.IllegalProjectNameError}";
+			}
+			if (!FileUtility.IsValidPath(location) || !Path.IsPathRooted(location)) {
+				return "${res:ICSharpCode.SharpDevelop.Gui.Dialogs.NewProjectDialog.SpecifyValidLocation}";
+			}
+			return null;
+		}
+		
+		bool CreateProject()
+		{
+			if (SelectedCategory != null) {
+				ICSharpCode.Core.PropertyService.Set("Dialogs.NewProjectDialog.LastSelectedCategory", SelectedCategory.Text);				
+				ICSharpCode.Core.PropertyService.Set("Dialogs.NewProjectDialog.LargeImages", SelectedIconSizeIndex);
+			}
+			
+			string solution = SolutionName.Trim();
+			string name     = ProjectName.Trim();
+			string location = ProjectLocationDirectory.Trim();
+			string projectNameError = CheckProjectName(solution, name, location);
+			if (projectNameError != null) {
+				MessageService.ShowError(projectNameError);
+				return false;
+			}
+			
+			if (SelectedTemplate != null && ProjectLocationDirectory.Length > 0 && SolutionName.Length > 0) {
+				TemplateItem item = SelectedTemplate;
+				try {
+					System.IO.Directory.CreateDirectory(NewProjectDirectory);
+				} catch (Exception) {
+					MessageService.ShowError("${res:ICSharpCode.SharpDevelop.Gui.Dialogs.NewProjectDialog.CantCreateDirectoryError}");
+					return false;
+				}
+				
+				ProjectTemplateOptions cinfo = new ProjectTemplateOptions();
+				
+				if (item.Template.SupportedTargetFrameworks.Any()) {
+					cinfo.TargetFramework = SelectedTargetFramework;
+					ICSharpCode.Core.PropertyService.Set("Dialogs.NewProjectDialog.TargetFramework", cinfo.TargetFramework.TargetFrameworkVersion);
+				}
+				
+				cinfo.ProjectBasePath = DirectoryName.Create(NewProjectDirectory);
+				cinfo.ProjectName     = name;
+				
+				if (CreateNewSolution) {
+					if (!SD.ProjectService.CloseSolution())
+						return false;
+					_result = item.Template.CreateAndOpenSolution(cinfo, NewSolutionDirectory, solution);
+				} else {
+					cinfo.Solution = SolutionFolder.ParentSolution;
+					cinfo.SolutionFolder = SolutionFolder;
+					_result = item.Template.CreateProjects(cinfo);
+					cinfo.Solution.Save();
+				}
+				
+				if (_result != null)
+					item.Template.RunOpenActions(_result);
+				
+				ProjectBrowserPad.RefreshViewAsync();
+				return true;
+			}
+			return false;
+		}
+		
 	}
 	
 	/// <summary>

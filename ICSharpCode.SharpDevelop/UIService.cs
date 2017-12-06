@@ -88,7 +88,7 @@ namespace ICSharpCode.SharpDevelop
 				new ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialog();
 			ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialogViewModel npdlgViewModel =
 				new ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialogViewModel(
-					templates ?? SD.Templates.TemplateCategories, createNewSolution: solutionFolder == null);
+					templates ?? SD.Templates.TemplateCategories, solutionFolder == null, npdlg);
 			
 			
 			npdlg.SetDataContext(npdlgViewModel);

@@ -40,7 +40,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 		void CategoriesTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
 		{
 			
-			((NewProjectDialogViewModel)this.DataContext).SelectedCategory = (Category)e.NewValue;
+			((NewProjectDialogViewModel)this.DataContext).SelectedCategory = (Category)e.NewValue;			
 		}
 		
 		void TemplatesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -82,7 +82,7 @@
 				<ListBox
 					x:Name="IconSizeListBox"
 					Style="{StaticResource MaterialDesignToolToggleFlatListBox}"
-					SelectedIndex="0"
+					SelectedIndex="{Binding SelectedIconSizeIndex}"					
 					HorizontalAlignment="Center">
 					<ListBoxItem
 						x:Name="LargeIconSize">
@@ -121,6 +121,7 @@
 				x:Name="TemplatesListView"
 				ItemsSource="{Binding ElementName=CategoriesTreeView, Path=SelectedItem.Templates}"
 				SelectionChanged="TemplatesListView_SelectionChanged"
+				SelectedItem="{Binding SelectedTemplate}"
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"></ListView>
 		</Border>
@@ -261,7 +262,7 @@
 			<Button
 				x:Name="CreateProjectButton"
 				Style="{StaticResource MaterialDesignRaisedDarkButton}"
-				Command="wpf:DialogHost.CloseDialogCommand"
+				Command="local:NewProjectDialogCommands.CreateProject"
 				Width="100"
 				Height="28"
 				Content="_Ok"
