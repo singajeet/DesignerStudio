@@ -8,7 +8,7 @@
 		<Identity name = "DesignerStudio" />
 	</Manifest>
 	<Runtime>
-		<Import assembly="ICSharpCode.SharpDevelop.Services.dll" >	
+		<Import assembly="ICSharpCode.SharpDevelop.dll" >	
 			<ConditionEvaluator name="ActiveContentExtension" class="ICSharpCode.SharpDevelop.ActiveContentExtensionConditionEvaluator"/>
 			<ConditionEvaluator name="ActiveViewContentUntitled" class="ICSharpCode.SharpDevelop.ActiveViewContentUntitledConditionEvaluator"/>
 			<ConditionEvaluator name="ActiveWindowState" class="ICSharpCode.SharpDevelop.ActiveWindowStateConditionEvaluator"/>
@@ -1948,6 +1948,18 @@
 	<Path name = "/SharpDevelop/BackendBindings/TemplateCommands">
 		<Class id="CheckPortableLibraryInstalled"
 		       class="ICSharpCode.SharpDevelop.Project.PortableLibrary.CheckPortableLibraryInstalled"/>
+	</Path>
+
+	<Path name = "/SharpDevelop/TargetFrameworks">
+		<Static class="ICSharpCode.SharpDevelop.Project.TargetFramework" member="Net20" />
+		<Static class="ICSharpCode.SharpDevelop.Project.TargetFramework" member="Net30" />
+		<Static class="ICSharpCode.SharpDevelop.Project.TargetFramework" member="Net35" />
+		<Static class="ICSharpCode.SharpDevelop.Project.TargetFramework" member="Net35Client" />
+		<Static class="ICSharpCode.SharpDevelop.Project.TargetFramework" member="Net40" />
+		<Static class="ICSharpCode.SharpDevelop.Project.TargetFramework" member="Net40Client" />
+		<Static class="ICSharpCode.SharpDevelop.Project.TargetFramework" member="Net45" />
+		<Static class="ICSharpCode.SharpDevelop.Project.TargetFramework" member="Net451" />
+		<Static class="ICSharpCode.SharpDevelop.Project.TargetFramework" member="Net452" />
 	</Path>
 
 </AddIn>

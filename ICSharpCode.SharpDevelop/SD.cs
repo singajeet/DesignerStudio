@@ -239,5 +239,10 @@ namespace ICSharpCode.SharpDevelop
 		public static IFileSystem FileSystem {
 			get { return GetRequiredService<IFileSystem>(); }
 		}
+		
+		/// <inheritdoc see="ILanguageService"/>
+		public static ILanguageService LanguageService {
+			get { return GetRequiredService<ILanguageService>(); }
+		}
 	}
 }

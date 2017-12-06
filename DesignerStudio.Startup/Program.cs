@@ -25,6 +25,7 @@ namespace DesignerStudio.Startup
 				.SetDomPersistancePath(@"Dom")
 				.SetAddInsPath(@"C:\Users\Admin\Documents\SharpDevelop Projects\DesignerStudio\DesignerStudio.Startup\bin\Debug")
 				.SetConfigDirectoryPath(@"Settings")
+				.AllowUserAddIns(false)
 				.Run();
 		}
 	}

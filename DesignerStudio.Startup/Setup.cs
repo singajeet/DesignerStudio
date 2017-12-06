@@ -93,6 +93,12 @@ namespace DesignerStudio.Startup
 			return this;
 		}
 		
+		public Setup AllowUserAddIns(bool allow)
+		{
+			_main.AllowUserAddIns = allow;
+			return this;
+		}
+		
 		public void Run()
 		{
 			if (_main.UseExceptionBox) {

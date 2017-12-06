@@ -71,7 +71,7 @@
       <HintPath>..\..\..\Visual Studio 2010\Projects\EmbeddedDesignerStudio\packages\MaterialDesignThemes.MahApps.0.0.11\lib\net45\MaterialDesignThemes.MahApps.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignThemes.Wpf">
-      <HintPath>..\..\..\Visual Studio 2010\Projects\EmbeddedDesignerStudio\packages\MaterialDesignThemes.2.3.1.953\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+      <HintPath>..\packages\MaterialDesignThemes.2.3.1.953\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.Build.Engine" />
@@ -172,9 +172,9 @@
       <Project>{81875f46-0628-4140-be0c-42ab9c3424eb}</Project>
       <Name>ICSharpCode.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ICSharpCode.SharpDevelop.Services\ICSharpCode.SharpDevelop.Services.csproj">
+    <ProjectReference Include="..\ICSharpCode.SharpDevelop\ICSharpCode.SharpDevelop.csproj">
       <Project>{8350e685-5488-423c-aeda-14802fb7ce0d}</Project>
-      <Name>ICSharpCode.SharpDevelop.Services</Name>
+      <Name>ICSharpCode.SharpDevelop</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

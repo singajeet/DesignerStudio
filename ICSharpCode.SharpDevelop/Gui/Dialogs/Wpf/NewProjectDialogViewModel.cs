@@ -8,6 +8,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -22,36 +23,37 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 	/// <summary>
 	/// Description of NewProjectDialogModelView.
 	/// </summary>
-	public class NewProjectDialogModelView : INotifyPropertyChanged
+	public class NewProjectDialogViewModel : INotifyPropertyChanged
 	{
-		private List<TemplateItem> _alltemplates = new List<TemplateItem>();
-		private List<Category> _categoryTreeViewItems = new List<Category>();
+		private ObservableCollection<TemplateItem> _alltemplates = new ObservableCollection<TemplateItem>();
+		private ObservableCollection<Category> _categoryTreeViewItems = new ObservableCollection<Category>();
+		private TargetFramework _selectedTargetFramework;
+		private ObservableCollection<TargetFramework> _targetFrameworks;
 		private  bool _createNewSolution;
 		private bool _isCreateDirectoryForSolutionChecked;
-		private string _projectLocationDirectory;
-		private string _initialSelectedCategory;
-		private string _selectedCategory;
+		private string _projectLocationDirectory;		
+		private Category _selectedCategory;
 		private string _projectName;
 		private string _solutionName;
 		private ISolutionFolder _solutionFolder;
 		internal ProjectTemplateResult _result;
 		
 		
-		protected List<TemplateItem> AllTemplates{
+		public ObservableCollection<TemplateItem> AllTemplates{
 			get { return this._alltemplates; }
 			set { this._alltemplates = value; 
 				OnPropertyChanged();
 			}
 		}
 		
-		protected List<Category> CategoryTreeViewItems{
+		public ObservableCollection<Category> CategoryTreeViewItems{
 			get { return this._categoryTreeViewItems; }
 			set { this._categoryTreeViewItems = value; 
 				OnPropertyChanged();
 			}
 		}
 		
-		protected bool CreateNewSolution{
+		public bool CreateNewSolution{
 			get { return this._createNewSolution; }
 			set { this._createNewSolution = value; 
 				OnPropertyChanged();
@@ -65,17 +67,51 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 			}
 		}
 		
-		public string InitialSelectedCategory{
-			get { return this._initialSelectedCategory; }
-			set { this._initialSelectedCategory = value; 
+		public Category SelectedCategory{
+			get {				
+				return this._selectedCategory; 
+			}
+			set { this._selectedCategory = value; 
 				OnPropertyChanged();
+				OnPropertyChanged("TargetFrameworks");
+				OnPropertyChanged("SelectedTargetFramework");
 			}
 		}
 		
-		public string SelectedCategory{
-			get { return this._selectedCategory; }
-			set { this._selectedCategory = value; 
-				OnPropertyChanged();
+		public ObservableCollection<TargetFramework> TargetFrameworks{
+			get { 
+				ObservableCollection<TargetFramework> tempTargetFrameworks = new ObservableCollection<TargetFramework>();
+				foreach (TemplateItem item in ((Category)SelectedCategory).Templates) {
+					tempTargetFrameworks.AddRange(item.Template.SupportedTargetFrameworks);
+				}
+				
+				_targetFrameworks = new ObservableCollection<TargetFramework>(tempTargetFrameworks
+				                                                 .Where(fx => fx.DisplayName != null && 
+				                                                        fx.IsAvailable())
+				                                                 .OrderBy(fx => fx.TargetFrameworkVersion)
+				                                                 .Distinct()
+				                                                 .ToList());
+				return _targetFrameworks;
+			}
+		}
+		
+		public TargetFramework SelectedTargetFramework{
+			get { 
+				string lastUsedTargetFramework = ICSharpCode.Core.PropertyService.Get("Dialogs.NewProjectDialog.TargetFramework", TargetFramework.DefaultTargetFrameworkVersion);
+				string lastUsedTargetFrameworkProfile = ICSharpCode.Core.PropertyService.Get("Dialogs.NewProjectDialog.TargetFrameworkProfile", TargetFramework.DefaultTargetFrameworkProfile);
+				foreach (TargetFramework framework in _targetFrameworks) {
+					if (framework.TargetFrameworkVersion.Equals(lastUsedTargetFramework)
+					    && framework.TargetFrameworkProfile.Equals(lastUsedTargetFrameworkProfile)) {
+						_selectedTargetFramework = framework;
+						return framework;
+					}
+				}
+				
+				//if not found, select first element as default
+				return _targetFrameworks[0];
+			}
+			set { 
+				_selectedTargetFramework = value;				
 			}
 		}
 		
@@ -100,7 +136,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 			}
 		}
 		
-		protected string NewProjectDirectory {
+		public string NewProjectDirectory {
 			get {
 				if (IsCreateDirectoryForSolutionChecked) {
 					return Path.Combine(NewSolutionDirectory, ProjectName);
@@ -110,7 +146,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 			}
 		}
 		
-		protected string NewSolutionDirectory {
+		public string NewSolutionDirectory {
 			get {
 				string location = ProjectLocationDirectory;
 				string name = IsCreateDirectoryForSolutionChecked ? SolutionName : ProjectName;
@@ -125,7 +161,7 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 			}
 		}
 		
-		public NewProjectDialogModelView(IEnumerable<TemplateCategory> templateCategories, bool createNewSolution)
+		public NewProjectDialogViewModel(IEnumerable<TemplateCategory> templateCategories, bool createNewSolution)
 		{
 			this.CreateNewSolution = createNewSolution;
 			MyInitializeComponents();
@@ -152,8 +188,18 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 
 		void InitializeViewModel()
 		{
-			InitialSelectedCategory = StringParser.Parse("C#\\${res:Templates.File.Categories.WindowsApplications}");			
-			SelectedCategory = ICSharpCode.Core.PropertyService.Get("Dialogs.NewProjectDialog.LastSelectedCategory", InitialSelectedCategory);
+			string initialSelectedCategory = StringParser.Parse("C#\\${res:Templates.File.Categories.WindowsApplications}");			
+			SelectedCategory = GetSelectedCategory(ICSharpCode.Core.PropertyService.Get("Dialogs.NewProjectDialog.LastSelectedCategory", initialSelectedCategory));
+		}
+		
+		Category GetSelectedCategory(string categoryName)
+		{
+			foreach (Category cat in this._categoryTreeViewItems) {
+				if (cat.Text.Equals(categoryName))
+					return cat;
+			}
+			
+			return null;
 		}
 		
 		IEnumerable<TemplateCategory> Sorted(IEnumerable<TemplateCategory> templateCategories)
@@ -203,7 +249,14 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 		
 		public TemplateItem(ProjectTemplate template)
 		{
-			this.template = template;				
+			this.template = template;	
+
+			StackPanel sp = new StackPanel();
+			TextBlock tb = new TextBlock();
+			tb.Text = template.DisplayName;
+			sp.Children.Add(tb);
+			
+			this.Content = sp;
 		}
 		
 		public ProjectTemplate Template {
@@ -215,14 +268,28 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 	
 	public class Category : TreeViewItem
 	{
-		List<TemplateItem> templates  = new List<TemplateItem>();
+		ObservableCollection<TemplateItem> templates  = new ObservableCollection<TemplateItem>();
+		string text;
 		
-		public Category(string name) : base()
-		{
-			this.Name = StringParser.Parse(name);			
+		public string Text{
+			get { return this.text; }
+			set { this.text = value; }
 		}
 		
-		public List<TemplateItem> Templates {
+		public Category(string name) : base()
+		{			
+			this.Text = StringParser.Parse(name);	
+			StackPanel sp = new StackPanel();
+			TextBlock tb = new TextBlock();
+			
+			tb.Text = this.Text;
+			sp.Orientation = Orientation.Horizontal;
+			sp.Children.Add(tb);		
+			
+			this.Header = sp;
+		}
+		
+		public ObservableCollection<TemplateItem> Templates {
 			get {
 				return templates;
 			}

@@ -466,7 +466,7 @@
       <DependentUpon>NewProjectDialog.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Gui\Dialogs\Wpf\NewProjectDialogModelView.cs" />
+    <Compile Include="Gui\Dialogs\Wpf\NewProjectDialogViewModel.cs" />
     <Compile Include="Gui\DragDropDataObjects\TreeNodeDragDropDataObject.cs" />
     <Compile Include="Gui\ErrorList\ErrorListPad.cs" />
     <Compile Include="Gui\ErrorList\ErrorListToolbarCommands.cs" />

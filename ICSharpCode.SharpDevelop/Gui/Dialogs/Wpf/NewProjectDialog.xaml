@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <UserControl
-	x:Class="ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialog" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf" xmlns:system="clr-namespace:System;assembly=mscorlib"
-xmlns:local="clr-namespace:ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf"
+	x:Class="ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialog" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf" xmlns:system="clr-namespace:System;assembly=mscorlib" xmlns:local="clr-namespace:ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf"
 	Foreground="{StaticResource MaterialDesignBody}"
 	Background="{StaticResource MaterialDesignPaper}"
 	Width="603"
@@ -67,11 +66,9 @@ xmlns:local="clr-namespace:ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf"
 				x:Name="TargetFrameworkComboBox"
 				HorizontalAlignment="Stretch"
 				MinWidth="200"
-				SelectedIndex="1">
-				<ComboBoxItem
-					IsSelected="True" />
-				<ComboBoxItem
-					Content="Arduino Mega" />
+				ItemsSource="{Binding TargetFrameworks}"
+				SelectedItem="{Binding SelectedTargetFramework}"				
+				SelectionChanged="TargetFrameworkComboBox_SelectionChanged">
 			</ComboBox>
 			<Border
 				BorderThickness="0"
@@ -104,13 +101,10 @@ xmlns:local="clr-namespace:ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf"
 			Margin="5,0,5,0">
 			<TreeView
 				x:Name="CategoriesTreeView"
-				HorizontalAlignment="Stretch"
+				SelectedItemChanged="CategoriesTreeView_SelectedItemChanged"
+				HorizontalAlignment="Stretch"				
+				ItemsSource="{Binding CategoryTreeViewItems}"
 				VerticalAlignment="Stretch">
-				<TreeView.ItemTemplate>
-				<HierarchicalDataTemplate DataType="{x:Type local:Category}" ItemsSource="{Binding CategoryTreeViewItems}">
-					<TextBlock Text="{Binding Name}"/>
-				</HierarchicalDataTemplate>
-				</TreeView.ItemTemplate>
 			</TreeView>
 		</Border>
 		<Border
@@ -121,17 +115,10 @@ xmlns:local="clr-namespace:ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf"
 			Margin="5,0,5,0">
 			<ListView
 				x:Name="TemplatesListView"
+				ItemsSource="{Binding ElementName=CategoriesTreeView, Path=SelectedItem.Templates}"
+				SelectionChanged="TemplatesListView_SelectionChanged"
 				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				SelectionMode="Single">
-				<ListViewItem
-					Content="Arduino Uno"
-					IsSelected="True" />
-				<ListViewItem
-					Content="Arduino Mega" />
-				<ListViewItem
-					Content="Atmega386" />
-			</ListView>
+				VerticalAlignment="Stretch"></ListView>
 		</Border>
 		<TextBlock
 			Grid.Column="0"
@@ -141,8 +128,7 @@ xmlns:local="clr-namespace:ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf"
 			Margin="10,5,10,5"
 			VerticalAlignment="Stretch"
 			Grid.ColumnSpan="2"
-			x:Name="DescriptionLabel">
-		</TextBlock>
+			x:Name="DescriptionLabel"></TextBlock>
 		<Grid
 			Grid.Column="0"
 			Grid.ColumnSpan="2"
@@ -226,6 +212,7 @@ xmlns:local="clr-namespace:ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf"
 					Margin="10,5,10,5" />
 				<CheckBox
 					x:Name="CreateDirectoryForSolutionCheckBox"
+					IsChecked="{Binding IsCreateDirectoryForSolutionChecked}"
 					Margin="10,5,10,5"
 					Grid.Column="1"
 					Grid.Row="0">

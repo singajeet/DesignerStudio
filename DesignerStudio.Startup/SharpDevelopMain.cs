@@ -38,6 +38,7 @@ namespace DesignerStudio.Startup
 		string[] _commandLineArgs = null;
 		bool _useExceptionBox = false;
 		string _appPath;
+		bool _allowUserAddins;
 		string _resourceAssemblyName = "DesignerStudio.Startup";
 		#endregion
 		
@@ -49,6 +50,11 @@ namespace DesignerStudio.Startup
 		#endregion
 		
 		#region public properties
+		public bool AllowUserAddIns{
+			get { return this._allowUserAddins; }
+			set { this._allowUserAddins = value; }
+		}
+		
 		public string AppPath{
 			get { return this._appPath; }
 			set { this._appPath = value; }
@@ -212,7 +218,7 @@ namespace DesignerStudio.Startup
 					startup.ApplicationRootPath = Path.Combine(Path.GetDirectoryName(exe.Location), "..");
 				else
 					startup.ApplicationRootPath = AppPath;
-				startup.AllowUserAddIns = true;
+				startup.AllowUserAddIns = AllowUserAddIns;
 				
 				LoggingService.Debug("ApplicationRootPath has been set to [{0}]", startup.ApplicationRootPath);
 				

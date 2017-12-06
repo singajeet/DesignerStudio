@@ -26,6 +26,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
 using ICSharpCode.Core;
+using ICSharpCode.SharpDevelop.Gui;
 //using ICSharpCode.SharpDevelop.Gui;
 using ICSharpCode.SharpDevelop.Widgets.DesignTimeSupport;
 
@@ -60,8 +61,8 @@ namespace ICSharpCode.SharpDevelop.Project
 		{
 		}
 		
-		//[LocalizedProperty("${res:ICSharpCode.SharpDevelop.Internal.Project.ProjectFile.BuildAction}",
-		//                   Description ="${res:ICSharpCode.SharpDevelop.Internal.Project.ProjectFile.BuildAction.Description}")]
+		[LocalizedProperty("${res:ICSharpCode.SharpDevelop.Internal.Project.ProjectFile.BuildAction}",
+		Description ="${res:ICSharpCode.SharpDevelop.Internal.Project.ProjectFile.BuildAction.Description}")]
 		[Editor(typeof(BuildActionEditor), typeof(UITypeEditor))]
 		public string BuildAction {
 			get {
@@ -73,8 +74,8 @@ namespace ICSharpCode.SharpDevelop.Project
 			}
 		}
 		
-		//[LocalizedProperty("${res:Global.FileName}",
-		//                   Description = "${res:ICSharpCode.SharpDevelop.Internal.Project.ProjectFile.FileName.Description}")]
+		[LocalizedProperty("${res:Global.FileName}",
+		Description = "${res:ICSharpCode.SharpDevelop.Internal.Project.ProjectFile.FileName.Description}")]
 		[Browsable(true)]
 		[ReadOnly(true)]
 		public override FileName FileName {
@@ -100,19 +101,19 @@ namespace ICSharpCode.SharpDevelop.Project
 			}
 		}
 		
-		//[LocalizedProperty("${res:ICSharpCode.SharpDevelop.Internal.Project.ProjectFile.CopyToOutputDirectory}",
-		//                   Description = "${res:ICSharpCode.SharpDevelop.Internal.Project.ProjectFile.CopyToOutputDirectory.Description}")]
-//		public CopyToOutputDirectory CopyToOutputDirectory {
-//			get {
-//				return GetEvaluatedMetadata("CopyToOutputDirectory", CopyToOutputDirectory.Never);
-//			}
-//			set {
-//				SetEvaluatedMetadata("CopyToOutputDirectory", value);
-//			}
-//		}
+		[LocalizedProperty("${res:ICSharpCode.SharpDevelop.Internal.Project.ProjectFile.CopyToOutputDirectory}",
+		 Description = "${res:ICSharpCode.SharpDevelop.Internal.Project.ProjectFile.CopyToOutputDirectory.Description}")]
+		public CopyToOutputDirectory CopyToOutputDirectory {
+			get {
+				return GetEvaluatedMetadata("CopyToOutputDirectory", CopyToOutputDirectory.Never);
+			}
+			set {
+				SetEvaluatedMetadata("CopyToOutputDirectory", value);
+			}
+		}
 		
-		//[LocalizedProperty("${res:ICSharpCode.SharpDevelop.Internal.Project.ProjectFile.CustomTool}",
-		//                   Description ="${res:ICSharpCode.SharpDevelop.Internal.Project.ProjectFile.CustomTool.Description}")]
+		[LocalizedProperty("${res:ICSharpCode.SharpDevelop.Internal.Project.ProjectFile.CustomTool}",
+		 Description ="${res:ICSharpCode.SharpDevelop.Internal.Project.ProjectFile.CustomTool.Description}")]
 		[Editor(typeof(CustomToolEditor), typeof(UITypeEditor))]
 		public string CustomTool {
 			get {
@@ -120,7 +121,7 @@ namespace ICSharpCode.SharpDevelop.Project
 			}
 			set {
 				SetEvaluatedMetadata("Generator", value);
-				//ReFilterProperties();
+				ReFilterProperties();
 			}
 		}
 		
@@ -129,11 +130,11 @@ namespace ICSharpCode.SharpDevelop.Project
 			protected override Control CreateDropDownControl(ITypeDescriptorContext context, IWindowsFormsEditorService editorService)
 			{
 				FileProjectItem item = context.Instance as FileProjectItem;
-				//if (item != null) {
-				//return new DropDownEditorListBox(editorService, CustomToolsService.GetCompatibleCustomToolNames(item));
-				//} else {
-				//return new DropDownEditorListBox(editorService, CustomToolsService.GetCustomToolNames());
-				//}
+				if (item != null) {
+				return new DropDownEditorListBox(editorService, CustomToolsService.GetCompatibleCustomToolNames(item));
+				} else {
+				return new DropDownEditorListBox(editorService, CustomToolsService.GetCustomToolNames());
+				}
 				return null;
 			}
 		}

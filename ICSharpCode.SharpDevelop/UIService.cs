@@ -86,12 +86,12 @@ namespace ICSharpCode.SharpDevelop
 			#endif
 			ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialog npdlg =
 				new ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialog();
-			ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialogModelView npdlgViewModel =
-				new ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialogModelView(
+			ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialogViewModel npdlgViewModel =
+				new ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf.NewProjectDialogViewModel(
 					templates ?? SD.Templates.TemplateCategories, createNewSolution: solutionFolder == null);
 			
 			
-			npdlg.DataContext = npdlgViewModel;
+			npdlg.SetDataContext(npdlgViewModel);
 			var result = await (SD.Workbench as Window).ShowDialog(npdlg, ClosingEventHandler);
 		}
 		

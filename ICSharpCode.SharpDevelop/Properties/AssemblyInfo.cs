@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can use the default the Revision and 
 // Build Numbers by using the '*' as shown below:
 [assembly: AssemblyVersion("5.2.0.0")]
-internal static class RevisionClass
+public static class RevisionClass
 {
 	public const string Major = "1";
 	public const string Minor = "0";
