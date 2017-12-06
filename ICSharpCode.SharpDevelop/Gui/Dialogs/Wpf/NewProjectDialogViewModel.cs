@@ -30,13 +30,22 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 		private TargetFramework _selectedTargetFramework;
 		private ObservableCollection<TargetFramework> _targetFrameworks;
 		private  bool _createNewSolution;
-		private bool _isCreateDirectoryForSolutionChecked;
+		private bool _isCreateDirectoryForSolutionChecked= true;
+		private bool _isCustomSolutionName= false;
 		private string _projectLocationDirectory;		
 		private Category _selectedCategory;
 		private string _projectName;
 		private string _solutionName;
 		private ISolutionFolder _solutionFolder;
 		internal ProjectTemplateResult _result;
+		
+		public bool IsCustomSolutionName{
+			get { return _isCustomSolutionName; }
+			set {
+				_isCustomSolutionName = value;
+						OnPropertyChanged();
+					}
+		}
 		
 		
 		public ObservableCollection<TemplateItem> AllTemplates{
@@ -61,7 +70,13 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 		}
 		
 		public string ProjectLocationDirectory{
-			get { return this._projectLocationDirectory; }
+			get { 
+				if (_projectLocationDirectory == null) {
+				_projectLocationDirectory= ICSharpCode.Core.PropertyService.Get("ICSharpCode.SharpDevelop.Gui.Dialogs.NewProjectDialog.DefaultPath", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "SharpDevelop Projects"));
+				}
+					
+				return this._projectLocationDirectory;
+			}
 			set { this._projectLocationDirectory = value; 
 				OnPropertyChanged();
 			}
@@ -123,14 +138,25 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 		}
 		
 		public string ProjectName{
-			get { return this._projectName; }
+			get {
+				if (this._projectName== null)
+					this._projectName = "MyProject";
+				return this._projectName; }
 			set { this._projectName = value; 
 				OnPropertyChanged();
+				OnPropertyChanged("SolutionName");
 			}
 		}
 		
 		public string SolutionName{
-			get { return this._solutionName; }
+			get { 
+				if (_solutionName == null)
+					return ProjectName;
+				
+				if (!IsCustomSolutionName)
+					return _projectName;
+				
+				return this._solutionName; }
 			set { this._solutionName = value; 
 				OnPropertyChanged();
 			}

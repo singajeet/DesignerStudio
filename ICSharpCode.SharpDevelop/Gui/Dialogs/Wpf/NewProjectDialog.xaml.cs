@@ -43,11 +43,6 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 			((NewProjectDialogViewModel)this.DataContext).SelectedCategory = (Category)e.NewValue;
 		}
 		
-		void TargetFrameworkComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			
-		}
-		
 		void TemplatesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			if (TemplatesListView.SelectedItems.Count == 1) {
@@ -59,10 +54,10 @@ namespace ICSharpCode.SharpDevelop.Services.Gui.Dialogs.Wpf
 			}
 		}
 		
-		void CategoriesTreeView_SourceUpdated(object sender, DataTransferEventArgs e)
+		
+		void SolutionNameTxtBox_KeyDown(object sender, KeyEventArgs e)
 		{
-			ProjectLocationPathTxtBox.Text = ICSharpCode.Core.PropertyService.Get("ICSharpCode.SharpDevelop.Gui.Dialogs.NewProjectDialog.DefaultPath", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "SharpDevelop Projects"));			
-			((TreeViewItem)CategoriesTreeView.Items[0]).IsSelected = true;
+			((NewProjectDialogViewModel)this.DataContext).IsCustomSolutionName = true;
 		}
 	}
 }
