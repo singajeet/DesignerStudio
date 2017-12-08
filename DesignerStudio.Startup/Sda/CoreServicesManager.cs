@@ -99,7 +99,7 @@ namespace ICSharpCode.SharpDevelop.Sda
 			LoggingService.Info("Building up ResourceManager...");
 			
 			Assembly exe = Assembly.Load(properties.ResourceAssemblyName);
-			LoggingService.Debug("ResourceAssembly [{0}] has been loaded successfully");
+			LoggingService.Debug("ResourceAssembly [{0}] has been loaded successfully", exe.FullName);
 			
 			SD.ResourceService.RegisterNeutralStrings(new ResourceManager(STRINGRESOURCES, exe));
 			LoggingService.Debug("String Resources [{0}] has been registered with ResourceManager", STRINGRESOURCES);
@@ -138,15 +138,15 @@ namespace ICSharpCode.SharpDevelop.Sda
 			LoggingService.Info("Building up AddInTree...");
 			startup.RunInitialization();
 			
-			//((AssemblyParserService)SD.AssemblyParserService).DomPersistencePath = properties.DomPersistencePath;
+			((AssemblyParserService)SD.AssemblyParserService).DomPersistencePath = properties.DomPersistencePath;
 			
 			// Register events to marshal back
-			//Project.ProjectService.BuildStarted   += delegate { this.callback.StartBuild(); };
-			//Project.ProjectService.BuildFinished  += delegate { this.callback.EndBuild(); };
-			//Project.ProjectService.SolutionLoaded += delegate { this.callback.SolutionLoaded(); };
-			//Project.ProjectService.SolutionClosed += delegate { this.callback.SolutionClosed(); };
-			//FileUtility.FileLoaded += delegate(object sender, FileNameEventArgs e) { this.callback.FileLoaded(e.FileName); };
-			//FileUtility.FileSaved  += delegate(object sender, FileNameEventArgs e) { this.callback.FileSaved(e.FileName); };
+			Project.ProjectService.BuildStarted   += delegate { this.callback.StartBuild(); };
+			Project.ProjectService.BuildFinished  += delegate { this.callback.EndBuild(); };
+			Project.ProjectService.SolutionLoaded += delegate { this.callback.SolutionLoaded(); };
+			Project.ProjectService.SolutionClosed += delegate { this.callback.SolutionClosed(); };
+			FileUtility.FileLoaded += delegate(object sender, FileNameEventArgs e) { this.callback.FileLoaded(e.FileName); };
+			FileUtility.FileSaved  += delegate(object sender, FileNameEventArgs e) { this.callback.FileSaved(e.FileName); };
 			
 			LoggingService.Info("AddInTree buildup completed!");
 			

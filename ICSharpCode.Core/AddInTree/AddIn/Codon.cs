@@ -98,6 +98,7 @@ namespace ICSharpCode.Core
 			this.name       = name;
 			this.properties = properties;
 			this.conditions = conditions;
+			
 		}
 		
 		public Codon(AddIn addIn, string name, Properties properties, IReadOnlyList<ICondition> conditions, Properties parentPathProperties)
@@ -111,20 +112,24 @@ namespace ICSharpCode.Core
 			this.properties = properties;
 			this.conditions = conditions;
 			this._parentPathProperties = parentPathProperties;
+			
 		}
 		
 		internal object BuildItem(BuildItemArgs args)
 		{
 			IDoozer doozer;
-			if (!addIn.AddInTree.Doozers.TryGetValue(Name, out doozer))
+			if (!addIn.AddInTree.Doozers.TryGetValue(Name, out doozer)) {
 				throw new CoreException("Doozer " + Name + " not found! " + ToString());
+			}
 			
 			if (!doozer.HandleConditions) {
 				ConditionFailedAction action = Condition.GetFailedAction(args.Conditions, args.Parameter);
+				
 				if (action != ConditionFailedAction.Nothing) {
 					return null;
 				}
 			}
+			
 			return doozer.BuildItem(args);
 		}
 		

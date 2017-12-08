@@ -74,7 +74,7 @@ namespace ICSharpCode.Core
 				applicationStateService.RegisterStateGetter("Installed 3rd party AddIns", GetInstalledThirdPartyAddInsListAsString);
 		}
 		
-		string GetInstalledThirdPartyAddInsListAsString()
+		public string GetInstalledThirdPartyAddInsListAsString()
 		{
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			foreach (AddIn addIn in AddIns) {
@@ -140,7 +140,7 @@ namespace ICSharpCode.Core
 		/// </param>
 		public AddInTreeNode GetTreeNode(string path, bool throwOnNotFound = true)
 		{
-			if (path == null || path.Length == 0) {
+			if (path == null || path.Length == 0) {				
 				return rootNode;
 			}
 			string[] splittedPath = path.Split('/');
@@ -151,8 +151,8 @@ namespace ICSharpCode.Core
 						throw new TreePathNotFoundException(path);
 					else
 						return null;
-				}
-			}
+				}								
+			}			
 			return curPath;
 		}
 		
@@ -174,6 +174,7 @@ namespace ICSharpCode.Core
 			string parent = path.Substring(0, pos);
 			string child = path.Substring(pos + 1);
 			AddInTreeNode node = GetTreeNode(parent);
+			
 			return node.BuildChildItem(child, parameter, additionalConditions);
 		}
 		
@@ -188,28 +189,30 @@ namespace ICSharpCode.Core
 		public IReadOnlyList<T> BuildItems<T>(string path, object parameter, bool throwOnNotFound = true)
 		{
 			AddInTreeNode node = GetTreeNode(path, throwOnNotFound);
-			if (node == null)
+			if (node == null) {
 				return new List<T>();
-			else
-				return node.BuildChildItems<T>(parameter);
+			} 
+				
+			return node.BuildChildItems<T>(parameter);
+			
 		}
 		
 		AddInTreeNode CreatePath(AddInTreeNode localRoot, string path)
-		{
+		{			
 			if (path == null || path.Length == 0) {
 				return localRoot;
 			}
+			
 			string[] splittedPath = path.Split('/');
 			AddInTreeNode curPath = localRoot;
 			int i = 0;
 			while (i < splittedPath.Length) {
 				if (!curPath.ChildNodes.ContainsKey(splittedPath[i])) {
-					curPath.ChildNodes[splittedPath[i]] = new AddInTreeNode();
+					curPath.ChildNodes[splittedPath[i]] = new AddInTreeNode();					
 				}
 				curPath = curPath.ChildNodes[splittedPath[i]];
 				++i;
 			}
-			
 			return curPath;
 		}
 		
@@ -249,16 +252,23 @@ namespace ICSharpCode.Core
 				
 				foreach (Runtime runtime in addIn.Runtimes) {
 					if (runtime.IsActive) {
+						
+						System.Text.StringBuilder doozerName = new System.Text.StringBuilder();
 						foreach (var pair in runtime.DefinedDoozers) {
+							doozerName.AppendFormat("{0}={1},", pair.Key, pair.Value);
 							if (!doozers.TryAdd(pair.Key, pair.Value))
 								throw new AddInLoadException("Duplicate doozer: " + pair.Key);
 						}
+						
+						System.Text.StringBuilder conditions = new System.Text.StringBuilder();
 						foreach (var pair in runtime.DefinedConditionEvaluators) {
+							conditions.AppendFormat("{0}={1},", pair.Key, pair.Value);
 							if (!conditionEvaluators.TryAdd(pair.Key, pair.Value))
 								throw new AddInLoadException("Duplicate condition evaluator: " + pair.Key);
-						}
+						}						
 					}
 				}
+				
 				
 				string addInRoot = Path.GetDirectoryName(addIn.FileName);
 				foreach(string bitmapResource in addIn.BitmapResources)
@@ -275,7 +285,7 @@ namespace ICSharpCode.Core
 					ServiceSingleton.GetRequiredService<IResourceService>().RegisterNeutralStrings(resourceManager);
 				}
 			}
-			addIns.Add(addIn);
+			addIns.Add(addIn);			
 		}
 		
 		/// <summary>
@@ -297,10 +307,12 @@ namespace ICSharpCode.Core
 		{
 			addIn.Enabled = false;
 			addIn.Action = AddInAction.DependencyError;
+			
 			foreach (string name in addIn.Manifest.Identities.Keys) {
 				dict.Remove(name);
 				addInDict.Remove(name);
-			}
+			
+			}			
 		}
 		
 		/// <summary>
@@ -319,12 +331,13 @@ namespace ICSharpCode.Core
 			Dictionary<string, Version> dict = new Dictionary<string, Version>();
 			Dictionary<string, AddIn> addInDict = new Dictionary<string, AddIn>();
 			var nameTable = new System.Xml.NameTable();
+			
 			foreach (string fileName in addInFiles) {
 				AddIn addIn;
 				try {
 					addIn = AddIn.Load(this, fileName, nameTable);
 				} catch (AddInLoadException ex) {
-					LoggingService.Error(ex);
+					LoggingService.Error(ex);					
 					if (ex.InnerException != null) {
 						MessageService.ShowError("Error loading AddIn " + fileName + ":\n"
 						                         + ex.InnerException.Message);
@@ -334,7 +347,7 @@ namespace ICSharpCode.Core
 					}
 					addIn = new AddIn(this);
 					addIn.addInFileName = fileName;
-					addIn.CustomErrorMessage = ex.Message;
+					addIn.CustomErrorMessage = ex.Message;					
 				}
 				if (addIn.Action == AddInAction.CustomError) {
 					list.Add(addIn);
@@ -365,7 +378,7 @@ namespace ICSharpCode.Core
 				}
 				list.Add(addIn);
 			}
-		checkDependencies:
+			checkDependencies:
 			for (int i = 0; i < list.Count; i++) {
 				AddIn addIn = list[i];
 				if (!addIn.Enabled) continue;
@@ -376,6 +389,9 @@ namespace ICSharpCode.Core
 					if (reference.Check(dict, out versionFound)) {
 						MessageService.ShowError(addIn.Name + " conflicts with " + reference.ToString()
 						                         + " and has been disabled.");
+						LoggingService.Error(addIn.Name + " conflicts with " + reference.ToString()
+						                         + " and has been disabled.");
+						
 						DisableAddin(addIn, dict, addInDict);
 						goto checkDependencies; // after removing one addin, others could break
 					}
@@ -386,9 +402,14 @@ namespace ICSharpCode.Core
 							MessageService.ShowError(addIn.Name + " has not been loaded because it requires "
 							                         + reference.ToString() + ", but version "
 							                         + versionFound.ToString() + " is installed.");
+							LoggingService.Error(addIn.Name + " has not been loaded because it requires "
+							                         + reference.ToString() + ", but version "
+							                         + versionFound.ToString() + " is installed.");
 						} else {
 							MessageService.ShowError(addIn.Name + " has not been loaded because it requires "
 							                         + reference.ToString() + ".");
+							LoggingService.Error(addIn.Name + " has not been loaded because it requires "
+							                         + reference.ToString() + ".");	
 						}
 						DisableAddin(addIn, dict, addInDict);
 						goto checkDependencies; // after removing one addin, others could break
@@ -397,7 +418,7 @@ namespace ICSharpCode.Core
 			}
 			foreach (AddIn addIn in list) {
 				try {
-					InsertAddIn(addIn);
+					InsertAddIn(addIn);					
 				} catch (AddInLoadException ex) {
 					LoggingService.Error(ex);
 					MessageService.ShowError("Error loading AddIn " + addIn.FileName + ":\n"

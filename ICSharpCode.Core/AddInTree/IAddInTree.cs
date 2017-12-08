@@ -70,6 +70,6 @@ namespace ICSharpCode.Core
 		/// <see cref="TreePathNotFoundException"/> when the path does not exist.
 		/// If set to <c>false</c>, <c>null</c> is returned for non-existing paths.
 		/// </param>
-		AddInTreeNode GetTreeNode(string path, bool throwOnNotFound = true);
+		AddInTreeNode GetTreeNode(string path, bool throwOnNotFound = true);		
 	}
 }

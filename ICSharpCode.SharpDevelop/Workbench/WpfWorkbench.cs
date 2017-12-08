@@ -166,7 +166,7 @@ namespace ICSharpCode.SharpDevelop.Workbench
 			var padDescriptors = AddInTree.BuildItems<PadDescriptor>(viewContentPath, this, false);
 			((SharpDevelopServiceContainer)SD.Services).AddFallbackProvider(new PadServiceProvider(padDescriptors));
 			foreach (PadDescriptor content in padDescriptors) {
-				ShowPad(content);
+				ShowPad(content);				
 			}
 			
 			mainMenu.ItemsSource = MenuService.CreateMenuItems(this, this, mainMenuPath, activationMethod: "MainMenu", immediatelyExpandMenuBuildersForShortcuts: true);
@@ -175,7 +175,7 @@ namespace ICSharpCode.SharpDevelop.Workbench
 				mainMenu.Style = menuStyle;
 			
 			toolBars = ToolBarService.CreateToolBars(this, this, "/SharpDevelop/Workbench/ToolBar");
-			foreach (ToolBar tb in toolBars) {
+			foreach (ToolBar tb in toolBars) {				
 				if (((ToolBarService.CoreToolBar)tb).ShowInTray) {
 					ToolBarTray tray = new ToolBarTray();
 					Style tbStyle = Application.Current.TryFindResource("MaterialDesignToolBar") as Style;
@@ -682,7 +682,7 @@ namespace ICSharpCode.SharpDevelop.Workbench
 					return;
 				}
 				
-				//((ParserService)SD.ParserService).StopParserThread();
+				((ParserService)SD.ParserService).StopParserThread();
 				((WpfWorkbench)SD.Workbench).WorkbenchLayout.StoreConfiguration();
 				restoreBoundsBeforeClosing = this.RestoreBounds;
 				

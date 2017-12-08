@@ -198,9 +198,8 @@ namespace ICSharpCode.Core
 		static bool UninstallAddIn(List<string> disabled, string addInName, string targetDir)
 		{
 			if (Directory.Exists(targetDir)) {
-				LoggingService.Info("Removing " + addInName + "...");
 				try {
-					Directory.Delete(targetDir, true);
+					Directory.Delete(targetDir, true);					
 				} catch (Exception ex) {
 					disabled.Add(addInName);
 					var messageService = ServiceSingleton.GetRequiredService<IMessageService>();
@@ -230,8 +229,9 @@ namespace ICSharpCode.Core
 					string addInName;
 					while ((addInName = r.ReadLine()) != null) {
 						addInName = addInName.Trim();
-						if (addInName.Length > 0)
-							removeEntries.Add(addInName);
+						if (addInName.Length > 0) {
+							removeEntries.Add(addInName);							
+						}
 					}
 				}
 				if (removeEntries.Contains(identity))
@@ -263,8 +263,9 @@ namespace ICSharpCode.Core
 				string addInName;
 				while ((addInName = r.ReadLine()) != null) {
 					addInName = addInName.Trim();
-					if (addInName.Length > 0)
-						removeEntries.Add(addInName);
+					if (addInName.Length > 0) {
+						removeEntries.Add(addInName);						
+					}
 				}
 			}
 			if (removeEntries.Remove(identity)) {
@@ -286,6 +287,7 @@ namespace ICSharpCode.Core
 		{
 			List<string> addInFiles = new List<string>();
 			List<string> disabled = new List<string>();
+			
 			LoadAddInConfiguration(addInFiles, disabled);
 			
 			foreach (AddIn addIn in addIns) {
@@ -294,6 +296,7 @@ namespace ICSharpCode.Core
 				addIn.Enabled = false;
 				addIn.Action = AddInAction.Install;
 				AddInTree.InsertAddIn(addIn);
+								
 			}
 			
 			SaveAddInConfiguration(addInFiles, disabled);
@@ -309,6 +312,7 @@ namespace ICSharpCode.Core
 		{
 			List<string> addInFiles = new List<string>();
 			List<string> disabled = new List<string>();
+			
 			LoadAddInConfiguration(addInFiles, disabled);
 			
 			foreach (AddIn addIn in addIns) {
@@ -318,7 +322,7 @@ namespace ICSharpCode.Core
 				addInFiles.Remove(addIn.FileName);
 				addIn.Action = AddInAction.Uninstall;
 				if (!addIn.Enabled) {
-					AddInTree.RemoveAddIn(addIn);
+					AddInTree.RemoveAddIn(addIn);					
 				}
 			}
 			
@@ -333,20 +337,23 @@ namespace ICSharpCode.Core
 		{
 			List<string> addInFiles = new List<string>();
 			List<string> disabled = new List<string>();
+			
 			LoadAddInConfiguration(addInFiles, disabled);
 			
 			foreach (AddIn addIn in addIns) {
 				foreach (string identity in addIn.Manifest.Identities.Keys) {
 					disabled.Remove(identity);
+					LoggingService.Debug("Identity => {0}", identity);
 				}
 				if (addIn.Action == AddInAction.Uninstall) {
 					if (FileUtility.IsBaseDirectory(userAddInPath, addIn.FileName)) {
 						foreach (string identity in addIn.Manifest.Identities.Keys) {
-							AbortRemoveUserAddInOnNextStart(identity);
+							AbortRemoveUserAddInOnNextStart(identity);							
 						}
 					} else {
-						if (!addInFiles.Contains(addIn.FileName))
-							addInFiles.Add(addIn.FileName);
+						if (!addInFiles.Contains(addIn.FileName)) {
+							addInFiles.Add(addIn.FileName);							
+						}
 					}
 				}
 				addIn.Action = AddInAction.Enable;
@@ -367,8 +374,12 @@ namespace ICSharpCode.Core
 			
 			foreach (AddIn addIn in addIns) {
 				string identity = addIn.Manifest.PrimaryIdentity;
-				if (identity == null)
-					throw new ArgumentException("The AddIn cannot be disabled because it has no identity.");
+				if (identity == null) {
+					LoggingService.Error("The AddIn cannot be disabled because it has no identity.");
+					throw new ArgumentException("The AddIn cannot be disabled because it has no identity.");					
+				}
+				
+				LoggingService.Debug("Identity => {0}", identity);
 				
 				if (!disabled.Contains(identity))
 					disabled.Add(identity);
@@ -391,18 +402,19 @@ namespace ICSharpCode.Core
 		{
 			if (!File.Exists(configurationFileName))
 				return;
+			
 			using (XmlTextReader reader = new XmlTextReader(configurationFileName)) {
 				while (reader.Read()) {
 					if (reader.NodeType == XmlNodeType.Element) {
 						if (reader.Name == "AddIn") {
 							string fileName = reader.GetAttribute("file");
 							if (fileName != null && fileName.Length > 0) {
-								addInFiles.Add(fileName);
+								addInFiles.Add(fileName);								
 							}
 						} else if (reader.Name == "Disable") {
 							string addIn = reader.GetAttribute("addin");
 							if (addIn != null && addIn.Length > 0) {
-								disabledAddIns.Add(addIn);
+								disabledAddIns.Add(addIn);								
 							}
 						}
 					}
@@ -421,16 +433,19 @@ namespace ICSharpCode.Core
 			using (XmlTextWriter writer = new XmlTextWriter(configurationFileName, Encoding.UTF8)) {
 				writer.Formatting = Formatting.Indented;
 				writer.WriteStartDocument();
+				
 				writer.WriteStartElement("AddInConfiguration");
 				foreach (string file in addInFiles) {
 					writer.WriteStartElement("AddIn");
 					writer.WriteAttributeString("file", file);
 					writer.WriteEndElement();
+					
 				}
 				foreach (string name in disabledAddIns) {
 					writer.WriteStartElement("Disable");
 					writer.WriteAttributeString("addin", name);
 					writer.WriteEndElement();
+					
 				}
 				writer.WriteEndDocument();
 			}

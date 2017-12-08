@@ -1,4 +1,6 @@
-﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
+using System;
+
+// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
@@ -15,7 +17,6 @@
 // FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
-
 using System.Reflection;
 
 // Information about this assembly is defined by the following
@@ -23,9 +24,10 @@ using System.Reflection;
 //
 // change them to the information which is associated with the assembly
 // you compile.
-
-[assembly: AssemblyTitle("C#Binding")]
-[assembly: AssemblyDescription("C# language binding for #develop")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyTitle ("C#Binding")]
+[assembly: AssemblyDescription ("C# language binding for #develop")]
+[assembly: AssemblyConfiguration ("")]
+[assembly: AssemblyTrademark ("")]
+[assembly: AssemblyCulture ("")]
+[assembly: AssemblyVersion ("5.2.0.0")]
+[assembly: AssemblyFileVersion ("5.2.0.0")]

@@ -66,7 +66,7 @@ namespace ICSharpCode.Core
 			this.AddIn = addIn;
 			this.name = name;
 			this.properties = properties;
-			action = properties.Get("action", ConditionFailedAction.Exclude);
+			action = properties.Get("action", ConditionFailedAction.Exclude);			
 		}
 		
 		public bool IsValid(object parameter)

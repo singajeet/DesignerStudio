@@ -34,9 +34,13 @@ namespace ICSharpCode.SharpDevelop.Project
 	{
 		public SDProjectService()
 		{
+			LoggingService.Debug("SDProjectService instance created");
+			
 			allSolutions = new NullSafeSimpleModelCollection<ISolution>();
 			allProjects = allSolutions.SelectMany(s => s.Projects);
+			
 			projectBindings = SD.AddInTree.BuildItems<ProjectBindingDescriptor>("/SharpDevelop/Workbench/ProjectBindings", null, false);
+			
 			targetFrameworks = SD.AddInTree.BuildItems<TargetFramework>("/SharpDevelop/TargetFrameworks", null, false);
 			
 			SD.GetFutureService<IWorkbench>().ContinueWith(t => t.Result.ActiveViewContentChanged += ActiveViewContentChanged).FireAndForget();
@@ -150,6 +154,7 @@ namespace ICSharpCode.SharpDevelop.Project
 		public bool OpenSolutionOrProject(FileName fileName)
 		{
 			if (!IsSolutionOrProjectFile(fileName)) {
+				LoggingService.Error("Error while opening solution or project => {0}", StringParser.Parse("${res:ICSharpCode.SharpDevelop.Commands.OpenCombine.InvalidProjectOrCombine}", new StringTagPair("FileName", fileName)));
 				MessageService.ShowError(StringParser.Parse("${res:ICSharpCode.SharpDevelop.Commands.OpenCombine.InvalidProjectOrCombine}", new StringTagPair("FileName", fileName)));
 				return false;
 			}
@@ -350,6 +355,7 @@ namespace ICSharpCode.SharpDevelop.Project
 				if (!ok)
 					solution.Dispose();
 			}
+			
 			return solution;
 		}
 		
@@ -361,6 +367,7 @@ namespace ICSharpCode.SharpDevelop.Project
 				throw new ArgumentException("Path must be rooted!");
 			Solution solution = new Solution(fileName, new ProjectChangeWatcher(fileName), SD.FileService);
 			solution.LoadPreferences();
+			
 			return solution;
 		}
 		#endregion
@@ -427,6 +434,7 @@ namespace ICSharpCode.SharpDevelop.Project
 			var result = binding.LoadProject(info);
 			if (result == null)
 				throw new InvalidOperationException("IProjectBinding.LoadProject() must not return null");
+			
 			return result;
 		}
 		#endregion

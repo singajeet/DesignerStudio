@@ -41,7 +41,7 @@ namespace ICSharpCode.SharpDevelop.Parser
 	/// <summary>
 	/// Portions of parser service that deal with loading external assemblies for code completion.
 	/// </summary>
-	sealed class AssemblyParserService : IAssemblyParserService
+	public sealed class AssemblyParserService : IAssemblyParserService
 	{
 		#region Get Assembly By File Name
 		[Serializable]

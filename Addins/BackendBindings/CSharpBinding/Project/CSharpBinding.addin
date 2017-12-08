@@ -20,6 +20,14 @@
 		<Import assembly = ":ICSharpCode.NRefactory.CSharp.Refactoring"/> <!-- used for issues and refactorings -->
 	</Runtime>
 	
+	<Path path = "/SharpDevelop/Workbench/ProjectBindings">
+		<ProjectBinding id                   = "C#"
+		                guid                 = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+		                supportedextensions  = ".cs"
+		                projectfileextension = ".csproj"
+		                class                = "CSharpBinding.CSharpProjectBinding" />
+	</Path>
+	
 	<Path name = "/SharpDevelop/Workbench/Ambiences">
 		<Class id    = "C#"
 		       class = "ICSharpCode.NRefactory.CSharp.CSharpAmbience"/>
@@ -136,14 +144,6 @@
 		<Icon id         = "C#File"
 		      extensions = ".cs"
 		      resource   = "C#.FileIcon"/>
-	</Path>
-	
-	<Path path = "/SharpDevelop/Workbench/ProjectBindings">
-		<ProjectBinding id                   = "C#"
-		                guid                 = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-		                supportedextensions  = ".cs"
-		                projectfileextension = ".csproj"
-		                class                = "CSharpBinding.CSharpProjectBinding" />
 	</Path>
 	
 	<Path path = "/SharpDevelop/Dialogs/OptionsDialog/CodingOptions">

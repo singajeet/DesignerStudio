@@ -127,12 +127,14 @@ namespace ICSharpCode.Core
 		
 		internal static Version ParseVersion(string version, string hintPath)
 		{
-			if (version == null || version.Length == 0)
-				return new Version(0,0,0,0);
+			if (version == null || version.Length == 0) {
+				return new Version(0, 0, 0, 0);
+			}
 			if (version.StartsWith("@")) {
 				if (version == "@SharpDevelopCoreVersion") {
-					if (entryVersion == null)
+					if (entryVersion == null) {
 						entryVersion = new Version(RevisionClass.Major + "." + RevisionClass.Minor + "." + RevisionClass.Build + "." + RevisionClass.Revision);
+					}
 					return entryVersion;
 				}
 				if (hintPath != null) {

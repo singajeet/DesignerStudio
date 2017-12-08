@@ -72,7 +72,7 @@ namespace ICSharpCode.Core
 		public ExtensionPath(string name, AddIn addIn)
 		{
 			this.addIn = addIn;
-			this.name = name;
+			this.name = name;			
 		}
 		
 		public void SetParentPathProperties(Properties properties){
@@ -100,8 +100,9 @@ namespace ICSharpCode.Core
 						if (reader.LocalName == "Condition" || reader.LocalName == "ComplexCondition") {
 							conditionStack.Pop();
 						} else if (reader.LocalName == endElement) {
-							if (innerCodons.Count > 0)
+							if (innerCodons.Count > 0) {
 								this.codons.Add(innerCodons);
+							}
 							return;
 						}
 						break;

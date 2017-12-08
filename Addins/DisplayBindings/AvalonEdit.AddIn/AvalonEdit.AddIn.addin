@@ -122,6 +122,7 @@
 		</Condition>
 	</Path>
 	
+	<!--
 	<Path name = "/SharpDevelop/Workbench/MainMenu/Edit">
 		<MenuItem id = "Folding" label = "${res:XML.MainMenu.EditMenu.FoldingMenu}" type="Menu" insertafter="Format">
 			<Condition name = "WindowActive" activewindow="ICSharpCode.SharpDevelop.Editor.ITextEditor" action="Disable">
@@ -139,7 +140,7 @@
 				          class       = "ICSharpCode.AvalonEdit.AddIn.Commands.ShowDefinitionsOnly"/>
 			</Condition>
 		</MenuItem>
-	</Path>
+	</Path>-->
 	
 	<Path name = "/SharpDevelop/Workbench/MainMenu/Search">
 		<MenuItem id = "FindDerivedOrOverridesClasses"

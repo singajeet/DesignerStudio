@@ -63,6 +63,8 @@ namespace ICSharpCode.Core
 			if (applicationName == null)
 				throw new ArgumentNullException("applicationName");
 			this.applicationName = applicationName;
+			
+			LoggingService.Info("Preparing to start '{0}' application...", this.applicationName);
 		}
 		
 		/// <summary>
@@ -73,7 +75,12 @@ namespace ICSharpCode.Core
 		{
 			if (addInDir == null)
 				throw new ArgumentNullException("addInDir");
+			
+			LoggingService.Debug("Trying to find addins in the '{0}' directory", addInDir);
+			
 			addInFiles.AddRange(Directory.GetFiles(addInDir, "*.addin", SearchOption.AllDirectories));
+			
+			string dirFound = Directory.GetFiles(addInDir, "*.addin", SearchOption.AllDirectories).ToString();			
 		}
 		
 		/// <summary>
@@ -83,7 +90,8 @@ namespace ICSharpCode.Core
 		{
 			if (addInFile == null)
 				throw new ArgumentNullException("addInFile");
-			addInFiles.Add(addInFile);
+			
+			addInFiles.Add(addInFile);			
 		}
 		
 		/// <summary>
@@ -121,6 +129,7 @@ namespace ICSharpCode.Core
 			if (!externalAddInsConfigured) {
 				throw new InvalidOperationException("ConfigureExternalAddIns must be called before ConfigureUserAddIns");
 			}
+			
 			AddInManager.AddInInstallTemp = addInInstallTemp;
 			AddInManager.UserAddInPath = userAddInPath;
 			if (Directory.Exists(addInInstallTemp)) {

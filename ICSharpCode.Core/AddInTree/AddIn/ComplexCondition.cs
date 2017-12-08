@@ -49,7 +49,7 @@ namespace ICSharpCode.Core
 		public NegatedCondition(ICondition condition)
 		{
 			Debug.Assert(condition != null);
-			this.condition = condition;
+			this.condition = condition;			
 		}
 		
 		public bool IsValid(object parameter)
@@ -96,7 +96,7 @@ namespace ICSharpCode.Core
 		public AndCondition(ICondition[] conditions)
 		{
 			Debug.Assert(conditions.Length >= 1);
-			this.conditions = conditions;
+			this.conditions = conditions;			
 		}
 		
 		public bool IsValid(object parameter)
@@ -149,7 +149,7 @@ namespace ICSharpCode.Core
 		public OrCondition(ICondition[] conditions)
 		{
 			Debug.Assert(conditions.Length >= 1);
-			this.conditions = conditions;
+			this.conditions = conditions;			
 		}
 		
 		public bool IsValid(object parameter)

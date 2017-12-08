@@ -57,10 +57,11 @@ namespace ICSharpCode.Core
 		public object CreateObject(string className)
 		{
 			Type t = FindType(className);
-			if (t != null)
+			if (t != null) {				
 				return Activator.CreateInstance(t);
-			else
+			} else {				
 				return null;
+			}
 		}
 		
 		public Type FindType(string className)
@@ -72,7 +73,7 @@ namespace ICSharpCode.Core
 					LoadDependencies();
 				}
 				Type t = runtime.FindType(className);
-				if (t != null) {
+				if (t != null) {					
 					return t;
 				}
 			}
@@ -81,6 +82,7 @@ namespace ICSharpCode.Core
 			} else {
 				hasShownErrorMessage = true;
 				var messageService = ServiceSingleton.GetRequiredService<IMessageService>();
+				LoggingService.Error("ERROR: Class [{0}] not found in any of the assemblies", className);
 				messageService.ShowError("Cannot find class: " + className + "\nFuture missing objects will not cause an error message.");
 			}
 			return null;
@@ -93,11 +95,11 @@ namespace ICSharpCode.Core
 				Assembly assembly = runtime.LoadedAssembly;
 				if (assembly != null) {
 					Stream s = assembly.GetManifestResourceStream(resourceName);
-					if (s != null) {
+					if (s != null) {						
 						return s;
 					}
 				}
-			}
+			}			
 			return null;
 		}
 		
@@ -105,8 +107,9 @@ namespace ICSharpCode.Core
 		{
 			LoadDependencies();
 			foreach (Runtime runtime in runtimes) {
-				if (runtime.IsActive)
-					runtime.Load();
+				if (runtime.IsActive) {
+					runtime.Load();					
+				} 
 			}
 		}
 		
@@ -120,15 +123,15 @@ namespace ICSharpCode.Core
 			// However, we need to make sure we don't return before the dependencies are ready,
 			// so "bool dependenciesLoaded" must be volatile and set only at the very end of this method.
 			if (!dependenciesLoaded) {
-				LoggingService.Info("Loading addin " + this.Name);
-				
+								
 				AssemblyLocator.Init();
 				foreach (AddInReference r in manifest.Dependencies) {
 					if (r.RequirePreload) {
 						bool found = false;
+						
 						foreach (AddIn addIn in AddInTree.AddIns) {
 							if (addIn.Manifest.Identities.ContainsKey(r.Name)) {
-								found = true;
+								found = true;								
 								addIn.LoadRuntimeAssemblies();
 							}
 						}
@@ -234,11 +237,11 @@ namespace ICSharpCode.Core
 							
 							if(reader.LocalName == "BitmapResources")
 							{
-								addIn.BitmapResources.Add(filename);
+								addIn.BitmapResources.Add(filename);								
 							}
 							else
 							{
-								addIn.StringResources.Add(filename);
+								addIn.StringResources.Add(filename);								
 							}
 							break;
 						case "Runtime":
@@ -256,7 +259,9 @@ namespace ICSharpCode.Core
 							if (hintPath == null) {
 								throw new AddInLoadException("Cannot use include nodes when hintPath was not specified (e.g. when AddInManager reads a .addin file)!");
 							}
+							
 							string fileName = Path.Combine(hintPath, reader.GetAttribute(0));
+							
 							XmlReaderSettings xrs = new XmlReaderSettings();
 							xrs.NameTable = reader.NameTable; // share the name table
 							xrs.ConformanceLevel = ConformanceLevel.Fragment;
@@ -269,8 +274,14 @@ namespace ICSharpCode.Core
 //								throw new AddInLoadException("Import node requires ONE attribute.");
 //							}
 //							string pathName = reader.GetAttribute(0);
+							
 							Properties properties = Properties.ReadFromAttributes(reader);
 							string pathName = properties["name"];
+							if (string.IsNullOrEmpty(pathName))
+								pathName = properties["path"];
+							
+							if (string.IsNullOrEmpty(pathName))
+								pathName = properties[properties.Keys[0]];
 							
 							ExtensionPath extensionPath = addIn.GetExtensionPath(pathName);
 							if (!reader.IsEmptyElement) {
@@ -280,7 +291,7 @@ namespace ICSharpCode.Core
 						case "Manifest":
 							addIn.Manifest.ReadManifestSection(reader, hintPath);
 							break;
-						default:
+						default:							
 							throw new AddInLoadException("Unknown root path node:" + reader.LocalName);
 					}
 				}
@@ -309,14 +320,15 @@ namespace ICSharpCode.Core
 									addIn.properties = Properties.ReadFromAttributes(reader);
 									SetupAddIn(reader, addIn, hintPath);
 									break;
-								default:
+								default:									
 									throw new AddInLoadException("Unknown add-in file.");
 							}
 						}
 					}
-				}
+				}				
 				return addIn;
 			} catch (XmlException ex) {
+				LoggingService.Debug("Error while loading AddIn => {0} \n {1}", ex.Message, ex.ToString());
 				throw new AddInLoadException(ex.Message, ex);
 			}
 		}
@@ -327,11 +339,13 @@ namespace ICSharpCode.Core
 				using (TextReader textReader = File.OpenText(fileName)) {
 					AddIn addIn = Load(addInTree, textReader, Path.GetDirectoryName(fileName), nameTable);
 					addIn.addInFileName = fileName;
+					
 					return addIn;
 				}
-			} catch (AddInLoadException) {
+			} catch (AddInLoadException ex) {
 				throw;
 			} catch (Exception e) {
+				LoggingService.Debug("Error while loading AddIn {0} => {1} \n {2}", fileName, e.Message, e.ToString());
 				throw new AddInLoadException("Can't load " + fileName, e);
 			}
 		}
@@ -340,9 +354,10 @@ namespace ICSharpCode.Core
 		/// Gets whether the AddIn is a preinstalled component of the host application.
 		/// </summary>
 		public bool IsPreinstalled {
-			get {
+			get {				
 				if (FileUtility.IsBaseDirectory(FileUtility.ApplicationRootPath, this.FileName)) {
 					string hidden = this.Properties["addInManagerHidden"];
+					
 					return string.Equals(hidden, "true", StringComparison.OrdinalIgnoreCase)
 						|| string.Equals(hidden, "preinstalled", StringComparison.OrdinalIgnoreCase);
 				} else {

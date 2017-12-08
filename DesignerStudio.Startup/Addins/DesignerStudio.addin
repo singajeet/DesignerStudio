@@ -57,10 +57,10 @@
 		</Import>
 		<!--<Import assembly="ICSharpCode.Core.Presentation.dll" />
 		<Import assembly="ICSharpCode.SharpDevelop.Widgets.dll" />
-		<Import assembly="ICSharpCode.TreeView.dll" />
-		<Import assembly="DesignerStudio.Test.dll" />-->
+		<Import assembly="ICSharpCode.TreeView.dll" />-->
+		<Import assembly="DesignerStudio.Test.dll" />
 	</Runtime>
-	<Path name="/SharpDevelop/Services">		
+	<Path name="/SharpDevelop/Services">					
 		<Service id="ICSharpCode.SharpDevelop.Parser.IGlobalAssemblyCacheService"
 		         class="ICSharpCode.SharpDevelop.Parser.GlobalAssemblyCacheService"/>
 		<Service id="ICSharpCode.SharpDevelop.Parser.IParserService"
@@ -137,6 +137,12 @@
 	</Path>
 	
 	<Path name = "/SharpDevelop/Workbench/Pads">
+		<Pad id="AddInTreeDetails"
+			category="Main"
+			title="AddInTreeDetails"
+			class="CustomPad.AddInTreeDetails"
+			defaultPosition="Right"/>
+		
 		<Pad id       = "ProjectBrowser"
 		     category = "Main"
 		     title    = "${res:MainWindow.Windows.ProjectScoutLabel}"		     
@@ -1950,6 +1956,12 @@
 		       class="ICSharpCode.SharpDevelop.Project.PortableLibrary.CheckPortableLibraryInstalled"/>
 	</Path>
 
+	<Path name="/SharpDevelop/Workbench/ProjectBindings">
+	</Path>
+	
+	<Path name="/SharpDevelop/Workbench/ProjectBindings/Temp">
+	</Path>
+	
 	<Path name = "/SharpDevelop/TargetFrameworks">
 		<Static class="ICSharpCode.SharpDevelop.Project.TargetFramework" member="Net20" />
 		<Static class="ICSharpCode.SharpDevelop.Project.TargetFramework" member="Net30" />
